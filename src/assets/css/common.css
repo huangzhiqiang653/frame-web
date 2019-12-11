@@ -1,0 +1,223 @@
+html {
+  height: 100%;
+  width: 100%;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+}
+
+.app {
+  height: 100%;
+  width: 100%;
+}
+
+.el-container {
+  height: 100%;
+  width: 100%;
+}
+
+.el-header {
+  background-color: #545C64;
+  color: #333;
+  text-align: center;
+  line-height: 60px;
+  height: 60px;
+}
+
+.menu-top {
+  background-color: #303133;
+  color: #ffffff;
+  text-align: center;
+  height: 60px;
+}
+
+.menu-top-close {
+  background-color: #545C64;
+  color: #ffffff;
+  text-align: center;
+  height: 59px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.menu-top-title {
+  padding: 12px 0 0 0;
+  font-size: 20px;
+}
+
+.menu-top-title-sub {
+  font-size: 12px;
+}
+
+.el-footer {
+  background-color: #B3C0D1;
+  color: #333;
+  text-align: center;
+  line-height: 30px;
+  font-size: 12px;
+  height: 30px !important;
+}
+
+.el-aside {
+  background-color: #303133;
+  color: #ffffff;
+  text-align: center;
+}
+
+.el-main {
+  text-align: center;
+  height: calc(100% - 120px);
+}
+
+.menu-area {
+  width: 100%;
+}
+
+.user-area {
+  height: 40px;
+  width: 100%;
+  margin: 10px;
+  text-align: center;
+}
+
+.user-divider {
+  height: 80%;
+  width: 1px;
+  background-color: #ffffff;
+  display: inline-block;
+  margin: 0 20px;
+}
+
+.user-logout {
+  height: 80%;
+  display: inline-block;
+}
+
+.menu-fold {
+  float: left;
+  line-height: 60px;
+  margin-left: -17px;
+  cursor: pointer;
+}
+
+.main-area {
+  height: 100%;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+.margin-top-0 {
+  margin-top: 0 !important;
+}
+
+.margin-top-10 {
+  margin-top: 10px !important;
+}
+
+.margin-top-20 {
+  margin-top: 20px !important;
+}
+
+.margin-top-30 {
+  margin-top: 30px !important;
+}
+
+.margin-top-40 {
+  margin-top: 40px !important;
+}
+
+.user-name {
+  color: #ffffff;
+  float: right;
+  font-size: 12px;
+  font-weight: normal;
+}
+
+.margin-bottom-0 {
+  margin-bottom: 0 !important;
+  width: 100%;
+}
+
+.margin-bottom-10 {
+  margin-bottom: 10px !important;
+}
+
+.margin-bottom-20 {
+  margin-bottom: 20px !important;
+}
+
+.search-label {
+  float: right;
+  display: inline-block;
+  font-size: 14px;
+  color: #606266;
+  padding: 0 12px 0 0;
+  vertical-align: middle;
+  text-align: right;
+  box-sizing: border-box;
+  line-height: 28px;
+}
+
+.division-style {
+  display: inline-block;
+  font-size: 14px;
+  color: #606266;
+  padding: 0 5px;
+  vertical-align: middle;
+  text-align: right;
+  box-sizing: border-box;
+  line-height: 28px;
+}
+
+.operator-text {
+  color: #409eff;
+  font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, SimSun, sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.el-dialog__header {
+  padding: 10px 0 0 0 !important;
+}
+
+.el-form-item {
+  width: 100%;
+}
+
+.el-form-item__content {
+  width: calc(100% - 145px);
+  float: left;
+}
+
+.el-form-item__label {
+  float: left !important;
+}
+
+.tips-max-length {
+  float: right;
+  margin: -15px 0 10px 0;
+}
+
+/*列表风险等级颜色*/
+.el-table .common-row {
+  background: #d4d4d4;
+}
+
+.el-table .secondary-row {
+  background: #e6d379;
+}
+
+.el-table .major-row {
+  background: #da717b;
+}
+
+.upload-view {
+  margin: 5px 20px 10px 20px;
+  width: calc(100% - 40px);
+  height: calc(100% - 35px);
+}
