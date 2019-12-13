@@ -58,7 +58,8 @@
       </el-header>
       <!--主体-->
       <el-main>
-        <codeGenerate/>
+        <codeGenerate v-if="selectMenu === 'codeGenerate'"/>
+        <testTemplate v-if="selectMenu === 'user'"/>
       </el-main>
       <el-footer>{{footer}}</el-footer>
     </el-container>
@@ -66,6 +67,7 @@
 </template>
 <script>
   import codeGenerate from './view/CodeGenerate'
+  import testTemplate from './view/zxMenuTable'
 
   export default {
     name: 'Index',
@@ -82,7 +84,8 @@
       }
     },
     components: {
-      codeGenerate
+      codeGenerate,
+      testTemplate
     },
     methods: {
       init: function () {

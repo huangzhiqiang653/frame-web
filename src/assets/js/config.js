@@ -13,7 +13,9 @@ const urls = {
     validateDbConnect: '/auth/zx-system/validateDbConnect',
     getTableData: '/auth/zx-system/getTableData'
   },
-  business: {}
+  business: {
+    zxMenu: ''
+  }
 
 }
 

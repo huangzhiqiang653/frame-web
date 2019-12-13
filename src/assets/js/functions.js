@@ -27,7 +27,7 @@ const systemFunction = {
    * @param dataType
    * @param callback
    */
-  interactiveData: function (_this, businessType, handleType, data, dataType, callback) {
+  interactiveData: function (_this, businessType, handleType, data, dataType, callback, errorback) {
     // 基本校验========start====================
     if (typeof _this === 'undefined') {
       alert('this参数未传，请联系管理员处理～')
@@ -64,6 +64,7 @@ const systemFunction = {
         if (resultData.code === '0') {
           callback && callback(resultData.data)
         } else {
+          errorback && errorback()
           _this.$message({
             showClose: true,
             message: '操作失败～',
@@ -72,6 +73,7 @@ const systemFunction = {
         }
       },
       () => {
+        errorback && errorback()
         _this.$message({
           showClose: true,
           message: '请求异常，请联系管理员～',

@@ -14,6 +14,8 @@ import config from './assets/js/config'
 import functions from './assets/js/functions'
 import global from './assets/js/global'
 
+axios.defaults.timeout = 3000
+
 Vue.config.productionTip = false
 Vue.config.productionTip = false
 // Vue.config.devtools = false
