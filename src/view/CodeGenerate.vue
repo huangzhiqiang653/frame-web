@@ -424,7 +424,7 @@
         },
         tableHandleList: [
           {id: 1, name: '新增', code: 'addInfo'},
-          {id: 2, name: '批量删除', code: 'deleteBatch'},
+            {id: 2, name: '批量删除', code: 'deleteBatch'},
           {id: 3, name: '导出', code: 'export'},
           {id: 4, name: '导入', code: 'import'}
         ],
@@ -440,7 +440,8 @@
           {id: 2, name: '更新', code: 'update'},
           {id: 3, name: '查看', code: 'view'},
           {id: 4, name: '审批', code: 'approval'},
-          {id: 5, name: '提交', code: 'submit'}
+          {id: 5, name: '提交', code: 'submit'},
+          {id: 6, name: '附件', code: 'enclosure'}
         ]
       }
     },
