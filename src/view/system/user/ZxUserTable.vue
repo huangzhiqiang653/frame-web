@@ -1,39 +1,101 @@
-<!--zx_frame_db.auth_zx_menu（菜单表）-table-->
-<!--参数添加，1、config.js business中添加：zxMenu: '后台地址'-->
-<!--参数添加，2、global.js businessFlag中添加：zxMenu: 'zxMenu'-->
+<!--zx_frame_db.auth_zx_user（用户表）-table-->
+<!--参数添加，1、config.js business中添加：zxUser: '后台地址'-->
+<!--参数添加，2、global.js businessFlag中添加：zxUser: 'zxUser'-->
 <template>
   <div class="main-area">
     <el-breadcrumb separator=":">
       <el-breadcrumb-item>当前位置</el-breadcrumb-item>
-      <el-breadcrumb-item>菜单列表</el-breadcrumb-item>
+      <el-breadcrumb-item>用户列表</el-breadcrumb-item>
     </el-breadcrumb>
     <!--查询区域-->
     <el-row class="margin-top-10">
       <el-col :span="2" class="margin-top-10">
         <label class="search-label">
-          名称:
+          姓名:
         </label>
       </el-col>
-      <el-col :span="4" class="margin-top-10">
-        <el-input v-model="searchForm.name"
+      <el-col :span="5" class="margin-top-10">
+        <el-input v-model="searchForm.userName"
                   :size="GLOBAL.config.systemSize"
-                  placeholder="名称"
+                  placeholder="姓名"
                   maxlength="32"></el-input>
       </el-col>
       <el-col :span="2" class="margin-top-10">
         <label class="search-label">
-          类型:
+          出生年月日:
         </label>
       </el-col>
-      <el-col :span="4" class="margin-top-10">
-        <el-select v-model="searchForm.menuType"
+      <el-col :span="8" class="margin-top-10">
+        <el-date-picker
+          v-model="searchForm.birthDay"
+          :size="GLOBAL.config.systemSize"
+          type="daterange"
+          align="right"
+          unlink-panels
+          format="yyyy-MM-dd"
+          value-format="yyyy-MM-dd"
+          range-separator="至"
+          start-placeholder="开始"
+          end-placeholder="结束"
+          style="width: 100%;">
+        </el-date-picker>
+      </el-col>
+      <el-col :span="2" class="margin-top-10">
+        <label class="search-label">
+          邮箱:
+        </label>
+      </el-col>
+      <el-col :span="5" class="margin-top-10">
+        <el-input v-model="searchForm.email"
+                  :size="GLOBAL.config.systemSize"
+                  placeholder="邮箱"
+                  maxlength="32"></el-input>
+      </el-col>
+      <el-col :span="2" class="margin-top-10">
+        <label class="search-label">
+          手机号码:
+        </label>
+      </el-col>
+      <el-col :span="5" class="margin-top-10">
+        <el-input v-model="searchForm.phoneNumber"
+                  :size="GLOBAL.config.systemSize"
+                  placeholder="手机号码"
+                  maxlength="32"></el-input>
+      </el-col>
+      <el-col :span="2" class="margin-top-10">
+        <label class="search-label">
+          更新时间:
+        </label>
+      </el-col>
+      <el-col :span="8" class="margin-top-10">
+        <el-date-picker
+          v-model="searchForm.updateTime"
+          :size="GLOBAL.config.systemSize"
+          type="daterange"
+          align="right"
+          unlink-panels
+          format="yyyy-MM-dd HH:mm:ss"
+          value-format="yyyy-MM-dd HH:mm:ss"
+          range-separator="至"
+          start-placeholder="开始"
+          end-placeholder="结束"
+          style="width: 100%;">
+        </el-date-picker>
+      </el-col>
+      <el-col :span="2" class="margin-top-10">
+        <label class="search-label">
+          用户状态:
+        </label>
+      </el-col>
+      <el-col :span="3" class="margin-top-10">
+        <el-select v-model="searchForm.status"
                    :size="GLOBAL.config.systemSize"
-                   placeholder="类型"
+                   placeholder="用户状态"
                    style="width: 100%;"
         >
           <el-option label="--请选择--" value=""></el-option>
           <el-option :label="item.name" :value="item.code"
-                     v-for="item in dictionary.type"
+                     v-for="item in dictionary.status"
                      :key="item.id"></el-option>
         </el-select>
       </el-col>
@@ -58,13 +120,6 @@
                    style="float: left;"
                    @click="deleteBatch">批量删除
         </el-button>
-        <el-button v-if="source.export"
-                   type="primary"
-                   icon="el-icon-download"
-                   :size="GLOBAL.config.systemSize"
-                   style="float: left;"
-                   @click="exportTableData">导出
-        </el-button>
       </el-col>
     </el-row>
     <el-table style="width: 100%"
@@ -75,18 +130,42 @@
       <el-table-column
         type="selection">
       </el-table-column>
-      <!--名称-->
-      <el-table-column prop="name" label="名称" align="center"/>
-      <!--类型-->
-      <el-table-column prop="menuType"
-                       label="类型" align="center">
+      <!--姓名-->
+      <el-table-column prop="userName" label="姓名" align="center"/>
+      <!--出生年月日-->
+      <el-table-column prop="birthDay"
+                       label="出生年月日">
+        <template slot-scope="scope">
+          {{ scope.row.birthDay
+          ?$moment(scope.row.birthDay
+          ).format('yyyy-MM-dd'):'' }}
+        </template>
+      </el-table-column>
+      <!--头像地址-->
+      <el-table-column prop="headUrl" label="头像地址" align="center"/>
+      <!--邮箱-->
+      <el-table-column prop="email" label="邮箱" align="center"/>
+      <!--手机号码-->
+      <el-table-column prop="phoneNumber" label="手机号码" align="center"/>
+      <!--用户状态 0启用(默认)，1禁用-->
+      <el-table-column prop="status"
+                       label="用户状态" align="center">
         <template slot-scope="scope">
           {{
           FUNCTIONS.systemFunction.getConfigValue(
-          scope.row.menuType,
+          scope.row.status,
           GLOBAL.config.dictionaryPre +
-          GLOBAL.config.dictionary.类型)
+          GLOBAL.config.dictionary.用户状态)
           }}
+        </template>
+      </el-table-column>
+      <!--更新时间-->
+      <el-table-column prop="updateTime"
+                       label="更新时间">
+        <template slot-scope="scope">
+          {{ scope.row.updateTime
+          ?$moment(scope.row.updateTime
+          ).format('yyyy-MM-dd HH:mm:ss'):'' }}
         </template>
       </el-table-column>
       <el-table-column prop="scope" label="操作" align="center">
@@ -132,22 +211,26 @@
 </template>
 <script>
   // 替换成相应的模板
-  import operationTemplate from './zxMenuTable'
+  import operationTemplate from './ZxUserTable'
 
   export default {
-    name: 'zxMenu',
+    name: 'zxUser',
     data () {
       return {
         // 查询表单
         searchForm: {
-          name: '',
-          menuType: '',
+          userName: '',
+          birthDay: '',
+          email: '',
+          phoneNumber: '',
+          status: '',
+          updateTime: ''
         },
         tableData: [],
         // 字典数据
         dictionary: {
-          type:
-            JSON.parse(unescape(localStorage.getItem(this.GLOBAL.config.dictionaryPre + this.GLOBAL.config.dictionary.type))),
+          status:
+            JSON.parse(unescape(localStorage.getItem(this.GLOBAL.config.dictionaryPre + this.GLOBAL.config.dictionary.status))),
         },
         // 资源权限控制，有的系统不需这么细，则全部为true
         source: {
@@ -205,7 +288,7 @@
           _this.loading = true
           _this.FUNCTIONS.systemFunction.interactiveData(
             _this,
-            _this.GLOBAL.config.businessFlag.zxMenu,
+            _this.GLOBAL.config.businessFlag.zxUser,
             _this.GLOBAL.config.handleType.deleteLogicalBatch,
             _this.deleteBatchList.ids,
             'list',
@@ -226,6 +309,7 @@
         return [
           this.source.infoEdit && tempList.push({icon: 'el-icon-edit', title: '编辑', method: 'handleEdit'}),
           this.source.infoView && tempList.push({icon: 'el-icon-view', title: '查看', method: 'handleView'}),
+          this.source.infoDelete && tempList.push({icon: 'el-icon-delete', title: '删除', method: 'handleDelete'}),
         ]
       },
       handleCommon: function (type, rowData) {
@@ -235,6 +319,9 @@
             break
           case 'handleView':
             this.handleView(rowData)
+            break
+          case 'handleDelete':
+            this.handleDelete(rowData)
             break
         }
       },
@@ -248,6 +335,33 @@
         this.operationMethod('view', rowData)
         // TODO
       },
+      // 单条数据删除
+      handleDelete: function (rowData) {
+        let _this = this
+        _this.$confirm('确认删除当前数据？？', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          _this.loading = true
+          _this.FUNCTIONS.systemFunction.interactiveData(
+            _this,
+            _this.GLOBAL.config.businessFlag.zxUser,
+            _this.GLOBAL.config.handleType.deleteLogical,
+            rowData.id,
+            null,
+            resultData => {
+              _this.loading = false
+              if (resultData) {
+                _this.$message.success('删除成功～')
+                _this.getTableData('init')
+              } else {
+                _this.$message.warning('删除失败～')
+              }
+            }
+          )
+        })
+      },
       // 获取列表
       getTableData: function (initPageFlag) {
         this.loading = true
@@ -260,7 +374,7 @@
         // 3、 调接口获取数据
         _this.FUNCTIONS.systemFunction.interactiveData(
           _this,
-          _this.GLOBAL.config.businessFlag.zxMenu,
+          _this.GLOBAL.config.businessFlag.zxUser,
           _this.GLOBAL.config.handleType.getPage,
           paginationData,
           null,
@@ -303,16 +417,7 @@
         } else {
           this.deleteBatchList.deleteFlag = false
         }
-      },
-      // 列表数据导出
-      exportTableData: function () {
-        let _this = this, searchParams = this.searchForm
-        _this.FUNCTIONS.systemFunction.removeNullFields(searchParams)
-        this.FUNCTIONS.systemFunction.postDownFile(this, {
-          type: 'litigationCasesServiceImpl.downFile',
-          info: searchParams
-        })
-      },
+      }
     }
   }
 </script>

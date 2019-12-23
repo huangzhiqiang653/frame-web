@@ -16,16 +16,60 @@
           text-color="#fff"
           active-text-color="#ffd04b"
           :collapse="isCollapse"
-          @select="(targetMenu)=>{selectMenu = targetMenu;}"
+          @select="menuSelect"
         >
-          <el-menu-item index="codeGenerate">
-            <i class="el-icon-s-tools"></i>
+          <el-menu-item index="/">
+            <i class="el-icon-guide"></i>
             <span slot="title">代码生成</span>
           </el-menu-item>
-          <el-menu-item index="user">
-            <i class="el-icon-s-order"></i>
-            <span slot="title">用户管理</span>
+          <el-menu-item index="/dictionary">
+            <i class="el-icon-notebook-2"></i>
+            <span slot="title">字典管理</span>
           </el-menu-item>
+          <el-submenu index="1">
+            <template slot="title">
+              <i class="el-icon-s-tools"></i>
+              <span>系统管理</span>
+            </template>
+            <el-menu-item-group>
+              <el-menu-item index="/system/account">
+                <i class="el-icon-postcard"></i>
+                <span slot="title">账号管理</span>
+              </el-menu-item>
+              <el-menu-item index="system/user">
+                <i class="el-icon-user"></i>
+                <span slot="title">用户管理</span>
+              </el-menu-item>
+              <el-menu-item index="system/role">
+                <i class="el-icon-view"></i>
+                <span slot="title">角色管理</span>
+              </el-menu-item>
+              <el-menu-item index="system/menu">
+                <i class="el-icon-menu"></i>
+                <span slot="title">菜单管理</span>
+              </el-menu-item>
+              <el-menu-item index="system/source">
+                <i class="el-icon-tickets"></i>
+                <span slot="title">资源管理</span>
+              </el-menu-item>
+              <el-menu-item index="system/organisation">
+                <i class="el-icon-office-building"></i>
+                <span slot="title">组织管理</span>
+              </el-menu-item>
+              <el-menu-item index="system/dictionary">
+                <i class="el-icon-notebook-2"></i>
+                <span slot="title">字典管理</span>
+              </el-menu-item>
+              <el-menu-item index="/system/cron">
+                <i class="el-icon-date"></i>
+                <span slot="title">定时任务</span>
+              </el-menu-item>
+              <el-menu-item index="/system/log">
+                <i class="el-icon-takeaway-box"></i>
+                <span slot="title">日志管理</span>
+              </el-menu-item>
+            </el-menu-item-group>
+          </el-submenu>
         </el-menu>
       </el-col>
     </el-aside>
@@ -58,8 +102,9 @@
       </el-header>
       <!--主体-->
       <el-main>
-        <codeGenerate v-if="selectMenu === 'codeGenerate'"/>
-        <testTemplate v-if="selectMenu === 'user'"/>
+        <!--<codeGenerate v-if="selectMenu === 'codeGenerate'"/>
+        <testTemplate v-if="selectMenu === 'user'"/>-->
+        <router-view></router-view>
       </el-main>
       <el-footer>{{footer}}</el-footer>
     </el-container>
@@ -93,6 +138,11 @@
       },
       getInfo: function () {
         return null
+      },
+      // 菜单选择
+      menuSelect: function (target) {
+        debugger
+        this.$router.push({path: target})
       },
       // 退出系统
       exitSystem: function () {

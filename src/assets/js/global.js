@@ -37,7 +37,9 @@ const config = {
   },
   businessFlag: {
     system: 'system',
-    zxMenu: 'zxMenu'
+    zxMenu: 'zxMenu',
+    zxUser: 'zxUser',
+    zxDictionary: 'zxDictionary'
   },
   handleType: {
     // 系统默认

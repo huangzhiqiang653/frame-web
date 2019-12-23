@@ -1,11 +1,11 @@
-<!--zx_frame_db.auth_zx_menu（菜单表）-table-->
-<!--参数添加，1、config.js business中添加：zxMenu: '后台地址'-->
-<!--参数添加，2、global.js businessFlag中添加：zxMenu: 'zxMenu'-->
+<!--zx_frame_db.auth_zx_dictionary（字典表）-table-->
+<!--参数添加，1、config.js business中添加：zxDictionary: '后台地址'-->
+<!--参数添加，2、global.js businessFlag中添加：zxDictionary: 'zxDictionary'-->
 <template>
   <div class="main-area">
     <el-breadcrumb separator=":">
       <el-breadcrumb-item>当前位置</el-breadcrumb-item>
-      <el-breadcrumb-item>菜单列表</el-breadcrumb-item>
+      <el-breadcrumb-item>字典列表</el-breadcrumb-item>
     </el-breadcrumb>
     <!--查询区域-->
     <el-row class="margin-top-10">
@@ -22,11 +22,22 @@
       </el-col>
       <el-col :span="2" class="margin-top-10">
         <label class="search-label">
+          编码:
+        </label>
+      </el-col>
+      <el-col :span="4" class="margin-top-10">
+        <el-input v-model="searchForm.code"
+                  :size="GLOBAL.config.systemSize"
+                  placeholder="编码"
+                  maxlength="32"></el-input>
+      </el-col>
+      <el-col :span="2" class="margin-top-10">
+        <label class="search-label">
           类型:
         </label>
       </el-col>
       <el-col :span="4" class="margin-top-10">
-        <el-select v-model="searchForm.menuType"
+        <el-select v-model="searchForm.type"
                    :size="GLOBAL.config.systemSize"
                    placeholder="类型"
                    style="width: 100%;"
@@ -58,13 +69,6 @@
                    style="float: left;"
                    @click="deleteBatch">批量删除
         </el-button>
-        <el-button v-if="source.export"
-                   type="primary"
-                   icon="el-icon-download"
-                   :size="GLOBAL.config.systemSize"
-                   style="float: left;"
-                   @click="exportTableData">导出
-        </el-button>
       </el-col>
     </el-row>
     <el-table style="width: 100%"
@@ -77,18 +81,22 @@
       </el-table-column>
       <!--名称-->
       <el-table-column prop="name" label="名称" align="center"/>
+      <!--编码-->
+      <el-table-column prop="code" label="编码" align="center"/>
       <!--类型-->
-      <el-table-column prop="menuType"
+      <el-table-column prop="type"
                        label="类型" align="center">
         <template slot-scope="scope">
           {{
           FUNCTIONS.systemFunction.getConfigValue(
-          scope.row.menuType,
+          scope.row.type,
           GLOBAL.config.dictionaryPre +
           GLOBAL.config.dictionary.类型)
           }}
         </template>
       </el-table-column>
+      <!--排序-->
+      <el-table-column prop="sort" label="排序" align="center"/>
       <el-table-column prop="scope" label="操作" align="center">
         <template slot-scope="scope">
           <el-dropdown>
@@ -117,49 +125,37 @@
       :total="pagination.total">
     </el-pagination>
     <!--操作-->
-    <el-dialog
-      :fullscreen="true"
-      :show-close="false"
-      :visible.sync="operationVisibleFlag"
-      :destroy-on-close="true">
-      <operationTemplate
-        ref="operationTemplate"
-        :refresh="init"
-        :close-self="()=> operationVisibleFlag = false"
-      />
-    </el-dialog>
+    <operationTemplate ref="operationTemplate" :refresh="getTableData"/>
   </div>
 </template>
 <script>
   // 替换成相应的模板
-  import operationTemplate from './zxMenuTable'
+  import operationTemplate from './ZxDictionaryOperateDialog'
 
   export default {
-    name: 'zxMenu',
+    name: 'zxDictionary',
     data () {
       return {
         // 查询表单
         searchForm: {
           name: '',
-          menuType: '',
+          code: '',
+          type: '',
+          sort: ''
         },
         tableData: [],
         // 字典数据
         dictionary: {
           type:
-            JSON.parse(unescape(localStorage.getItem(this.GLOBAL.config.dictionaryPre + this.GLOBAL.config.dictionary.type))),
+            JSON.parse(unescape(localStorage.getItem(this.GLOBAL.config.dictionaryPre + this.GLOBAL.config.dictionary.type)))
         },
         // 资源权限控制，有的系统不需这么细，则全部为true
         source: {
           deleteBatch: true,
           add: true,
-          import: true,
-          export: true,
           infoEdit: true,
           infoView: true,
-          infoDelete: true,
-          infoApproval: true,
-          infoSubmit: true
+          infoDelete: true
         },
         // 分页参数
         pagination: {
@@ -192,7 +188,7 @@
         this.getTableData('init')
       },
       operationMethod: function (operateType, info) {
-        this.operationVisibleFlag = true
+        this.$refs.operationTemplate.init(operateType, info ? info.id : null)
       },
       deleteBatch: function () {
         let _this = this
@@ -205,7 +201,7 @@
           _this.loading = true
           _this.FUNCTIONS.systemFunction.interactiveData(
             _this,
-            _this.GLOBAL.config.businessFlag.zxMenu,
+            _this.GLOBAL.config.businessFlag.zxDictionary,
             _this.GLOBAL.config.handleType.deleteLogicalBatch,
             _this.deleteBatchList.ids,
             'list',
@@ -226,6 +222,7 @@
         return [
           this.source.infoEdit && tempList.push({icon: 'el-icon-edit', title: '编辑', method: 'handleEdit'}),
           this.source.infoView && tempList.push({icon: 'el-icon-view', title: '查看', method: 'handleView'}),
+          this.source.infoDelete && tempList.push({icon: 'el-icon-delete', title: '删除', method: 'handleDelete'})
         ]
       },
       handleCommon: function (type, rowData) {
@@ -235,6 +232,9 @@
             break
           case 'handleView':
             this.handleView(rowData)
+            break
+          case 'handleDelete':
+            this.handleDelete(rowData)
             break
         }
       },
@@ -248,6 +248,33 @@
         this.operationMethod('view', rowData)
         // TODO
       },
+      // 单条数据删除
+      handleDelete: function (rowData) {
+        let _this = this
+        _this.$confirm('确认删除当前数据？？', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          _this.loading = true
+          _this.FUNCTIONS.systemFunction.interactiveData(
+            _this,
+            _this.GLOBAL.config.businessFlag.zxDictionary,
+            _this.GLOBAL.config.handleType.deleteLogical,
+            rowData.id,
+            null,
+            resultData => {
+              _this.loading = false
+              if (resultData) {
+                _this.$message.success('删除成功～')
+                _this.getTableData('init')
+              } else {
+                _this.$message.warning('删除失败～')
+              }
+            }
+          )
+        })
+      },
       // 获取列表
       getTableData: function (initPageFlag) {
         this.loading = true
@@ -260,7 +287,7 @@
         // 3、 调接口获取数据
         _this.FUNCTIONS.systemFunction.interactiveData(
           _this,
-          _this.GLOBAL.config.businessFlag.zxMenu,
+          _this.GLOBAL.config.businessFlag.zxDictionary,
           _this.GLOBAL.config.handleType.getPage,
           paginationData,
           null,
@@ -303,16 +330,7 @@
         } else {
           this.deleteBatchList.deleteFlag = false
         }
-      },
-      // 列表数据导出
-      exportTableData: function () {
-        let _this = this, searchParams = this.searchForm
-        _this.FUNCTIONS.systemFunction.removeNullFields(searchParams)
-        this.FUNCTIONS.systemFunction.postDownFile(this, {
-          type: 'litigationCasesServiceImpl.downFile',
-          info: searchParams
-        })
-      },
+      }
     }
   }
 </script>
