@@ -67,6 +67,7 @@
                    icon="el-icon-delete"
                    :size="GLOBAL.config.systemSize"
                    style="float: left;"
+                   :disabled="deleteBatchList.ids.length === 0"
                    @click="deleteBatch">批量删除
         </el-button>
       </el-col>
@@ -91,7 +92,7 @@
           FUNCTIONS.systemFunction.getConfigValue(
           scope.row.type,
           GLOBAL.config.dictionaryPre +
-          GLOBAL.config.dictionary.类型)
+          GLOBAL.config.dictionary.dictionaryType)
           }}
         </template>
       </el-table-column>
@@ -124,16 +125,18 @@
       :layout="pagination.layout"
       :total="pagination.total">
     </el-pagination>
+    <!--字典明细-->
+    <dictionaryDetail ref="dictionaryDetail" :refresh="getTableData"/>
     <!--操作-->
     <operationTemplate ref="operationTemplate" :refresh="getTableData"/>
   </div>
 </template>
 <script>
-  // 替换成相应的模板
   import operationTemplate from './ZxDictionaryOperateDialog'
+  import dictionaryDetail from './ZxDictionaryTableNormal'
 
   export default {
-    name: 'zxDictionary',
+    name: 'ZxDictionaryTable',
     data () {
       return {
         // 查询表单
@@ -147,7 +150,7 @@
         // 字典数据
         dictionary: {
           type:
-            JSON.parse(unescape(localStorage.getItem(this.GLOBAL.config.dictionaryPre + this.GLOBAL.config.dictionary.type)))
+            JSON.parse(unescape(localStorage.getItem(this.GLOBAL.config.dictionaryPre + this.GLOBAL.config.dictionary.dictionaryType)))
         },
         // 资源权限控制，有的系统不需这么细，则全部为true
         source: {
@@ -155,7 +158,8 @@
           add: true,
           infoEdit: true,
           infoView: true,
-          infoDelete: true
+          infoDelete: true,
+          addDictionaryDetail: true
         },
         // 分页参数
         pagination: {
@@ -174,7 +178,8 @@
       }
     },
     components: {
-      operationTemplate
+      operationTemplate,
+      dictionaryDetail
     },
     mounted () {
       this.init()
@@ -188,7 +193,7 @@
         this.getTableData('init')
       },
       operationMethod: function (operateType, info) {
-        this.$refs.operationTemplate.init(operateType, info ? info.id : null)
+        this.$refs.operationTemplate.init(operateType, info ? info.id : null, this.pagination.total)
       },
       deleteBatch: function () {
         let _this = this
@@ -219,11 +224,15 @@
       },
       getSource: function (rowData) {
         let tempList = []
-        return [
-          this.source.infoEdit && tempList.push({icon: 'el-icon-edit', title: '编辑', method: 'handleEdit'}),
-          this.source.infoView && tempList.push({icon: 'el-icon-view', title: '查看', method: 'handleView'}),
-          this.source.infoDelete && tempList.push({icon: 'el-icon-delete', title: '删除', method: 'handleDelete'})
-        ]
+        this.source.infoEdit && tempList.push({icon: 'el-icon-edit', title: '编辑', method: 'handleEdit'})
+        this.source.infoView && tempList.push({icon: 'el-icon-view', title: '查看', method: 'handleView'})
+        this.source.infoDelete && tempList.push({icon: 'el-icon-delete', title: '删除', method: 'handleDelete'})
+        this.source.addDictionaryDetail && tempList.push({
+          icon: 'el-icon-s-operation',
+          title: '编辑字典值',
+          method: 'handleDictionaryDetail'
+        })
+        return tempList
       },
       handleCommon: function (type, rowData) {
         switch (type) {
@@ -236,17 +245,18 @@
           case 'handleDelete':
             this.handleDelete(rowData)
             break
+          case 'handleDictionaryDetail':
+            this.handleDictionaryDetail(rowData)
+            break
         }
       },
       // 编辑
       handleEdit: function (rowData) {
         this.operationMethod('edit', rowData)
-        // TODO
       },
       // 查看
       handleView: function (rowData) {
         this.operationMethod('view', rowData)
-        // TODO
       },
       // 单条数据删除
       handleDelete: function (rowData) {
@@ -274,6 +284,10 @@
             }
           )
         })
+      },
+      // 明细
+      handleDictionaryDetail: function (rowData) {
+        this.$refs.dictionaryDetail ? this.$refs.dictionaryDetail.init(rowData) : this.$message.warning('获取ref失败~')
       },
       // 获取列表
       getTableData: function (initPageFlag) {

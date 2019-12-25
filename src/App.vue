@@ -20,13 +20,14 @@
     created: async function () {
       this.hasLogin = false
       let _this = this
-      // validateAndInitData()
+      validateAndInitData()
 
       // 登陆及初始化页面数据
       function validateAndInitData () {
         _this.FUNCTIONS.systemFunction.commonGet(
           _this.CONFIG.urls.root + _this.CONFIG.urls.index.login,
           result => {
+            debugger
             if (result.code === _this.GLOBAL.config.resultCode.notLogin) {
               window.location.href = result.data
             } else if (result.code === _this.GLOBAL.config.resultCode.success) {
@@ -56,7 +57,6 @@
             localStorage.removeItem(_this.GLOBAL.config.dictionaryPre + _parentCode)
             localStorage.setItem(_this.GLOBAL.config.dictionaryPre + _parentCode, escape(JSON.stringify(dictionaryDetails)))
           })
-          localStorage.removeItem(_this.GLOBAL.config.psDataName)
         }
       }
     }

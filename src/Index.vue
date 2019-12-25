@@ -141,7 +141,6 @@
       },
       // 菜单选择
       menuSelect: function (target) {
-        debugger
         this.$router.push({path: target})
       },
       // 退出系统

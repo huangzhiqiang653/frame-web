@@ -1,22 +1,10 @@
 /* 全局变量 */
 const config = {
-  dictionaryPre: 'fwfx_dictionary_',
+  dictionaryPre: 'zx_auth_dictionary_',
   userConfigName: 'userInfo',
-  psDataName: 'ps_personnel_list',
   systemSize: 'mini',
   dictionary: {
-    caseType: 'caseType',
-    disputeType: 'disputeType',
-    serviceType: 'serviceType',
-    riskGrade: 'riskGrade',
-    appealType: 'appealType',
-    outsideLawerFlag: 'outsideLawerFlag',
-    costFlag: 'costFlag',
-    caseState: 'caseState',
-    riskType: 'riskType',
-    eventState: 'eventState',
-    hearingProcedure: 'hearingProcedure',
-    closingMethod: 'closingMethod'
+    dictionaryType: 'dictionaryType'
   },
   resultCode: {
     success: '0',
