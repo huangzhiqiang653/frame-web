@@ -224,14 +224,14 @@
       },
       getSource: function (rowData) {
         let tempList = []
+        this.source.addDictionaryDetail && tempList.push({
+          icon: 'el-icon-s-operation',
+          title: '字典明细',
+          method: 'handleDictionaryDetail'
+        })
         this.source.infoEdit && tempList.push({icon: 'el-icon-edit', title: '编辑', method: 'handleEdit'})
         this.source.infoView && tempList.push({icon: 'el-icon-view', title: '查看', method: 'handleView'})
         this.source.infoDelete && tempList.push({icon: 'el-icon-delete', title: '删除', method: 'handleDelete'})
-        this.source.addDictionaryDetail && tempList.push({
-          icon: 'el-icon-s-operation',
-          title: '编辑字典值',
-          method: 'handleDictionaryDetail'
-        })
         return tempList
       },
       handleCommon: function (type, rowData) {
