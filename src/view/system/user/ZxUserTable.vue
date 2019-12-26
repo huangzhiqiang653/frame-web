@@ -14,7 +14,7 @@
           姓名:
         </label>
       </el-col>
-      <el-col :span="5" class="margin-top-10">
+      <el-col :span="4" class="margin-top-10">
         <el-input v-model="searchForm.userName"
                   :size="GLOBAL.config.systemSize"
                   placeholder="姓名"
@@ -22,30 +22,27 @@
       </el-col>
       <el-col :span="2" class="margin-top-10">
         <label class="search-label">
-          出生年月日:
+          性别:
         </label>
       </el-col>
-      <el-col :span="8" class="margin-top-10">
-        <el-date-picker
-          v-model="searchForm.birthDay"
-          :size="GLOBAL.config.systemSize"
-          type="daterange"
-          align="right"
-          unlink-panels
-          format="yyyy-MM-dd"
-          value-format="yyyy-MM-dd"
-          range-separator="至"
-          start-placeholder="开始"
-          end-placeholder="结束"
-          style="width: 100%;">
-        </el-date-picker>
+      <el-col :span="4" class="margin-top-10">
+        <el-select v-model="searchForm.sex"
+                   :size="GLOBAL.config.systemSize"
+                   placeholder="性别"
+                   style="width: 100%;"
+        >
+          <el-option label="--请选择--" value=""></el-option>
+          <el-option :label="item.name" :value="item.code"
+                     v-for="item in dictionary.sex"
+                     :key="item.id"></el-option>
+        </el-select>
       </el-col>
       <el-col :span="2" class="margin-top-10">
         <label class="search-label">
           邮箱:
         </label>
       </el-col>
-      <el-col :span="5" class="margin-top-10">
+      <el-col :span="4" class="margin-top-10">
         <el-input v-model="searchForm.email"
                   :size="GLOBAL.config.systemSize"
                   placeholder="邮箱"
@@ -56,7 +53,7 @@
           手机号码:
         </label>
       </el-col>
-      <el-col :span="5" class="margin-top-10">
+      <el-col :span="4" class="margin-top-10">
         <el-input v-model="searchForm.phoneNumber"
                   :size="GLOBAL.config.systemSize"
                   placeholder="手机号码"
@@ -64,30 +61,10 @@
       </el-col>
       <el-col :span="2" class="margin-top-10">
         <label class="search-label">
-          更新时间:
-        </label>
-      </el-col>
-      <el-col :span="8" class="margin-top-10">
-        <el-date-picker
-          v-model="searchForm.updateTime"
-          :size="GLOBAL.config.systemSize"
-          type="daterange"
-          align="right"
-          unlink-panels
-          format="yyyy-MM-dd HH:mm:ss"
-          value-format="yyyy-MM-dd HH:mm:ss"
-          range-separator="至"
-          start-placeholder="开始"
-          end-placeholder="结束"
-          style="width: 100%;">
-        </el-date-picker>
-      </el-col>
-      <el-col :span="2" class="margin-top-10">
-        <label class="search-label">
           用户状态:
         </label>
       </el-col>
-      <el-col :span="3" class="margin-top-10">
+      <el-col :span="4" class="margin-top-10">
         <el-select v-model="searchForm.status"
                    :size="GLOBAL.config.systemSize"
                    placeholder="用户状态"
@@ -95,9 +72,29 @@
         >
           <el-option label="--请选择--" value=""></el-option>
           <el-option :label="item.name" :value="item.code"
-                     v-for="item in dictionary.status"
+                     v-for="item in dictionary.userStatus"
                      :key="item.id"></el-option>
         </el-select>
+      </el-col>
+      <el-col :span="2" class="margin-top-10">
+        <label class="search-label">
+          更新时间:
+        </label>
+      </el-col>
+      <el-col :span="10" class="margin-top-10">
+        <el-date-picker
+          v-model="searchForm.updateTime"
+          :size="GLOBAL.config.systemSize"
+          type="datetimerange"
+          align="right"
+          unlink-panels
+          format="yyyy-MM-dd HH:mm"
+          value-format="yyyy-MM-dd HH:mm"
+          range-separator="至"
+          start-placeholder="开始"
+          end-placeholder="结束"
+          style="width: 100%;">
+        </el-date-picker>
       </el-col>
       <el-col :span="2" class="margin-top-10">
         <el-button type="primary" @click="doSearch" :size="GLOBAL.config.systemSize" icon="el-icon-search">查询
@@ -118,6 +115,7 @@
                    icon="el-icon-delete"
                    :size="GLOBAL.config.systemSize"
                    style="float: left;"
+                   :disabled="deleteBatchList.ids.length === 0"
                    @click="deleteBatch">批量删除
         </el-button>
       </el-col>
@@ -132,17 +130,20 @@
       </el-table-column>
       <!--姓名-->
       <el-table-column prop="userName" label="姓名" align="center"/>
-      <!--出生年月日-->
-      <el-table-column prop="birthDay"
-                       label="出生年月日">
+      <!--性别 0女，1男，2未知(默认)-->
+      <el-table-column prop="sex"
+                       label="性别" align="center">
         <template slot-scope="scope">
-          {{ scope.row.birthDay
-          ?$moment(scope.row.birthDay
-          ).format('yyyy-MM-dd'):'' }}
+          {{
+          FUNCTIONS.systemFunction.getConfigValue(
+          scope.row.sex.toString(),
+          GLOBAL.config.dictionaryPre +
+          GLOBAL.config.dictionary.sex)
+          }}
         </template>
       </el-table-column>
-      <!--头像地址-->
-      <el-table-column prop="headUrl" label="头像地址" align="center"/>
+      <!--所属机构-->
+      <el-table-column prop="organizationId" label="所属机构" align="center"/>
       <!--邮箱-->
       <el-table-column prop="email" label="邮箱" align="center"/>
       <!--手机号码-->
@@ -151,12 +152,14 @@
       <el-table-column prop="status"
                        label="用户状态" align="center">
         <template slot-scope="scope">
-          {{
-          FUNCTIONS.systemFunction.getConfigValue(
-          scope.row.status,
-          GLOBAL.config.dictionaryPre +
-          GLOBAL.config.dictionary.用户状态)
-          }}
+          <el-switch
+            @change="inActiveUse(scope.row)"
+            v-model="scope.row.status + '' "
+            :active-value="dictionary.userStatus[0]?dictionary.userStatus[0].code:''"
+            :inactive-value="dictionary.userStatus[1]?dictionary.userStatus[1].code:''"
+            active-text="启用"
+            inactive-text="禁用">
+          </el-switch>
         </template>
       </el-table-column>
       <!--更新时间-->
@@ -165,7 +168,7 @@
         <template slot-scope="scope">
           {{ scope.row.updateTime
           ?$moment(scope.row.updateTime
-          ).format('yyyy-MM-dd HH:mm:ss'):'' }}
+          ).format('YYYY-MM-DD HH:mm:ss'):'' }}
         </template>
       </el-table-column>
       <el-table-column prop="scope" label="操作" align="center">
@@ -196,31 +199,21 @@
       :total="pagination.total">
     </el-pagination>
     <!--操作-->
-    <el-dialog
-      :fullscreen="true"
-      :show-close="false"
-      :visible.sync="operationVisibleFlag"
-      :destroy-on-close="true">
-      <operationTemplate
-        ref="operationTemplate"
-        :refresh="init"
-        :close-self="()=> operationVisibleFlag = false"
-      />
-    </el-dialog>
+    <operationTemplate ref="operationTemplate" :refresh="getTableData"/>
   </div>
 </template>
 <script>
   // 替换成相应的模板
-  import operationTemplate from './ZxUserTable'
+  import operationTemplate from './ZxUserOperateDialog'
 
   export default {
-    name: 'zxUser',
+    name: 'ZxUserTable',
     data () {
       return {
         // 查询表单
         searchForm: {
           userName: '',
-          birthDay: '',
+          sex: '',
           email: '',
           phoneNumber: '',
           status: '',
@@ -229,20 +222,16 @@
         tableData: [],
         // 字典数据
         dictionary: {
-          status:
-            JSON.parse(unescape(localStorage.getItem(this.GLOBAL.config.dictionaryPre + this.GLOBAL.config.dictionary.status))),
+          sex: JSON.parse(unescape(localStorage.getItem(this.GLOBAL.config.dictionaryPre + this.GLOBAL.config.dictionary.sex))),
+          userStatus: JSON.parse(unescape(localStorage.getItem(this.GLOBAL.config.dictionaryPre + this.GLOBAL.config.dictionary.userStatus))),
         },
         // 资源权限控制，有的系统不需这么细，则全部为true
         source: {
-          deleteBatch: true,
           add: true,
-          import: true,
-          export: true,
+          deleteBatch: true,
           infoEdit: true,
           infoView: true,
-          infoDelete: true,
-          infoApproval: true,
-          infoSubmit: true
+          infoDelete: true
         },
         // 分页参数
         pagination: {
@@ -275,7 +264,7 @@
         this.getTableData('init')
       },
       operationMethod: function (operateType, info) {
-        this.operationVisibleFlag = true
+        this.$refs.operationTemplate.init(operateType, info ? info.id : null)
       },
       deleteBatch: function () {
         let _this = this
@@ -306,11 +295,10 @@
       },
       getSource: function (rowData) {
         let tempList = []
-        return [
-          this.source.infoEdit && tempList.push({icon: 'el-icon-edit', title: '编辑', method: 'handleEdit'}),
-          this.source.infoView && tempList.push({icon: 'el-icon-view', title: '查看', method: 'handleView'}),
-          this.source.infoDelete && tempList.push({icon: 'el-icon-delete', title: '删除', method: 'handleDelete'}),
-        ]
+        this.source.infoEdit && tempList.push({icon: 'el-icon-edit', title: '编辑', method: 'handleEdit'})
+        this.source.infoView && tempList.push({icon: 'el-icon-view', title: '查看', method: 'handleView'})
+        this.source.infoDelete && tempList.push({icon: 'el-icon-delete', title: '删除', method: 'handleDelete'})
+        return tempList
       },
       handleCommon: function (type, rowData) {
         switch (type) {
@@ -416,6 +404,36 @@
           this.deleteBatchList.deleteFlag = true
         } else {
           this.deleteBatchList.deleteFlag = false
+        }
+      },
+      // 禁用用户
+      inActiveUse: function (rowData) {
+        let _this = this
+        !rowData.status ? this.$confirm('确定禁用该用户【' + rowData.userName + '】吗?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          f()
+        }) : f()
+
+        function f () {
+          let params = {id: rowData.id, status: rowData.status ? 0 : 1}
+          _this.FUNCTIONS.systemFunction.interactiveData(
+            _this,
+            _this.GLOBAL.config.businessFlag.zxUser,
+            _this.GLOBAL.config.handleType.updateAll,
+            params,
+            null,
+            resultData => {
+              if (resultData) {
+                _this.$message.success('操作成功～')
+                _this.showFlag = false
+                _this.getTableData('init')
+              } else {
+                _this.$message.warning('操作失败～')
+              }
+            })
         }
       }
     }

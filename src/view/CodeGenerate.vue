@@ -358,7 +358,7 @@
           userName: 'root',
           password: 'root',
           tablePre: 'auth_',
-          tableList: 'auth_zx_menu,auth_zx_account,auth_zx_user,auth_zx_task'
+          tableList: 'auth_zx_account,auth_zx_user,auth_zx_role,auth_zx_menu,auth_zx_resource,auth_zx_organization'
         },
         formRules: {
           url: [
@@ -424,7 +424,7 @@
         },
         tableHandleList: [
           {id: 1, name: '新增', code: 'addInfo'},
-            {id: 2, name: '批量删除', code: 'deleteBatch'},
+          {id: 2, name: '批量删除', code: 'deleteBatch'},
           {id: 3, name: '导出', code: 'export'},
           {id: 4, name: '导入', code: 'import'}
         ],
@@ -553,7 +553,7 @@
       removeListField: function (item) {
         let index = this.listData.showFields.indexOf(item)
         if (index !== -1) {
-          this.this.listData.showFields.splice(index, 1)
+          this.listData.showFields.splice(index, 1)
         }
       },
       addField: function () {

@@ -32,31 +32,27 @@
               <span>系统管理</span>
             </template>
             <el-menu-item-group>
-              <el-menu-item index="/system/account">
+              <el-menu-item index="/account">
                 <i class="el-icon-postcard"></i>
                 <span slot="title">账号管理</span>
               </el-menu-item>
-              <el-menu-item index="system/user">
+              <el-menu-item index="/user">
                 <i class="el-icon-user"></i>
                 <span slot="title">用户管理</span>
               </el-menu-item>
-              <el-menu-item index="system/role">
+              <el-menu-item index="/role">
                 <i class="el-icon-view"></i>
                 <span slot="title">角色管理</span>
               </el-menu-item>
-              <el-menu-item index="system/menu">
+              <el-menu-item index="/menu">
                 <i class="el-icon-menu"></i>
-                <span slot="title">菜单管理</span>
+                <span slot="title">菜单资源</span>
               </el-menu-item>
-              <el-menu-item index="system/source">
-                <i class="el-icon-tickets"></i>
-                <span slot="title">资源管理</span>
-              </el-menu-item>
-              <el-menu-item index="system/organisation">
+              <el-menu-item index="/organisation">
                 <i class="el-icon-office-building"></i>
                 <span slot="title">组织管理</span>
               </el-menu-item>
-              <el-menu-item index="system/dictionary">
+              <el-menu-item index="/dictionary">
                 <i class="el-icon-notebook-2"></i>
                 <span slot="title">字典管理</span>
               </el-menu-item>

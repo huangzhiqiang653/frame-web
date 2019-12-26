@@ -98,6 +98,13 @@
        * @param id
        */
       init: function (type, id, parentInfo) {
+        this.formData = {
+          id: '',
+          name: '',
+          code: '',
+          type: '',
+          sort: 99
+        }
         let _title = ''
         if (type === 'add') {
           _title = '新增'

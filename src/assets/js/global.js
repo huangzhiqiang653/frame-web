@@ -4,7 +4,10 @@ const config = {
   userConfigName: 'userInfo',
   systemSize: 'mini',
   dictionary: {
-    dictionaryType: 'dictionaryType'
+    dictionaryType: 'dictionaryType',
+    sex: 'sex',
+    userStatus: 'userStatus',
+    accountStatus: 'accountStatus'
   },
   resultCode: {
     success: '0',
@@ -25,9 +28,12 @@ const config = {
   },
   businessFlag: {
     system: 'system',
+    zxAccount: 'zxAccount',
+    zxRole: 'zxRole',
     zxMenu: 'zxMenu',
     zxUser: 'zxUser',
-    zxDictionary: 'zxDictionary'
+    zxDictionary: 'zxDictionary',
+    zxOrganization: 'zxOrganization'
   },
   handleType: {
     // 系统默认

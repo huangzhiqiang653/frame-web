@@ -27,7 +27,6 @@
         _this.FUNCTIONS.systemFunction.commonGet(
           _this.CONFIG.urls.root + _this.CONFIG.urls.index.login,
           result => {
-            debugger
             if (result.code === _this.GLOBAL.config.resultCode.notLogin) {
               window.location.href = result.data
             } else if (result.code === _this.GLOBAL.config.resultCode.success) {

@@ -1,4 +1,4 @@
-<!--zx_frame_db.auth_zx_dictionary（字典表）-dialog-->
+<!--zx_frame_db.auth_zx_organization（组织表）-dialog-->
 <template>
   <el-dialog :title="showTitle" :visible.sync="showFlag">
     <el-form
@@ -7,7 +7,6 @@
       class="demo-ruleForm"
       label-width="100px"
       :rules="formRules"
-      width="40%"
       ref="formData"
       :size="GLOBAL.config.systemSize"
       element-loading-text="数据处理中...请稍等..."
@@ -15,8 +14,13 @@
       v-loading="loading">
       <el-row class="margin-top-20">
         <el-col :span="24">
-          <el-form-item label="名称：" prop="name">
-            <el-input v-model="formData.name" placeholder="名称" maxlength="64"></el-input>
+          <el-form-item label="名称全程：" prop="fullName">
+            <el-input v-model="formData.fullName" placeholder="名称全程" maxlength="64"></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="24">
+          <el-form-item label="简称：" prop="shortName">
+            <el-input v-model="formData.shortName" placeholder="简称" maxlength="64"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="24">
@@ -25,14 +29,14 @@
           </el-form-item>
         </el-col>
         <el-col :span="24">
-          <el-form-item label="类型：" prop="type">
+          <el-form-item label="组织类型：" prop="type">
             <el-select v-model="formData.type"
-                       placeholder="类型"
+                       placeholder="组织类型"
                        style="width: 100%;"
             >
               <el-option label="--请选择--" value=""></el-option>
               <el-option :label="item.name" :value="item.code"
-                         v-for="item in dictionary.dictionaryType" :key="item.id"></el-option>
+                         v-for="item in dictionary.organisationType" :key="item.id"></el-option>
             </el-select>
           </el-form-item>
         </el-col>
@@ -41,29 +45,30 @@
             <el-input-number
               v-model="formData.sort"
               placeholder="排序"
-              :min="1"
+              :min="0"
+              :precision="2"
               :step="1"
               style="width: 100%;">
             </el-input-number>
           </el-form-item>
         </el-col>
+        <el-col :span="24">
+          <el-form-item label="备注：" prop="remark">
+            <el-input v-model="formData.remark" placeholder="备注" maxlength="64"></el-input>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row class="margin-top-20">
+        <el-button @click="closeDialog" style="margin: 0 20px;" :size="GLOBAL.config.systemSize">关闭</el-button>
+        <el-button type="primary" @click="saveOrUpdateForm" style="margin: 0 20px;" :size="GLOBAL.config.systemSize">保存
+        </el-button>
       </el-row>
     </el-form>
-    <el-row class="margin-top-20">
-      <el-button @click="closeDialog" style="margin: 0 20px;" :size="GLOBAL.config.systemSize">关闭</el-button>
-      <el-button
-        type="primary"
-        @click="saveOrUpdateForm"
-        style="margin: 0 20px;"
-        v-if="editableFlag"
-        :size="GLOBAL.config.systemSize">保存
-      </el-button>
-    </el-row>
   </el-dialog>
 </template>
 <script>
   export default {
-    name: 'ZxDictionaryOperateDialog',
+    name: 'ZxOrganizationOperateDialog',
     props: {
       id: {
         type: String
@@ -79,27 +84,25 @@
       return {
         formData: {
           id: '',
-          name: '',
+          fullName: '',
+          shortName: '',
           code: '',
           type: '',
-          sort: 99
+          sort: '',
+          remark: ''
         },
         // 校验规则
         formRules: {
-          name: [
-            {required: true, message: '请输入名称', trigger: 'blur'}
-          ],
-          code: [
-            {required: true, message: '请输入编号', trigger: 'blur'}
-          ],
-          type: [
-            {required: true, message: '请选择字典类型', trigger: 'blur'}
-          ],
-          sort: []
+          fullName: [],
+          shortName: [],
+          code: [],
+          type: [],
+          sort: [],
+          remark: []
         },
         // 字典数据
         dictionary: {
-          dictionaryType: JSON.parse(unescape(localStorage.getItem(this.GLOBAL.config.dictionaryPre + this.GLOBAL.config.dictionary.dictionaryType)))
+          organisationType: JSON.parse(unescape(localStorage.getItem(this.GLOBAL.config.dictionaryPre + this.GLOBAL.config.dictionary.organisationType))),
         },
         editableFlag: true,
         loading: false,
@@ -108,24 +111,19 @@
       }
     },
     methods: {
-      /**
-       * 初始化参数
-       * @param type
-       * @param id
-       */
-      init: function (type, id, total) {
+      init: function (type, id) {
         this.formData = {
           id: '',
-          name: '',
+          fullName: '',
+          shortName: '',
           code: '',
           type: '',
-          sort: 99
+          sort: '',
+          remark: ''
         }
         let _title = ''
         if (type === 'add') {
           _title = '新增'
-          this.formData.type = this.dictionary.dictionaryType[0].code
-          total && (this.formData.sort = (total + 1))
         } else if (type === 'edit') {
           _title = '编辑'
         } else if (type === 'view') {
@@ -156,7 +154,7 @@
             _this.loading = true
             this.FUNCTIONS.systemFunction.interactiveData(
               _this,
-              _this.GLOBAL.config.businessFlag.zxDictionary,
+              _this.GLOBAL.config.businessFlag.zxOrganization,
               _this.GLOBAL.config.handleType.add,
               _this.FUNCTIONS.systemFunction.removeNullFields(params),
               null,
@@ -190,7 +188,7 @@
             _this.loading = true
             this.FUNCTIONS.systemFunction.interactiveData(
               _this,
-              _this.GLOBAL.config.businessFlag.zxDictionary,
+              _this.GLOBAL.config.businessFlag.zxOrganization,
               _this.GLOBAL.config.handleType.updateAll,
               _this.FUNCTIONS.systemFunction.removeNullFields(params),
               null,
@@ -217,7 +215,7 @@
         let _this = this
         this.formData.id && this.FUNCTIONS.systemFunction.interactiveData(
           _this,
-          _this.GLOBAL.config.businessFlag.zxDictionary,
+          _this.GLOBAL.config.businessFlag.zxOrganization,
           _this.GLOBAL.config.handleType.getInfoById,
           _this.formData.id,
           null,

@@ -14,9 +14,12 @@ const urls = {
     getTableData: '/auth/zx-system/getTableData'
   },
   business: {
-    zxMenu: '',
+    zxAccount: '/auth/zx-account/base',
+    zxRole: '/auth/zx-account/role',
+    zxMenu: '/auth/zx-menu/base',
     zxUser: '/auth/zx-user/base',
-    zxDictionary: '/auth/zx-dictionary/base'
+    zxDictionary: '/auth/zx-dictionary/base',
+    zxOrganization: '/auth/zx-organization/base'
   }
 
 }

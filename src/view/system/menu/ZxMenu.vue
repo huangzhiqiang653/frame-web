@@ -1,61 +1,24 @@
-<!--zx_frame_db.auth_zx_account（账户表）-table-->
-<!--参数添加，1、config.js business中添加：zxAccount: '后台地址'-->
-<!--参数添加，2、global.js businessFlag中添加：zxAccount: 'zxAccount'-->
+<!--zx_frame_db.auth_zx_menu（菜单表）-table-->
+<!--参数添加，1、config.js business中添加：zxMenu: '后台地址'-->
+<!--参数添加，2、global.js businessFlag中添加：zxMenu: 'zxMenu'-->
 <template>
   <div class="main-area">
     <el-breadcrumb separator=":">
       <el-breadcrumb-item>当前位置</el-breadcrumb-item>
-      <el-breadcrumb-item>账户列表</el-breadcrumb-item>
+      <el-breadcrumb-item>菜单列表</el-breadcrumb-item>
     </el-breadcrumb>
     <!--查询区域-->
     <el-row class="margin-top-10">
       <el-col :span="2" class="margin-top-10">
         <label class="search-label">
-          账户名称:
+          名称:
         </label>
       </el-col>
       <el-col :span="4" class="margin-top-10">
-        <el-input v-model="searchForm.accountName"
+        <el-input v-model="searchForm.name"
                   :size="GLOBAL.config.systemSize"
-                  placeholder="账户名称"
+                  placeholder="名称"
                   maxlength="32"></el-input>
-      </el-col>
-      <el-col :span="2" class="margin-top-10">
-        <label class="search-label">
-          账号状态:
-        </label>
-      </el-col>
-      <el-col :span="4" class="margin-top-10">
-        <el-select v-model="searchForm.status"
-                   :size="GLOBAL.config.systemSize"
-                   placeholder="账号状态"
-                   style="width: 100%;"
-        >
-          <el-option label="--请选择--" value=""></el-option>
-          <el-option :label="item.name" :value="item.code"
-                     v-for="item in dictionary.accountStatus"
-                     :key="item.id"></el-option>
-        </el-select>
-      </el-col>
-      <el-col :span="2" class="margin-top-10">
-        <label class="search-label">
-          更新时间:
-        </label>
-      </el-col>
-      <el-col :span="6" class="margin-top-10">
-        <el-date-picker
-          v-model="searchForm.updateTime"
-          :size="GLOBAL.config.systemSize"
-          type="daterange"
-          align="right"
-          unlink-panels
-          format="yyyy-MM-dd HH:mm:ss"
-          value-format="yyyy-MM-dd HH:mm:ss"
-          range-separator="至"
-          start-placeholder="开始"
-          end-placeholder="结束"
-          style="width: 100%;">
-        </el-date-picker>
       </el-col>
       <el-col :span="2" class="margin-top-10">
         <el-button type="primary" @click="doSearch" :size="GLOBAL.config.systemSize" icon="el-icon-search">查询
@@ -89,37 +52,8 @@
       <el-table-column
         type="selection">
       </el-table-column>
-      <!--账户名称-->
-      <el-table-column prop="accountName" label="账户名称" align="center"/>
-      <!--所属用户-->
-      <el-table-column prop="userId" label="所属用户" align="center">
-        <template slot-scope="scope">
-          {{scope.row.userId?scope.row.userId.split(',')[1]:'--'}}
-        </template>
-      </el-table-column>
-      <!--账号状态 0启用(默认)，1禁用-->
-      <el-table-column prop="status"
-                       label="账号状态" align="center">
-        <template slot-scope="scope">
-          <el-switch
-            @change="inActiveUse(scope.row)"
-            v-model="scope.row.status + '' "
-            :active-value="dictionary.accountStatus[0]?dictionary.accountStatus[0].code:''"
-            :inactive-value="dictionary.accountStatus[1]?dictionary.accountStatus[1].code:''"
-            active-text="启用"
-            inactive-text="禁用">
-          </el-switch>
-        </template>
-      </el-table-column>
-      <!--更新时间-->
-      <el-table-column prop="updateTime"
-                       label="更新时间">
-        <template slot-scope="scope">
-          {{ scope.row.updateTime
-          ?$moment(scope.row.updateTime
-          ).format('YYYY-MM-DD HH:mm:ss'):'' }}
-        </template>
-      </el-table-column>
+      <!--名称-->
+      <el-table-column prop="name" label="名称" align="center"/>
       <el-table-column prop="scope" label="操作" align="center">
         <template slot-scope="scope">
           <el-dropdown>
@@ -153,32 +87,25 @@
 </template>
 <script>
   // 替换成相应的模板
-  import operationTemplate from './ZxAccountOperateDialog'
+  import operationTemplate from './ZxMenuOperateDialog'
 
   export default {
-    name: 'ZxAccountTable',
+    name: 'ZxMenu',
     data () {
       return {
         // 查询表单
         searchForm: {
-          accountName: '',
-          status: '',
-          userId: '',
-          updateTime: ''
+          name: ''
         },
         tableData: [],
         // 字典数据
-        dictionary: {
-          accountStatus: JSON.parse(unescape(localStorage.getItem(this.GLOBAL.config.dictionaryPre + this.GLOBAL.config.dictionary.accountStatus)))
-        },
+        dictionary: {},
         // 资源权限控制，有的系统不需这么细，则全部为true
         source: {
           add: true,
           deleteBatch: true,
           infoEdit: true,
-          infoView: true,
-          infoDelete: true,
-          resetPwd: true
+          infoView: true
         },
         // 分页参数
         pagination: {
@@ -224,7 +151,7 @@
           _this.loading = true
           _this.FUNCTIONS.systemFunction.interactiveData(
             _this,
-            _this.GLOBAL.config.businessFlag.zxAccount,
+            _this.GLOBAL.config.businessFlag.zxMenu,
             _this.GLOBAL.config.handleType.deleteLogicalBatch,
             _this.deleteBatchList.ids,
             'list',
@@ -242,10 +169,8 @@
       },
       getSource: function (rowData) {
         let tempList = []
-        this.source.resetPwd && tempList.push({icon: 'el-icon-refresh-right', title: '重置密码', method: 'resetPwd'})
         this.source.infoEdit && tempList.push({icon: 'el-icon-edit', title: '编辑', method: 'handleEdit'})
         this.source.infoView && tempList.push({icon: 'el-icon-view', title: '查看', method: 'handleView'})
-        this.source.infoDelete && tempList.push({icon: 'el-icon-delete', title: '删除', method: 'handleDelete'})
         return tempList
       },
       handleCommon: function (type, rowData) {
@@ -255,12 +180,6 @@
             break
           case 'handleView':
             this.handleView(rowData)
-            break
-          case 'handleDelete':
-            this.handleDelete(rowData)
-            break
-          case 'resetPwd':
-            this.resetPwd(rowData)
             break
         }
       },
@@ -274,40 +193,8 @@
         this.operationMethod('view', rowData)
         // TODO
       },
-      // 重置密码
-      resetPwd: function (rowData) {
-        // TODO
-      },
-      // 单条数据删除
-      handleDelete: function (rowData) {
-        let _this = this
-        _this.$confirm('确认删除当前数据？？', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          _this.loading = true
-          _this.FUNCTIONS.systemFunction.interactiveData(
-            _this,
-            _this.GLOBAL.config.businessFlag.zxAccount,
-            _this.GLOBAL.config.handleType.deleteLogical,
-            rowData.id,
-            null,
-            resultData => {
-              _this.loading = false
-              if (resultData) {
-                _this.$message.success('删除成功～')
-                _this.getTableData('init')
-              } else {
-                _this.$message.warning('删除失败～')
-              }
-            }
-          )
-        })
-      },
       // 获取列表
       getTableData: function (initPageFlag) {
-        debugger
         this.loading = true
         let _this = this, searchParams = this.searchForm
         _this.FUNCTIONS.systemFunction.removeNullFields(searchParams)
@@ -318,7 +205,7 @@
         // 3、 调接口获取数据
         _this.FUNCTIONS.systemFunction.interactiveData(
           _this,
-          _this.GLOBAL.config.businessFlag.zxAccount,
+          _this.GLOBAL.config.businessFlag.zxMenu,
           _this.GLOBAL.config.handleType.getPage,
           paginationData,
           null,
@@ -360,36 +247,6 @@
           this.deleteBatchList.deleteFlag = true
         } else {
           this.deleteBatchList.deleteFlag = false
-        }
-      },
-      // 禁用账号
-      inActiveUse: function (rowData) {
-        let _this = this
-        !rowData.status ? this.$confirm('确定禁用该账号【' + rowData.accountName + '】吗?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          f()
-        }) : f()
-
-        function f () {
-          let params = {id: rowData.id, status: rowData.status ? 0 : 1}
-          _this.FUNCTIONS.systemFunction.interactiveData(
-            _this,
-            _this.GLOBAL.config.businessFlag.zxAccount,
-            _this.GLOBAL.config.handleType.updateAll,
-            params,
-            null,
-            resultData => {
-              if (resultData) {
-                _this.$message.success('操作成功～')
-                _this.showFlag = false
-                _this.getTableData('init')
-              } else {
-                _this.$message.warning('操作失败～')
-              }
-            })
         }
       }
     }
