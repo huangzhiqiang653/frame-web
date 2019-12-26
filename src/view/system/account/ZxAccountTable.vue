@@ -149,11 +149,14 @@
     </el-pagination>
     <!--操作-->
     <operationTemplate ref="operationTemplate" :refresh="getTableData"/>
+    <!--查看明细-->
+    <viewAllTemplate ref="viewAllTemplate"/>
   </div>
 </template>
 <script>
   // 替换成相应的模板
   import operationTemplate from './ZxAccountOperateDialog'
+  import viewAllTemplate from './ZxAccountAllView'
 
   export default {
     name: 'ZxAccountTable',
@@ -197,7 +200,8 @@
       }
     },
     components: {
-      operationTemplate
+      operationTemplate,
+      viewAllTemplate
     },
     mounted () {
       this.init()
@@ -271,8 +275,7 @@
       },
       // 查看
       handleView: function (rowData) {
-        this.operationMethod('view', rowData)
-        // TODO
+        this.$refs.viewAllTemplate.init(rowData)
       },
       // 重置密码
       resetPwd: function (rowData) {
@@ -307,7 +310,6 @@
       },
       // 获取列表
       getTableData: function (initPageFlag) {
-        debugger
         this.loading = true
         let _this = this, searchParams = this.searchForm
         _this.FUNCTIONS.systemFunction.removeNullFields(searchParams)
