@@ -58,12 +58,17 @@
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row class="margin-top-20">
-        <el-button @click="closeDialog" style="margin: 0 20px;" :size="GLOBAL.config.systemSize">关闭</el-button>
-        <el-button type="primary" @click="saveOrUpdateForm" style="margin: 0 20px;" :size="GLOBAL.config.systemSize">保存
-        </el-button>
-      </el-row>
     </el-form>
+    <el-row class="margin-top-20">
+      <el-button @click="closeDialog" style="margin: 0 20px;" :size="GLOBAL.config.systemSize">关闭</el-button>
+      <el-button
+        v-if="editableFlag"
+        type="primary"
+        @click="saveOrUpdateForm"
+        style="margin: 0 20px;"
+        :size="GLOBAL.config.systemSize">保存
+      </el-button>
+    </el-row>
   </el-dialog>
 </template>
 <script>

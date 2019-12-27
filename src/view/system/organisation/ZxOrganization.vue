@@ -5,7 +5,7 @@
   <div class="main-area">
     <el-breadcrumb separator=":">
       <el-breadcrumb-item>当前位置</el-breadcrumb-item>
-      <el-breadcrumb-item>组织列表</el-breadcrumb-item>
+      <el-breadcrumb-item>组织管理</el-breadcrumb-item>
     </el-breadcrumb>
     <!--查询区域-->
     <el-row class="margin-top-10">
@@ -36,42 +36,8 @@
         </el-button>
       </el-col>
     </el-row>
-    <el-table style="width: 100%"
-              :data="tableData"
-              @selection-change="tableSelectionChange"
-              element-loading-text="数据处理中...请稍等..."
-              v-loading="loading">
-      <!--名称全程-->
-      <el-table-column prop="fullName" label="名称全程" align="center"/>
-      <el-table-column prop="scope" label="操作" align="center">
-        <template slot-scope="scope">
-          <el-dropdown>
-                <span class="el-dropdown-link operator-text">
-                  选择操作<i class="el-icon-arrow-down el-icon--right"></i>
-                </span>
-            <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item :icon="item.icon" v-for="item in getSource(scope.row)"
-                                :key="item.method"
-                                @click.native="handleCommon(item.method, scope.row)">
-                {{item.title}}
-              </el-dropdown-item>
-            </el-dropdown-menu>
-          </el-dropdown>
-        </template>
-      </el-table-column>
-    </el-table>
-    <el-pagination
-      class="margin-top-10 margin-bottom-20"
-      @size-change="tableSizeChange"
-      @current-change="currentChange"
-      :current-page="pagination.currentPage"
-      :page-sizes="pagination.pageSizeList"
-      :page-size="pagination.pageSize"
-      :layout="pagination.layout"
-      :total="pagination.total">
-    </el-pagination>
     <!--操作-->
-    <operationTemplate ref="operationTemplate" :refresh="getTableData"/>
+    <operationTemplate ref="operationTemplate"/>
   </div>
 </template>
 <script>
@@ -115,10 +81,9 @@
     methods: {
       init: function () {
         // TODO 加载列表数据
-        this.getTableData('init')
+        this.getTreeData()
       },
       doSearch: function () {
-        this.getTableData('init')
       },
       operationMethod: function (operateType, info) {
         this.$refs.operationTemplate.init(operateType, info ? info.id : null)
@@ -141,46 +106,28 @@
         // TODO
       },
       // 获取列表
-      getTableData: function (initPageFlag) {
+      getTreeData: function () {
         this.loading = true
-        let _this = this, searchParams = this.searchForm
-        _this.FUNCTIONS.systemFunction.removeNullFields(searchParams)
-        let paginationData = _this.FUNCTIONS.systemFunction.paginationSet(
-          initPageFlag ? 1 : _this.pagination.currentPage,
-          initPageFlag ? 10 : _this.pagination.pageSize,
-          searchParams)
+        let _this = this
         // 3、 调接口获取数据
         _this.FUNCTIONS.systemFunction.interactiveData(
           _this,
           _this.GLOBAL.config.businessFlag.zxOrganization,
-          _this.GLOBAL.config.handleType.getPage,
-          paginationData,
+          _this.GLOBAL.config.handleType.getTree,
+          null,
           null,
           resultData => {
             _this.loading = false
             if (resultData) {
-              // 结果参数赋值
-              _this.pagination.pageSize = resultData.size
-              _this.pagination.total = resultData.total
-              _this.pagination.currentPage = resultData.current
-              _this.tableData = resultData.records
+              debugger
             } else {
-              _this.$message.warning('获取列表数据失败～')
+              _this.$message.warning('获取组织数据失败～')
             }
           },
           () => {
             _this.loading = false
           }
         )
-      },
-      // 分页方法
-      tableSizeChange: function (pageSize) {
-        this.pagination.pageSize = pageSize
-        this.getTableData()
-      },
-      currentChange: function (current) {
-        this.pagination.currentPage = current
-        this.getTableData()
       }
     }
   }

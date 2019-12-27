@@ -53,7 +53,8 @@ const config = {
     getPage: 'getPage',
     // 新增操作
     deleteAndAdd: 'deleteAndAdd',
-    updateSelfInfo: 'updateSelfInfo'
+    updateSelfInfo: 'updateSelfInfo',
+    getTree: 'getTree'
   },
   dateFormat: {
     YMD: 'YYYY-MM-DD',
