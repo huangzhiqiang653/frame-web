@@ -210,11 +210,13 @@ const systemFunction = {
   // 清除对象中的空字符
   removeNullFields: function (entry) {
     for (let key in entry) {
-      if (!entry[key]) {
-        delete entry[key]
-      }
-      if (entry[key] && entry[key].length === 0) {
-        delete entry[key]
+      if (entry[key] !== 0 && entry[key] !== '0') {
+        if (!entry[key]) {
+          delete entry[key]
+        }
+        if (entry[key] && entry[key].length === 0) {
+          delete entry[key]
+        }
       }
     }
     return entry

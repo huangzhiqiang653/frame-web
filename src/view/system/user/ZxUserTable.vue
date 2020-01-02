@@ -81,7 +81,7 @@
           更新时间:
         </label>
       </el-col>
-      <el-col :span="10" class="margin-top-10">
+      <el-col :span="6" class="margin-top-10">
         <el-date-picker
           v-model="searchForm.updateTime"
           :size="GLOBAL.config.systemSize"
@@ -95,6 +95,30 @@
           end-placeholder="结束"
           style="width: 100%;">
         </el-date-picker>
+      </el-col>
+      <el-col :span="2" class="margin-top-10">
+        <label class="search-label">
+          所属机构:
+        </label>
+      </el-col>
+      <el-col :span="4" class="margin-top-10">
+        <el-cascader
+          ref="orgList"
+          v-model="searchForm.organizationId"
+          style="width: 100%;"
+          placeholder="所属机构"
+          :options="dictionary.treeData"
+          :props="defaultProps"
+          :size="GLOBAL.config.systemSize"
+          clearable></el-cascader>
+      </el-col>
+      <el-col :span="2" class="margin-top-10">
+        <label class="search-label">
+          <el-checkbox
+            :size="GLOBAL.config.systemSize"
+            v-model="searchForm.childrenInclude">含子部门
+          </el-checkbox>
+        </label>
       </el-col>
       <el-col :span="2" class="margin-top-10">
         <el-button type="primary" @click="doSearch" :size="GLOBAL.config.systemSize" icon="el-icon-search">查询
@@ -143,7 +167,11 @@
         </template>
       </el-table-column>
       <!--所属机构-->
-      <el-table-column prop="organizationId" label="所属机构" align="center"/>
+      <el-table-column prop="organizationId" label="所属机构" align="center">
+        <template slot-scope="scope">
+          {{scope.row.organizationId.split(',').slice(-1).join('')}}
+        </template>
+      </el-table-column>
       <!--邮箱-->
       <el-table-column prop="email" label="邮箱" align="center"/>
       <!--手机号码-->
@@ -217,13 +245,16 @@
           email: '',
           phoneNumber: '',
           status: '',
-          updateTime: ''
+          updateTime: '',
+          organizationId: '',
+          childrenInclude: false
         },
         tableData: [],
         // 字典数据
         dictionary: {
           sex: JSON.parse(unescape(localStorage.getItem(this.GLOBAL.config.dictionaryPre + this.GLOBAL.config.dictionary.sex))),
           userStatus: JSON.parse(unescape(localStorage.getItem(this.GLOBAL.config.dictionaryPre + this.GLOBAL.config.dictionary.userStatus))),
+          treeData: []
         },
         // 资源权限控制，有的系统不需这么细，则全部为true
         source: {
@@ -246,7 +277,14 @@
           ids: [],
           deleteFlag: false
         },
-        loading: false
+        loading: false,
+        defaultProps: {
+          checkStrictly: true,
+          label: 'shortName',
+          value: 'id',
+          children: 'children',
+          expandTrigger: 'hover'
+        }
       }
     },
     components: {
@@ -254,6 +292,7 @@
     },
     mounted () {
       this.init()
+      this.getTreeData()
     },
     methods: {
       init: function () {
@@ -353,7 +392,19 @@
       // 获取列表
       getTableData: function (initPageFlag) {
         this.loading = true
-        let _this = this, searchParams = this.searchForm
+        let _this = this, searchParams = {},
+          orgs = this.$refs.orgList.getCheckedNodes(), selectOrgName = ''
+        Object.assign(searchParams, this.searchForm)
+        if (orgs && orgs.length && (orgs.length === 1)) {
+          selectOrgName = orgs[0].label
+        }
+        // 部门查询处理
+        if (searchParams.organizationId) {
+          searchParams.organizationId = searchParams.organizationId.join(',')
+          if (selectOrgName) {
+            searchParams.organizationId = searchParams.organizationId + ',' + selectOrgName
+          }
+        }
         _this.FUNCTIONS.systemFunction.removeNullFields(searchParams)
         let paginationData = _this.FUNCTIONS.systemFunction.paginationSet(
           initPageFlag ? 1 : _this.pagination.currentPage,
@@ -435,6 +486,30 @@
               }
             })
         }
+      },
+      // 组织树数据
+      getTreeData: function () {
+        this.loading = true
+        let _this = this
+        // 3、 调接口获取数据
+        _this.FUNCTIONS.systemFunction.interactiveData(
+          _this,
+          _this.GLOBAL.config.businessFlag.zxOrganization,
+          _this.GLOBAL.config.handleType.getTree,
+          null,
+          null,
+          resultData => {
+            _this.loading = false
+            if (resultData) {
+              _this.dictionary.treeData = resultData
+            } else {
+              _this.$message.warning('获取组织数据失败～')
+            }
+          },
+          () => {
+            _this.loading = false
+          }
+        )
       }
     }
   }

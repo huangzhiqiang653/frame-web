@@ -7,7 +7,8 @@ const config = {
     dictionaryType: 'dictionaryType',
     sex: 'sex',
     userStatus: 'userStatus',
-    accountStatus: 'accountStatus'
+    accountStatus: 'accountStatus',
+    orgList: 'orgList'
   },
   resultCode: {
     success: '0',

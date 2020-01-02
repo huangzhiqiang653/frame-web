@@ -221,8 +221,24 @@ body {
   width: calc(100% - 40px);
   height: calc(100% - 35px);
 }
+
 .operation-normal {
   color: #409eff;
   cursor: pointer;
   margin: 0 10px 0 0;
+}
+
+.tree-area {
+  width: 200px;
+  margin: 20px 0;
+  background-color: #ffffff;
+  border-right: 1px solid #ececec;
+}
+
+.tree-content {
+  width: calc(100% - 212px);
+  height: calc(100% - 32px);
+  margin: 0 0 10px 10px;
+  background-color: #ffffff;
+  border-radius: 10px;
 }

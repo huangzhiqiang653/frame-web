@@ -50,7 +50,14 @@
         </el-col>
         <el-col :span="24">
           <el-form-item label="所属机构：" prop="organizationId">
-            <el-input v-model="formData.organizationId" placeholder="所属机构" maxlength="64"></el-input>
+            <el-cascader
+              ref="orgList"
+              v-model="formData.organizationId"
+              style="width: 100%;"
+              placeholder="所属机构"
+              :options="dictionary.treeData"
+              :props="defaultProps"
+              clearable></el-cascader>
           </el-form-item>
         </el-col>
         <el-col :span="24">
@@ -102,10 +109,11 @@
         userName: '',
         sex: '',
         birthDay: '',
-        organizationId: '',
+        organizationId: [],
         email: '',
         phoneNumber: '',
-        remark: ''
+        remark: '',
+        status: ''
       },
       // 校验规则
       formRules: {
@@ -116,7 +124,9 @@
           {required: true, message: '请选择性别', trigger: 'blur'}
         ],
         birthDay: [],
-        organizationId: [],
+        organizationId: [
+          {required: true, message: '请选择部门', trigger: 'blur'}
+        ],
         email: [],
         phoneNumber: [
           {required: true, message: '请输入手机号码', trigger: 'blur'}
@@ -125,13 +135,24 @@
       },
       // 字典数据
       dictionary: {
-        sex: JSON.parse(unescape(localStorage.getItem(this.GLOBAL.config.dictionaryPre + this.GLOBAL.config.dictionary.sex)))
+        sex: JSON.parse(unescape(localStorage.getItem(this.GLOBAL.config.dictionaryPre + this.GLOBAL.config.dictionary.sex))),
+        treeData: []
       },
       editableFlag: true,
       loading: false,
       showTitle: '新增',
-      showFlag: false
+      showFlag: false,
+      defaultProps: {
+        checkStrictly: true,
+        label: 'shortName',
+        value: 'id',
+        children: 'children',
+        expandTrigger: 'hover'
+      }
     }
+  },
+  mounted () {
+    this.getTreeData()
   },
   methods: {
     init: function (type, id) {
@@ -140,10 +161,11 @@
         userName: '',
         sex: '',
         birthDay: '',
-        organizationId: '',
+        organizationId: [],
         email: '',
         phoneNumber: '',
-        remark: ''
+        remark: '',
+        status: ''
       }
       let _title = ''
       if (type === 'add') {
@@ -168,11 +190,20 @@
       this.formData.id ? this.updateForm() : this.saveForm()
     },
     saveForm: function () {
+      let orgs = this.$refs.orgList.getCheckedNodes(), selectOrgName = ''
+      if (orgs && orgs.length && (orgs.length === 1)) {
+        selectOrgName = orgs[0].label
+      }
       this.$refs.formData.validate(valid => {
         if (valid) {
           let params = this.formData
           // 参数处理======start==========
           // TODO 对于单选、复选、多选、附件等需要进行单独处理
+          this.$refs.orgList.getCheckedNodes()
+          params.organizationId = params.organizationId.join(',')
+          if (selectOrgName) {
+            params.organizationId = params.organizationId + ',' + selectOrgName
+          }
           // 参数处理======end============
           let _this = this
           _this.loading = true
@@ -202,11 +233,21 @@
       })
     },
     updateForm: function () {
-      this.$refs.formData.validate(valid => {
+      let _this = this, orgs = this.$refs.orgList.getCheckedNodes(), selectOrgName = ''
+      if (orgs && orgs.length && (orgs.length === 1)) {
+        selectOrgName = orgs[0].label
+      }
+      _this.$refs.formData.validate(valid => {
         if (valid) {
           let params = this.formData
           // 参数处理======start==========
           // TODO 对于单选、复选、多选、附件等需要进行单独处理
+          if (params.organizationId && params.organizationId.length) {
+            params.organizationId = params.organizationId.join(',')
+          }
+          if (selectOrgName) {
+            params.organizationId = params.organizationId + ',' + selectOrgName
+          }
           // 参数处理======end============
           let _this = this
           _this.loading = true
@@ -246,7 +287,34 @@
         resultData => {
           _this.loading = false
           resultData.sex = resultData.sex.toString()
+          if (resultData.organizationId) {
+            resultData.organizationId = resultData.organizationId.split(',').slice(0, resultData.organizationId.split(',').length - 1)
+          }
           Object.assign(_this.formData, resultData)
+        }
+      )
+    },
+    // 组织树数据
+    getTreeData: function () {
+      this.loading = true
+      let _this = this
+      // 3、 调接口获取数据
+      _this.FUNCTIONS.systemFunction.interactiveData(
+        _this,
+        _this.GLOBAL.config.businessFlag.zxOrganization,
+        _this.GLOBAL.config.handleType.getTree,
+        null,
+        null,
+        resultData => {
+          _this.loading = false
+          if (resultData) {
+            _this.dictionary.treeData = resultData
+          } else {
+            _this.$message.warning('获取组织数据失败～')
+          }
+        },
+        () => {
+          _this.loading = false
         }
       )
     }
