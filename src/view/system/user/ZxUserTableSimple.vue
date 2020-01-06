@@ -16,6 +16,7 @@
       <el-col :span="4" class="margin-top-10">
         <el-checkbox
           :size="GLOBAL.config.systemSize"
+          @change="getTableData('init')"
           v-model="searchForm.childrenInclude">含子部门人员
         </el-checkbox>
       </el-col>

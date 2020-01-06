@@ -15,6 +15,7 @@
           :props="defaultProps"
           :default-expand-all="true"
           :size="GLOBAL.config.systemSize"
+          ref="orgList"
           accordion
           @node-click="handleNodeClick">
         </el-tree>
@@ -225,9 +226,23 @@
           }
         )
       },
-      handleNodeClick: function (target) {
+      handleNodeClick: function (target, node) {
+        let ids = target.shortName
+
+        function f (tmpNode) {
+          if (tmpNode &&
+            tmpNode.data &&
+            tmpNode.data.id &&
+            (typeof tmpNode.data === 'object')) {
+            ids = tmpNode.data.id + ',' + ids
+            f(tmpNode.parent)
+          }
+        }
+
+        f(node)
+        debugger
         this.formData = target
-        this.$refs.zxUser.init(target.id)
+        this.$refs.zxUser.init(ids)
       },
       appendDepartment: function () {
         this.formData = {

@@ -116,6 +116,7 @@
         <label class="search-label">
           <el-checkbox
             :size="GLOBAL.config.systemSize"
+            @change="getTableData('init')"
             v-model="searchForm.childrenInclude">含子部门
           </el-checkbox>
         </label>
