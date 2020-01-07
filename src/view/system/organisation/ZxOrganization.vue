@@ -240,7 +240,6 @@
         }
 
         f(node)
-        debugger
         this.formData = target
         this.$refs.zxUser.init(ids)
       },
