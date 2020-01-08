@@ -37,7 +37,10 @@
         </el-col>
         <el-col :span="24">
           <el-form-item label="备注：" prop="remark">
-            <el-input v-model="formData.remark" placeholder="备注" maxlength="64"></el-input>
+            <el-input
+              type="textarea"
+              :rows="2"
+              v-model="formData.remark" placeholder="备注" maxlength="64"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -108,7 +111,7 @@
                     _title = '查看'
                     this.editableFlag = false
                 }
-                this.showTitle = this.showTitle || _title
+                this.showTitle = _title || this.showTitle
                 this.showFlag = true
                 this.formData.relationId = relationId
                 if (id) {

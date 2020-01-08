@@ -15,7 +15,7 @@ const urls = {
   },
   business: {
     zxAccount: '/auth/zx-account/base',
-    zxRole: '/auth/zx-account/role',
+    zxRole: '/auth/zx-role/base',
     zxMenu: '/auth/zx-menu/base',
     zxUser: '/auth/zx-user/base',
     zxDictionary: '/auth/zx-dictionary/base',
