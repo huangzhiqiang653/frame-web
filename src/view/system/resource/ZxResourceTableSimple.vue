@@ -2,7 +2,7 @@
 <!--参数添加，1、config.js business中添加：zxDictionary: '后台地址'-->
 <!--参数添加，2、global.js businessFlag中添加：zxDictionary: 'zxDictionary'-->
 <template>
-  <div>
+  <div v-if = "searchForm.relationId">
     <!--查询区域-->
     <el-row class="margin-top-10">
       <el-col :span="2" class="margin-top-10">
@@ -13,11 +13,12 @@
       <el-col :span="8" class="margin-top-10">
         <el-input v-model="searchForm.keyWords"
                   :size="GLOBAL.config.systemSize"
+                  :disabled="!searchForm.relationId"
                   placeholder="关键词(名称/编码)"
                   maxlength="32"></el-input>
       </el-col>
       <el-col :span="4" class="margin-top-10">
-        <el-button type="primary" @click="doSearch" :size="GLOBAL.config.systemSize" icon="el-icon-search">查询
+        <el-button type="primary" @click="doSearch" :size="GLOBAL.config.systemSize" :disabled="!searchForm.relationId" icon="el-icon-search">查询
         </el-button>
       </el-col>
     </el-row>
@@ -27,6 +28,7 @@
                    type="primary"
                    icon="el-icon-plus"
                    :size="GLOBAL.config.systemSize"
+                   :disabled="!searchForm.relationId"
                    style="float: left;"
                    @click="operationMethod('add')">新增
         </el-button>
@@ -63,9 +65,9 @@
                   选择操作<i class="el-icon-arrow-down el-icon--right"></i>
                 </span>
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item :icon="item.icon" v-for="item in getSource(scope.row)"
-                                :key="item.method"
-                                @click.native="handleCommon(item.method, scope.row)">
+              <el-dropdown-item :icon="item.icon" :key="index"
+                                @click.native="handleCommon(item.method, scope.row)"
+                                v-for="(item, index) in getSource(scope.row)">
                 {{item.title}}
               </el-dropdown-item>
             </el-dropdown-menu>
@@ -92,28 +94,23 @@
 
     export default {
         name: 'ZxResourceTableSimple',
-        data() {
+        data () {
             return {
                 // 查询表单
                 searchForm: {
                     relationId: '',
-                    resourceName: '',
-                    resourceCode: ''
+                    keyWords: ''
                 },
                 tableData: [],
                 // 字典数据
-                dictionary: {
-                    type:
-                        JSON.parse(unescape(localStorage.getItem(this.GLOBAL.config.dictionaryPre + this.GLOBAL.config.dictionary.dictionaryType)))
-                },
+                dictionary: {type: JSON.parse(unescape(localStorage.getItem(this.GLOBAL.config.dictionaryPre + this.GLOBAL.config.dictionary.dictionaryType)))},
                 // 资源权限控制，有的系统不需这么细，则全部为true
                 source: {
                     deleteBatch: true,
                     add: true,
                     infoEdit: true,
                     infoView: true,
-                    infoDelete: true,
-                    addDictionaryDetail: true
+                    infoDelete: true
                 },
                 // 分页参数
                 pagination: {
@@ -123,7 +120,6 @@
                     total: 0,
                     currentPage: 1
                 },
-                operationVisibleFlag: false,
                 deleteBatchList: {
                     ids: [],
                     deleteFlag: false
@@ -134,7 +130,7 @@
         components: {
             resourceTemplate
         },
-        mounted() {
+        mounted () {
             this.init()
         },
         methods: {
@@ -143,6 +139,10 @@
                     this.searchForm.relationId = relationId
                     this.getTableData('init')
                 } else {
+                    this.searchForm = {
+                        relationId: '',
+                            keyWords: ''
+                    }
                     this.tableData = []
                     this.pagination = {
                         pageSizeList: [10, 20, 30, 40, 50],
@@ -170,7 +170,7 @@
                     _this.loading = true
                     _this.FUNCTIONS.systemFunction.interactiveData(
                         _this,
-                        _this.GLOBAL.config.businessFlag.zxDictionary,
+                        _this.GLOBAL.config.businessFlag.zxResource,
                         _this.GLOBAL.config.handleType.deleteLogicalBatch,
                         _this.deleteBatchList.ids,
                         'list',
@@ -185,6 +185,13 @@
                         }
                     )
                 })
+            },
+            getSource: function (rowData) {
+                let tempList = []
+                this.source.infoEdit && tempList.push({icon: 'el-icon-edit', title: '编辑', method: 'handleEdit'})
+                this.source.infoView && tempList.push({icon: 'el-icon-view', title: '查看', method: 'handleView'})
+                this.source.infoDelete && tempList.push({icon: 'el-icon-delete', title: '删除', method: 'handleDelete'})
+                return tempList
             },
             handleCommon: function (type, rowData) {
                 switch (type) {
@@ -218,7 +225,7 @@
                     _this.loading = true
                     _this.FUNCTIONS.systemFunction.interactiveData(
                         _this,
-                        _this.GLOBAL.config.businessFlag.zxDictionary,
+                        _this.GLOBAL.config.businessFlag.zxResource,
                         _this.GLOBAL.config.handleType.deleteLogical,
                         rowData.id,
                         null,

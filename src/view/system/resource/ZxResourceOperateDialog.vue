@@ -63,7 +63,7 @@
                 type: Function
             }
         },
-        data() {
+        data () {
             return {
                 formData: {
                     id: '',
@@ -90,9 +90,18 @@
         },
         methods: {
             init: function (type, relationId, id) {
+                this.editableFlag = true
                 let _title = ''
                 if (type === 'add') {
                     _title = '新增'
+                    this.formData = {
+                            id: '',
+                            relationId: '',
+                            resourceName: '',
+                            resourceCode: '',
+                            sort: '',
+                            remark: ''
+                    }
                 } else if (type === 'edit') {
                     _title = '编辑'
                 } else if (type === 'view') {

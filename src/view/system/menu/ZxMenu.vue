@@ -113,7 +113,7 @@
               :size="GLOBAL.config.systemSize">删除
             </el-button>
           </el-col>
-          <el-col :span="24"  v-if="formData.parentId">
+          <el-col :span="24">
             <el-divider content-position="left">资源{{formData.name? '(' + formData.name+ ')':''}}
             </el-divider>
             <zxResource ref="zxResource"/>
@@ -182,15 +182,13 @@
         },
         mounted () {
             this.init()
+            this.$refs.zxResource.init()
         },
         methods: {
             init: function () {
                 this.getTreeData()
             },
             doSearch: function () {
-            },
-            operationMethod: function (operateType, info) {
-                this.$refs.operationTemplate.init(operateType, info ? info.id : null)
             },
             getSource: function (rowData) {
                 let tempList = []
@@ -350,7 +348,20 @@
                             _this.loading = false
                             if (resultData) {
                                 _this.$message.success('删除成功～')
+                                this.formData = {
+                                    id: '',
+                                    name: '',
+                                    code: '',
+                                    level: '',
+                                    menuType: '',
+                                    icon: '',
+                                    remark: '',
+                                    url: '',
+                                    parentId: this.formData.parentId,
+                                    sort: ''
+                                }
                                 _this.getTreeData()
+                                _this.$refs.zxResource.init()
                             } else {
                                 _this.$message.warning('删除失败～')
                             }
