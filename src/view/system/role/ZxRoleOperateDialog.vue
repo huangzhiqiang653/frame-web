@@ -82,7 +82,7 @@
           _title = '查看'
           this.editableFlag = false
         }
-        this.showTitle = this.showTitle || _title
+        this.showTitle = _title || this.showTitle
         this.showFlag = true
         if (id) {
           this.formData.id = id

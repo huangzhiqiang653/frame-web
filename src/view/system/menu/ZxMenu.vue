@@ -15,7 +15,7 @@
           :props="defaultProps"
           :default-expand-all="true"
           :size="GLOBAL.config.systemSize"
-          ref="orgList"
+          ref="menuList"
           accordion
           @node-click="handleNodeClick">
         </el-tree>

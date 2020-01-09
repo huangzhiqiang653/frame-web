@@ -35,7 +35,8 @@ const config = {
     zxUser: 'zxUser',
     zxDictionary: 'zxDictionary',
     zxOrganization: 'zxOrganization',
-    zxResource: 'zxResource'
+    zxResource: 'zxResource',
+    zxRelationRoleMenu: 'zxRelationRoleMenu'
   },
   handleType: {
     // 系统默认

@@ -235,6 +235,13 @@ body {
   border-right: 1px solid #ececec;
 }
 
+.tree-area-dialog {
+  width: 200px;
+  max-height: 220px;
+  background-color: #ffffff;
+  border-right: 1px solid #ececec;
+}
+
 .tree-content {
   width: calc(100% - 212px);
   height: calc(100% - 32px);
