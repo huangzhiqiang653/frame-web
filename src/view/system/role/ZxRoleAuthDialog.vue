@@ -54,7 +54,8 @@
                 },
                 formData: {
                     roleId: '',
-                    menuIds: ''
+                    menuIds: [],
+                    menuResourceIds: ''
                 },
                 // 校验规则
                 formRules: {},
@@ -97,7 +98,7 @@
                     _this,
                     _this.GLOBAL.config.businessFlag.zxMenu,
                     _this.GLOBAL.config.handleType.getTree,
-                    null,
+                    {'showResource': true},
                     null,
                     resultData => {
                         _this.loading = false
@@ -113,33 +114,43 @@
                 )
             },
             getRelationRoleMenu: function (role) {
+                this.$refs.menuList.setCheckedKeys([])
                 let _this = this
                 // 3、 调接口获取数据
                 _this.FUNCTIONS.systemFunction.interactiveData(
                     _this,
-                    _this.GLOBAL.config.businessFlag.zxRelationRoleMenu,
-                    _this.GLOBAL.config.handleType.getListByCondition,
-                    {'roleId': _this.formData.roleId},
+                    _this.GLOBAL.config.businessFlag.zxRole,
+                    _this.GLOBAL.config.handleType.getAuthMenu,
+                    {'id': _this.formData.roleId},
                     null,
                     resultData => {
                         if (resultData) {
-                            let menuIds = []
-                            resultData.forEach(item => {
-                                menuIds.push(item.menuId)
-                            })
-
-                            this.$refs.menuList.setCheckedKeys(menuIds)
+                            let menuIds = resultData.menuIds
+                            if (menuIds) {
+                                let checkedKeys = []
+                                checkedKeys=checkedKeys.concat(menuIds)
+                                // this.$refs.menuList.setCheckedKeys(menuIds)
+                                let menuResourceIds = resultData.menuResourceIds
+                                if (menuResourceIds) {
+                                    menuIds.forEach((item) => {
+                                        let resourceIds = menuResourceIds[item]
+                                        if(resourceIds){
+                                            checkedKeys=checkedKeys.concat(resourceIds)
+                                        }
+                                    })
+                                }
+                                this.$refs.menuList.setCheckedKeys(checkedKeys)
+                            }
                         } else {
                             _this.$message.warning('获取菜单数据失败～')
                         }
                     },
                     () => {
-                        _this.loading = false
                     }
                 )
             },
             handleNodeClick: function (target, node) {
-                this.formData = target
+
             },
             closeDialog: function () {
                 this.showFlag = false
@@ -149,21 +160,40 @@
                     this.$message.warning('请重新选择角色～')
                     return
                 }
-
-                let checkedMenus = this.$refs.menuList.getCheckedKeys()
-                if (!checkedMenus) {
+                let checkedMenusNode = this.$refs.menuList.getCheckedNodes(true)
+                if (!checkedMenusNode) {
                     this.$message.warning('请勾选菜单～')
                     return
                 }
+                let checkedMenus = new Set()
+                const menuResourceMap = {}
+                checkedMenusNode.forEach(item => {
+                    if (item.isResource) {
+                        let menuId = item.relationId
+                        checkedMenus.add(menuId)
+                        let resourceId = item.id
+                        if (resourceId) {
+                            let resourceIds = menuResourceMap[menuId]
+                            if (!resourceIds) {
+                                resourceIds = []
+                                menuResourceMap[menuId] = resourceIds
+                            }
 
+                            resourceIds.push(resourceId)
+                        }
+                    } else {
+                        checkedMenus.add(item.id)
+                    }
+                })
                 this.formData.menuIds = checkedMenus
-                let params = this.formData
+                this.formData.menuResourceIds = menuResourceMap
                 // 参数处理======start==========
                 // TODO 对于单选、复选、多选、附件等需要进行单独处理
                 // 参数处理======end============
                 let _this = this
                 _this.loading = true
-                this.FUNCTIONS.systemFunction.interactiveData(
+                let params = this.formData
+                _this.FUNCTIONS.systemFunction.interactiveData(
                     _this,
                     _this.GLOBAL.config.businessFlag.zxRelationRoleMenu,
                     _this.GLOBAL.config.handleType.add,
