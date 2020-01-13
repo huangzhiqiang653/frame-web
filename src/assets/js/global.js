@@ -36,7 +36,8 @@ const config = {
     zxDictionary: 'zxDictionary',
     zxOrganization: 'zxOrganization',
     zxResource: 'zxResource',
-    zxRelationRoleMenu: 'zxRelationRoleMenu'
+    zxRelationRoleMenu: 'zxRelationRoleMenu',
+    zxRelationRoleResource: 'zxRelationRoleResource'
   },
   handleType: {
     // 系统默认
@@ -57,7 +58,8 @@ const config = {
     // 新增操作
     deleteAndAdd: 'deleteAndAdd',
     updateSelfInfo: 'updateSelfInfo',
-    getTree: 'getTree'
+    getTree: 'getTree',
+    getAuthMenu: 'getAuthMenu'
   },
   dateFormat: {
     YMD: 'YYYY-MM-DD',

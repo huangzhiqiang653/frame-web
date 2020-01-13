@@ -21,7 +21,8 @@ const urls = {
     zxDictionary: '/auth/zx-dictionary/base',
     zxOrganization: '/auth/zx-organization/base',
     zxResource: '/auth/zx-resource/base',
-    zxRelationRoleMenu: '/auth/zx-relation-role-menu/base'
+    zxRelationRoleMenu: '/auth/zx-relation-role-menu/base',
+    zxRelationRoleResource: '/auth/zx-relation-role-resource/base'
   }
 
 }
