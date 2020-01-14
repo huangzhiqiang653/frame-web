@@ -173,7 +173,6 @@
             } else if (type === 'edit') {
                 _title = '编辑'
                 this.editableFlag = true
-
             } else if (type === 'view') {
                 _title = '查看'
                 this.editableFlag = false
