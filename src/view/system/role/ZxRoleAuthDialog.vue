@@ -44,7 +44,7 @@
                 type: Function
             }
         },
-        data () {
+        data() {
             return {
                 treeData: [],
                 roleMenuRelations: [],
@@ -128,16 +128,18 @@
                             let menuIds = resultData.menuIds
                             if (menuIds) {
                                 let checkedKeys = []
-                                checkedKeys=checkedKeys.concat(menuIds)
-                                // this.$refs.menuList.setCheckedKeys(menuIds)
                                 let menuResourceIds = resultData.menuResourceIds
                                 if (menuResourceIds) {
                                     menuIds.forEach((item) => {
                                         let resourceIds = menuResourceIds[item]
-                                        if(resourceIds){
-                                            checkedKeys=checkedKeys.concat(resourceIds)
+                                        if (resourceIds) {
+                                            checkedKeys = checkedKeys.concat(resourceIds)
+                                        } else {
+                                            checkedKeys = checkedKeys.concat(item)
                                         }
                                     })
+                                }else{
+                                    checkedKeys = checkedKeys.concat(menuIds)
                                 }
                                 this.$refs.menuList.setCheckedKeys(checkedKeys)
                             }
