@@ -1,7 +1,7 @@
 <template>
   <el-dialog :title="showTitle" :visible.sync="showFlag">
     <el-row class="margin-top-20" style="margin-top: 0px">
-      <el-aside class="tree-area-dialog">
+      <div class="tree-area-dialog">
         <el-tree
           style="margin: 0px"
           :data="treeData"
@@ -14,13 +14,7 @@
           accordion
           @node-click="handleNodeClick">
         </el-tree>
-      </el-aside>
-      <el-container class="tree-content">
-        <el-row class="margin-top-20">
-          <el-col :span="24">
-          </el-col>
-        </el-row>
-      </el-container>
+      </div>
     </el-row>
     <el-row class="margin-top-20">
       <el-button @click="closeDialog" style="margin: 0 20px;" :size="GLOBAL.config.systemSize">关闭</el-button>
@@ -44,7 +38,7 @@
                 type: Function
             }
         },
-        data () {
+        data() {
             return {
                 treeData: [],
                 roleMenuRelations: [],
@@ -128,16 +122,18 @@
                             let menuIds = resultData.menuIds
                             if (menuIds) {
                                 let checkedKeys = []
-                                checkedKeys=checkedKeys.concat(menuIds)
-                                // this.$refs.menuList.setCheckedKeys(menuIds)
                                 let menuResourceIds = resultData.menuResourceIds
                                 if (menuResourceIds) {
                                     menuIds.forEach((item) => {
-                                        let resourceIds = menuResourceIds[item]
-                                        if(resourceIds){
-                                            checkedKeys=checkedKeys.concat(resourceIds)
+                                         let resourceIds = menuResourceIds[item]
+                                        if (resourceIds) {
+                                            checkedKeys = checkedKeys.concat(resourceIds)
+                                        } else {
+                                            checkedKeys = checkedKeys.concat(item)
                                         }
                                     })
+                                }else{
+                                    checkedKeys = checkedKeys.concat(menuIds)
                                 }
                                 this.$refs.menuList.setCheckedKeys(checkedKeys)
                             }
