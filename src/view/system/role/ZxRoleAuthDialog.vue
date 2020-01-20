@@ -1,5 +1,5 @@
 <template>
-  <el-dialog :title="showTitle" :visible.sync="showFlag">
+  <el-dialog  width="350px" :title="showTitle" :visible.sync="showFlag">
     <el-row class="margin-top-20" style="margin-top: 0px">
       <div class="tree-area-dialog">
         <el-tree

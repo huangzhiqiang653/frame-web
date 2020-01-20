@@ -118,12 +118,14 @@
     <!--操作-->
     <operationTemplate ref="operationTemplate" :refresh="getTableData"/>
     <roleAuthTemplate ref="roleAuthTemplate" :refresh="getTableData"/>
+    <accountTemplate ref="accountTemplate" :refresh="getTableData"/>
   </div>
 </template>
 <script>
     // 替换成相应的模板
     import operationTemplate from './ZxRoleOperateDialog'
     import roleAuthTemplate from './ZxRoleAuthDialog'
+    import accountTemplate from './../account/ZxAccountTableDialog'
 
     export default {
         name: 'ZxRoleTable',
@@ -146,7 +148,8 @@
                     infoEdit: true,
                     infoView: true,
                     infoDelete: true,
-                    infoAuth: true
+                    infoAuth: true,
+                    infoAccount: true
                 },
                 // 分页参数
                 pagination: {
@@ -166,7 +169,8 @@
         },
         components: {
             operationTemplate,
-            roleAuthTemplate
+            roleAuthTemplate,
+            accountTemplate
         },
         mounted () {
             this.init()
@@ -215,6 +219,7 @@
                 this.source.infoView && tempList.push({icon: 'el-icon-view', title: '查看', method: 'handleView'})
                 this.source.infoDelete && tempList.push({icon: 'el-icon-delete', title: '删除', method: 'handleDelete'})
                 this.source.infoAuth && tempList.push({icon: 'el-icon-user', title: '授权', method: 'handleAuth'})
+                this.source.infoAccount && tempList.push({icon: 'el-icon-user', title: '绑定账号', method: 'handleAccount'})
                 return tempList
             },
             handleCommon: function (type, rowData) {
@@ -230,6 +235,9 @@
                         break
                     case 'handleAuth':
                         this.handleAuth(rowData)
+                        break
+                    case 'handleAccount':
+                        this.handleAccount(rowData)
                         break
                 }
             },
@@ -273,6 +281,10 @@
             // 授权
             handleAuth: function (rowData) {
                 this.$refs.roleAuthTemplate.init('auth', rowData.id)
+            },
+            // 绑定账号
+            handleAccount: function (rowData) {
+                this.$refs.accountTemplate.init('auth', rowData.id)
             },
             // 获取列表
             getTableData: function (initPageFlag) {
