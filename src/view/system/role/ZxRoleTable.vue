@@ -125,7 +125,7 @@
     // 替换成相应的模板
     import operationTemplate from './ZxRoleOperateDialog'
     import roleAuthTemplate from './ZxRoleAuthDialog'
-    import accountTemplate from './../account/ZxAccountTableDialog'
+    import accountTemplate from '../account/ZxRoleAuthAccountTableDialog'
 
     export default {
         name: 'ZxRoleTable',

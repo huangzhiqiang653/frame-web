@@ -61,7 +61,10 @@ const config = {
     updateSelfInfo: 'updateSelfInfo',
     getTree: 'getTree',
     getAuthMenu: 'getAuthMenu',
-    listAccountByRole: 'listAccountByRole'
+    listAccountByRole: 'listAccountByRole',
+    listRoleByAccountId: 'listRoleByAccountId',
+    addRoleAccountsRelation: 'addRoleAccountsRelation',
+    addAccountRolesRelation: 'addAccountRolesRelation'
   },
   dateFormat: {
     YMD: 'YYYY-MM-DD',

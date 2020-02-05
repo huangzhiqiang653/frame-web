@@ -151,249 +151,266 @@
     <operationTemplate ref="operationTemplate" :refresh="getTableData"/>
     <!--查看明细-->
     <viewAllTemplate ref="viewAllTemplate"/>
+    <!--设置角色-->
+    <roleTemplate ref="roleTemplate"/>
   </div>
 </template>
 <script>
-  // 替换成相应的模板
-  import operationTemplate from './ZxAccountOperateDialog'
-  import viewAllTemplate from './ZxAccountAllView'
+    // 替换成相应的模板
+    import operationTemplate from './ZxAccountOperateDialog'
+    import viewAllTemplate from './ZxAccountAllView'
+    import roleTemplate from '../role/ZxAccountAuthRoleTableDialog'
 
-  export default {
-    name: 'ZxAccountTable',
-    data () {
-      return {
-        // 查询表单
-        searchForm: {
-          accountName: '',
-          status: '',
-          userId: '',
-          updateTime: ''
-        },
-        tableData: [],
-        // 字典数据
-        dictionary: {
-          accountStatus: JSON.parse(unescape(localStorage.getItem(this.GLOBAL.config.dictionaryPre + this.GLOBAL.config.dictionary.accountStatus)))
-        },
-        // 资源权限控制，有的系统不需这么细，则全部为true
-        source: {
-          add: true,
-          deleteBatch: true,
-          infoEdit: true,
-          infoView: true,
-          infoDelete: true,
-          resetPwd: true
-        },
-        // 分页参数
-        pagination: {
-          pageSizeList: [10, 20, 30, 40, 50],
-          pageSize: 10,
-          layout: 'total, sizes, prev, pager, next, jumper',
-          total: 0,
-          currentPage: 1
-        },
-        operationVisibleFlag: false,
-        deleteBatchList: {
-          ids: [],
-          deleteFlag: false
-        },
-        loading: false
-      }
-    },
-    components: {
-      operationTemplate,
-      viewAllTemplate
-    },
-    mounted () {
-      this.init()
-    },
-    methods: {
-      init: function () {
-        // TODO 加载列表数据
-        this.getTableData('init')
-      },
-      doSearch: function () {
-        this.getTableData('init')
-      },
-      operationMethod: function (operateType, info) {
-        this.$refs.operationTemplate.init(operateType, info ? info.id : null)
-      },
-      deleteBatch: function () {
-        let _this = this
-        _this.$confirm('确认删除当前选择' +
-          '的' + _this.deleteBatchList.ids.length + '条数据？？', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          _this.loading = true
-          _this.FUNCTIONS.systemFunction.interactiveData(
-            _this,
-            _this.GLOBAL.config.businessFlag.zxAccount,
-            _this.GLOBAL.config.handleType.deleteLogicalBatch,
-            _this.deleteBatchList.ids,
-            'list',
-            resultData => {
-              _this.loading = false
-              if (resultData) {
-                _this.$message.success('删除成功～')
-                _this.getTableData('init')
-              } else {
-                _this.$message.warning('删除失败～')
-              }
+    export default {
+        name: 'ZxAccountTable',
+        data() {
+            return {
+                // 查询表单
+                searchForm: {
+                    accountName: '',
+                    status: '',
+                    userId: '',
+                    updateTime: ''
+                },
+                tableData: [],
+                // 字典数据
+                dictionary: {
+                    accountStatus: JSON.parse(unescape(localStorage.getItem(this.GLOBAL.config.dictionaryPre + this.GLOBAL.config.dictionary.accountStatus)))
+                },
+                // 资源权限控制，有的系统不需这么细，则全部为true
+                source: {
+                    add: true,
+                    deleteBatch: true,
+                    infoEdit: true,
+                    infoView: true,
+                    infoDelete: true,
+                    resetPwd: true,
+                    setRole: true
+                },
+                // 分页参数
+                pagination: {
+                    pageSizeList: [10, 20, 30, 40, 50],
+                    pageSize: 10,
+                    layout: 'total, sizes, prev, pager, next, jumper',
+                    total: 0,
+                    currentPage: 1
+                },
+                operationVisibleFlag: false,
+                deleteBatchList: {
+                    ids: [],
+                    deleteFlag: false
+                },
+                loading: false
             }
-          )
-        })
-      },
-      getSource: function (rowData) {
-        let tempList = []
-        this.source.resetPwd && tempList.push({icon: 'el-icon-refresh-right', title: '重置密码', method: 'resetPwd'})
-        this.source.infoEdit && tempList.push({icon: 'el-icon-edit', title: '编辑', method: 'handleEdit'})
-        this.source.infoView && tempList.push({icon: 'el-icon-view', title: '查看', method: 'handleView'})
-        this.source.infoDelete && tempList.push({icon: 'el-icon-delete', title: '删除', method: 'handleDelete'})
-        return tempList
-      },
-      handleCommon: function (type, rowData) {
-        switch (type) {
-          case 'handleEdit':
-            this.handleEdit(rowData)
-            break
-          case 'handleView':
-            this.handleView(rowData)
-            break
-          case 'handleDelete':
-            this.handleDelete(rowData)
-            break
-          case 'resetPwd':
-            this.resetPwd(rowData)
-            break
-        }
-      },
-      // 编辑
-      handleEdit: function (rowData) {
-        this.operationMethod('edit', rowData)
-        // TODO
-      },
-      // 查看
-      handleView: function (rowData) {
-        this.$refs.viewAllTemplate.init(rowData)
-      },
-      // 重置密码
-      resetPwd: function (rowData) {
-        // TODO
-      },
-      // 单条数据删除
-      handleDelete: function (rowData) {
-        let _this = this
-        _this.$confirm('确认删除当前数据？？', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          _this.loading = true
-          _this.FUNCTIONS.systemFunction.interactiveData(
-            _this,
-            _this.GLOBAL.config.businessFlag.zxAccount,
-            _this.GLOBAL.config.handleType.deleteLogical,
-            rowData.id,
-            null,
-            resultData => {
-              _this.loading = false
-              if (resultData) {
-                _this.$message.success('删除成功～')
-                _this.getTableData('init')
-              } else {
-                _this.$message.warning('删除失败～')
-              }
-            }
-          )
-        })
-      },
-      // 获取列表
-      getTableData: function (initPageFlag) {
-        this.loading = true
-        let _this = this, searchParams = this.searchForm
-        _this.FUNCTIONS.systemFunction.removeNullFields(searchParams)
-        let paginationData = _this.FUNCTIONS.systemFunction.paginationSet(
-          initPageFlag ? 1 : _this.pagination.currentPage,
-          initPageFlag ? 10 : _this.pagination.pageSize,
-          searchParams)
-        // 3、 调接口获取数据
-        _this.FUNCTIONS.systemFunction.interactiveData(
-          _this,
-          _this.GLOBAL.config.businessFlag.zxAccount,
-          _this.GLOBAL.config.handleType.getPage,
-          paginationData,
-          null,
-          resultData => {
-            _this.loading = false
-            if (resultData) {
-              // 结果参数赋值
-              _this.pagination.pageSize = resultData.size
-              _this.pagination.total = resultData.total
-              _this.pagination.currentPage = resultData.current
-              _this.tableData = resultData.records
-            } else {
-              _this.$message.warning('获取列表数据失败～')
-            }
-          },
-          () => {
-            _this.loading = false
-          }
-        )
-      },
-      // 分页方法
-      tableSizeChange: function (pageSize) {
-        this.pagination.pageSize = pageSize
-        this.getTableData()
-      },
-      currentChange: function (current) {
-        this.pagination.currentPage = current
-        this.getTableData()
-      },
-      // 复选框选择事件
-      tableSelectionChange: function (targetList) {
-        let ids = []
-        targetList.forEach(item => {
-          ids.push(item.id)
-        })
-        this.deleteBatchList.ids = ids
-        if (this.deleteBatchList.ids &&
-          this.deleteBatchList.ids.length > 0) {
-          this.deleteBatchList.deleteFlag = true
-        } else {
-          this.deleteBatchList.deleteFlag = false
-        }
-      },
-      // 禁用账号
-      inActiveUse: function (rowData) {
-        let _this = this
-        !rowData.status ? this.$confirm('确定禁用该账号【' + rowData.accountName + '】吗?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          f()
-        }) : f()
+        },
+        components: {
+            operationTemplate,
+            viewAllTemplate,
+            roleTemplate
+        },
+        mounted() {
+            this.init()
+        },
+        methods: {
+            init: function () {
+                // TODO 加载列表数据
+                this.getTableData('init')
+            },
+            doSearch: function () {
+                this.getTableData('init')
+            },
+            operationMethod: function (operateType, info) {
+                this.$refs.operationTemplate.init(operateType, info ? info.id : null)
+            },
+            deleteBatch: function () {
+                let _this = this
+                _this.$confirm('确认删除当前选择' +
+                    '的' + _this.deleteBatchList.ids.length + '条数据？？', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    _this.loading = true
+                    _this.FUNCTIONS.systemFunction.interactiveData(
+                        _this,
+                        _this.GLOBAL.config.businessFlag.zxAccount,
+                        _this.GLOBAL.config.handleType.deleteLogicalBatch,
+                        _this.deleteBatchList.ids,
+                        'list',
+                        resultData => {
+                            _this.loading = false
+                            if (resultData) {
+                                _this.$message.success('删除成功～')
+                                _this.getTableData('init')
+                            } else {
+                                _this.$message.warning('删除失败～')
+                            }
+                        }
+                    )
+                })
+            },
+            getSource: function (rowData) {
+                let tempList = []
+                this.source.resetPwd && tempList.push({
+                    icon: 'el-icon-refresh-right',
+                    title: '重置密码',
+                    method: 'resetPwd'
+                })
+                this.source.infoEdit && tempList.push({icon: 'el-icon-edit', title: '编辑', method: 'handleEdit'})
+                this.source.infoView && tempList.push({icon: 'el-icon-view', title: '查看', method: 'handleView'})
+                this.source.infoDelete && tempList.push({icon: 'el-icon-delete', title: '删除', method: 'handleDelete'})
+                this.source.setRole && tempList.push({icon: 'el-icon-user', title: '设置角色', method: 'setRole'})
+                return tempList
+            },
+            handleCommon: function (type, rowData) {
+                switch (type) {
+                    case 'handleEdit':
+                        this.handleEdit(rowData)
+                        break
+                    case 'handleView':
+                        this.handleView(rowData)
+                        break
+                    case 'handleDelete':
+                        this.handleDelete(rowData)
+                        break
+                    case 'resetPwd':
+                        this.resetPwd(rowData)
+                        break
+                    case 'setRole':
+                        this.setRole(rowData)
+                        break
+                }
+            },
+            // 编辑
+            handleEdit: function (rowData) {
+                this.operationMethod('edit', rowData)
+                // TODO
+            },
+            // 查看
+            handleView: function (rowData) {
+                this.$refs.viewAllTemplate.init(rowData)
+            },
+            // 重置密码
+            resetPwd: function (rowData) {
+                // TODO
+            },
+            // 设置角色
+            setRole: function (rowData) {
+                this.$refs.roleTemplate.init('auth', rowData.id)
+            },
+            // 单条数据删除
+            handleDelete: function (rowData) {
+                let _this = this
+                _this.$confirm('确认删除当前数据？？', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    _this.loading = true
+                    _this.FUNCTIONS.systemFunction.interactiveData(
+                        _this,
+                        _this.GLOBAL.config.businessFlag.zxAccount,
+                        _this.GLOBAL.config.handleType.deleteLogical,
+                        rowData.id,
+                        null,
+                        resultData => {
+                            _this.loading = false
+                            if (resultData) {
+                                _this.$message.success('删除成功～')
+                                _this.getTableData('init')
+                            } else {
+                                _this.$message.warning('删除失败～')
+                            }
+                        }
+                    )
+                })
+            },
+            // 获取列表
+            getTableData: function (initPageFlag) {
+                this.loading = true
+                let _this = this, searchParams = this.searchForm
+                _this.FUNCTIONS.systemFunction.removeNullFields(searchParams)
+                let paginationData = _this.FUNCTIONS.systemFunction.paginationSet(
+                    initPageFlag ? 1 : _this.pagination.currentPage,
+                    initPageFlag ? 10 : _this.pagination.pageSize,
+                    searchParams)
+                // 3、 调接口获取数据
+                _this.FUNCTIONS.systemFunction.interactiveData(
+                    _this,
+                    _this.GLOBAL.config.businessFlag.zxAccount,
+                    _this.GLOBAL.config.handleType.getPage,
+                    paginationData,
+                    null,
+                    resultData => {
+                        _this.loading = false
+                        if (resultData) {
+                            // 结果参数赋值
+                            _this.pagination.pageSize = resultData.size
+                            _this.pagination.total = resultData.total
+                            _this.pagination.currentPage = resultData.current
+                            _this.tableData = resultData.records
+                        } else {
+                            _this.$message.warning('获取列表数据失败～')
+                        }
+                    },
+                    () => {
+                        _this.loading = false
+                    }
+                )
+            },
+            // 分页方法
+            tableSizeChange: function (pageSize) {
+                this.pagination.pageSize = pageSize
+                this.getTableData()
+            },
+            currentChange: function (current) {
+                this.pagination.currentPage = current
+                this.getTableData()
+            },
+            // 复选框选择事件
+            tableSelectionChange: function (targetList) {
+                let ids = []
+                targetList.forEach(item => {
+                    ids.push(item.id)
+                })
+                this.deleteBatchList.ids = ids
+                if (this.deleteBatchList.ids &&
+                    this.deleteBatchList.ids.length > 0) {
+                    this.deleteBatchList.deleteFlag = true
+                } else {
+                    this.deleteBatchList.deleteFlag = false
+                }
+            },
+            // 禁用账号
+            inActiveUse: function (rowData) {
+                let _this = this
+                !rowData.status ? this.$confirm('确定禁用该账号【' + rowData.accountName + '】吗?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    f()
+                }) : f()
 
-        function f () {
-          let params = {id: rowData.id, status: rowData.status ? 0 : 1}
-          _this.FUNCTIONS.systemFunction.interactiveData(
-            _this,
-            _this.GLOBAL.config.businessFlag.zxAccount,
-            _this.GLOBAL.config.handleType.updateAll,
-            params,
-            null,
-            resultData => {
-              if (resultData) {
-                _this.$message.success('操作成功～')
-                _this.showFlag = false
-                _this.getTableData('init')
-              } else {
-                _this.$message.warning('操作失败～')
-              }
-            })
+                function f() {
+                    let params = {id: rowData.id, status: rowData.status ? 0 : 1}
+                    _this.FUNCTIONS.systemFunction.interactiveData(
+                        _this,
+                        _this.GLOBAL.config.businessFlag.zxAccount,
+                        _this.GLOBAL.config.handleType.updateAll,
+                        params,
+                        null,
+                        resultData => {
+                            if (resultData) {
+                                _this.$message.success('操作成功～')
+                                _this.showFlag = false
+                                _this.getTableData('init')
+                            } else {
+                                _this.$message.warning('操作失败～')
+                            }
+                        })
+                }
+            }
         }
-      }
     }
-  }
 </script>
