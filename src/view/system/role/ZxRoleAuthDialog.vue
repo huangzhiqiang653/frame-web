@@ -81,7 +81,6 @@
                 this.showFlag = true
                 this.formData.roleId = id
                 this.getTreeData()
-                this.getRelationRoleMenu()
             },
             // 组织树数据
             getTreeData: function () {
@@ -98,6 +97,7 @@
                         _this.loading = false
                         if (resultData) {
                             _this.treeData = resultData
+                            _this.getRelationRoleMenu()
                         } else {
                             _this.$message.warning('获取菜单数据失败～')
                         }

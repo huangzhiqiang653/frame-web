@@ -129,10 +129,11 @@
                 },
                 // 查询表单
                 searchForm: {
+                    roleId: '',
                     accountName: '',
                     status: '0',
-                    //未授权
-                    // isAuth:false
+                    //授权标志：false 只查询未授权，true 只查询已授权
+                    authFlag:'false'
                 },
                 defaultProps: {
                     children: 'children',
@@ -178,6 +179,7 @@
                 this.showTitle = _title || this.showTitle
                 this.showFlag = true
                 this.formData.roleId = id
+                this.searchForm.roleId = id
                 this.getTableData('init')
                 this.getAuthCountTree();
             },
@@ -217,7 +219,7 @@
                     }
                 )
             },      // 复选框选择事件
-            //获取已收取账号列表
+            //获取已授权账号列表
             getAuthCountTree: function () {
                 this.loading = true
                 let _this = this
