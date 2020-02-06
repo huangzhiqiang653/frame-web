@@ -7,6 +7,7 @@ import Dictionary from '@/view/system/dictionary/ZxDictionaryTable'
 import Role from '@/view/system/role/ZxRoleTable'
 import Organisation from '@/view/system/organisation/ZxOrganization'
 import Menu from '@/view/system/menu/ZxMenu'
+import Redis from '@/view/system/redis/ZxRedisTable'
 
 Vue.use(Router)
 const VueRouterPush = Router.prototype.push
@@ -56,6 +57,12 @@ export default new Router({
       path: '/dictionary',
       name: 'Dictionary',
       component: Dictionary
+    },
+    {
+      // redis缓存
+      path: '/redis',
+      name: 'Redis',
+      component: Redis
     }
   ]
 })

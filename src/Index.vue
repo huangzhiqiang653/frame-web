@@ -22,6 +22,10 @@
             <i class="el-icon-guide"></i>
             <span slot="title">代码生成</span>
           </el-menu-item>
+          <el-menu-item index="/redis">
+            <i class="el-icon-present"></i>
+            <span slot="title">redis缓存</span>
+          </el-menu-item>
           <el-menu-item index="/dictionary">
             <i class="el-icon-notebook-2"></i>
             <span slot="title">字典管理</span>
