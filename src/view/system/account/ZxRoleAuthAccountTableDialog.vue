@@ -84,7 +84,10 @@
             </el-table-column>
             <el-table-column prop="scope" label="操作" align="center">
               <template slot-scope="scope">
-                <el-button :id="scope.row.id" type="text" @click="appendAccountNode(scope.row,$event)">添加</el-button>
+                <el-button :id="scope.row.id" type="text"
+                           :disabled="scope.row.isdisabled"
+                           @click="appendAccountNode(scope.row, $event)">添加
+                </el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -133,7 +136,7 @@
                     accountName: '',
                     status: '0',
                     //授权标志：false 只查询未授权，true 只查询已授权
-                    authFlag:'false'
+                    authFlag: 'false'
                 },
                 defaultProps: {
                     children: 'children',
@@ -155,8 +158,7 @@
                     currentPage: 1
                 },
                 // 资源权限控制，有的系统不需这么细，则全部为true
-                source: {
-                },
+                source: {},
                 loading: false,
                 editableFlag: true,
                 showTitle: '账户授权',
@@ -207,6 +209,9 @@
                             _this.pagination.pageSize = resultData.size
                             _this.pagination.total = resultData.total
                             _this.pagination.currentPage = resultData.current
+                            resultData.records.forEach(item => {
+                                item.isdisabled = false
+                            })
                             _this.tableData = resultData.records
                         } else {
                             _this.$message.warning('获取列表数据失败～')
@@ -259,20 +264,24 @@
                 const children = parent.data.children || parent.data;
                 const index = children.findIndex(d => d.id === data.id);
                 children.splice(index, 1)
-                document.getElementById(data.id).disabled=false
-                document.getElementById(data.id).innerHTML="添加"
+                this.tableData.forEach(item => {
+                    if (item.id === data.id) {
+                        item.isdisabled = false
+                    }
+                })
             },
             // 项列表树追加节点
             appendAccountNode: function (rowData, event) {
                 let _this = this
                 let i = _this.treeData.findIndex(d => d.id === rowData.id)
                 if (i < 0) {
-                    rowData.event=event
                     _this.treeData.push(rowData)
                 }
-
-                document.getElementById(rowData.id).disabled=true
-                document.getElementById(rowData.id).innerHTML="已选择"
+                _this.tableData.forEach(item => {
+                    if (item.id === rowData.id) {
+                        item.isdisabled = true
+                    }
+                })
             },
             saveOrUpdateForm: function () {
                 if (!this.formData.roleId) {
@@ -285,7 +294,7 @@
                 this.treeData.forEach(item => {
                     accountIds.push(item.id)
                 })
-                _this.formData.accountIds=accountIds
+                _this.formData.accountIds = accountIds
                 // 参数处理======end============
                 _this.loading = true
                 let params = this.formData

@@ -52,7 +52,7 @@
             <el-table-column prop="code" label="角色编码" align="center"/>
             <el-table-column prop="scope" label="操作" align="center">
               <template slot-scope="scope">
-                <el-button :id="scope.row.id" type="text" @click="appendAccountNode(scope.row)">添加</el-button>
+                <el-button :id="scope.row.id" :disabled="scope.row.isdisabled" type="text" @click="appendAccountNode(scope.row)">添加</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -173,6 +173,9 @@
                             _this.pagination.pageSize = resultData.size
                             _this.pagination.total = resultData.total
                             _this.pagination.currentPage = resultData.current
+                            resultData.records.forEach(item => {
+                                item.isdisabled = false
+                            })
                             _this.tableData = resultData.records
                         } else {
                             _this.$message.warning('获取列表数据失败～')
@@ -225,8 +228,11 @@
                 const children = parent.data.children || parent.data;
                 const index = children.findIndex(d => d.id === data.id);
                 children.splice(index, 1)
-                document.getElementById(data.id).disabled = false
-                document.getElementById(data.id).innerHTML = "添加"
+                this.tableData.forEach(item => {
+                    if (item.id === data.id) {
+                        item.isdisabled = false
+                    }
+                })
             },
             // 项列表树追加节点
             appendAccountNode: function (rowData) {
@@ -235,9 +241,11 @@
                 if (i < 0) {
                     _this.treeData.push(rowData)
                 }
-
-                document.getElementById(rowData.id).disabled = true
-                document.getElementById(rowData.id).innerHTML = "已选择"
+                _this.tableData.forEach(item => {
+                    if (item.id === rowData.id) {
+                        item.isdisabled = true
+                    }
+                })
             },
             saveOrUpdateForm: function () {
                 if (!this.formData.accountId) {
