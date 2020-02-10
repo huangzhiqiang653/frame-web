@@ -64,7 +64,8 @@ const config = {
     listAccountByRole: 'listAccountByRole',
     listRoleByAccountId: 'listRoleByAccountId',
     addRoleAccountsRelation: 'addRoleAccountsRelation',
-    addAccountRolesRelation: 'addAccountRolesRelation'
+    addAccountRolesRelation: 'addAccountRolesRelation',
+    initialAccountPwd: 'initialAccountPwd'
   },
   dateFormat: {
     YMD: 'YYYY-MM-DD',

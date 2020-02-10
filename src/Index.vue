@@ -158,7 +158,7 @@
                 // 清除前端缓存
                 localStorage.clear()
                 sessionStorage.clear()
-                window.location.href = result.data
+                window.location.reload()
               } else {
                 this.$message({
                   message: '退出异常～请联系管理员',

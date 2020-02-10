@@ -292,7 +292,30 @@
             },
             // 重置密码
             resetPwd: function (rowData) {
-                // TODO
+                let _this = this
+                _this.$confirm('确认初始化密码？？', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    _this.loading = true
+                    _this.FUNCTIONS.systemFunction.interactiveData(
+                        _this,
+                        _this.GLOBAL.config.businessFlag.zxAccount,
+                        _this.GLOBAL.config.handleType.initialAccountPwd,
+                        rowData.id,
+                        null,
+                        resultData => {
+                            _this.loading = false
+                            if (resultData) {
+                                _this.$message.success('初始化密码成功～')
+                                _this.getTableData('init')
+                            } else {
+                                _this.$message.warning('初始化密码失败～')
+                            }
+                        }
+                    )
+                })
             },
             // 设置角色
             setRole: function (rowData) {

@@ -1,6 +1,7 @@
 const urls = {
   root: '/zxauth',
   index: {
+    toLogin: '/auth/index/toLogin',
     login: '/auth/index/login',
     logout: '/auth/index/logout',
     getMenu: '',
