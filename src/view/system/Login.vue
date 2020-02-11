@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="register-wrapper">
+    <div class="register-wrapper" v-loading="loading">
       <div id="register">
         <p class="title">登录</p>
         <el-form
@@ -56,7 +56,8 @@
                     accountPassword: [{validator: validatePass, trigger: 'change'}],
                 },
                 isDisabled: false, // 是否禁止点击发送验证码按钮
-                flag: true
+                flag: true,
+                loading: false
             }
         },
         methods: {
