@@ -29,7 +29,7 @@
 </template>
 <script>
     export default {
-        name: "Register",
+        name: 'RegisterAccount',
         data() {
             // <!--验证手机号是否合法-->
             let checkName = (rule, value, callback) => {
@@ -60,6 +60,9 @@
                 loading: false
             }
         },
+        created: function () {
+            console.log('注册')
+        },
         methods: {
             // <!--提交注册-->
             submitForm: function () {
@@ -71,9 +74,7 @@
                     params,
                     resultData => {
                         if (resultData.code === '0') {
-                            this.$router.push({
-                                window.location.reload()
-                            })
+                            _this.$emit("listenToChildEvent", true);
                         } else {
                             _this.$message({
                                 showClose: true,

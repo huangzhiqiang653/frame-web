@@ -8,6 +8,7 @@ import Role from '@/view/system/role/ZxRoleTable'
 import Organisation from '@/view/system/organisation/ZxOrganization'
 import Menu from '@/view/system/menu/ZxMenu'
 import Redis from '@/view/system/redis/ZxRedisTable'
+import RegisterAccount from '@/view/system/RegisterAccount'
 
 Vue.use(Router)
 const VueRouterPush = Router.prototype.push
@@ -63,6 +64,12 @@ export default new Router({
       path: '/redis',
       name: 'Redis',
       component: Redis
+    },
+    {
+      // 注册
+      path: '/RegisterAccount',
+      name: 'RegisterAccount',
+      component: RegisterAccount
     }
   ]
 })

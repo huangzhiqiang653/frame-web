@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="register-wrapper" v-loading="loading">
-      <div id="register">
+      <div id="register" v-if="isRegister">
         <p class="title">登录</p>
         <el-form
           :model="dataForm"
@@ -21,15 +21,23 @@
           <el-form-item>
             <el-button type="primary" @click="submitForm" style="width:100%;">登录</el-button>
             <p class="login" @click="gotoRegist">没有账号？立即注册</p>
+            <!--<router-link to='/RegisterAccount'>没有账号？立即注册</router-link>-->
+           <!-- <button @click="gotoRegist" class="btn btn-success">没有账号？立即注册</button>-->
           </el-form-item>
         </el-form>
       </div>
+
+      <registerAccount v-if="!isRegister" v-on:listenToChildEvent="showMsgFromChild"></registerAccount>
     </div>
   </div>
 </template>
 <script>
+  import registerAccount from '../../view/system/RegisterAccount'
     export default {
         name: "Register",
+        components: {
+            registerAccount
+        },
         data() {
             // <!--验证手机号是否合法-->
             let checkName = (rule, value, callback) => {
@@ -47,6 +55,7 @@
             }
 
             return {
+                isRegister: true, // 判断登录或注册
                 dataForm: {
                     accountName: "",
                     accountPassword: ""
@@ -90,14 +99,17 @@
                     }
                 )
             },
+         //获取子组件传递的值
+          showMsgFromChild: function (data){
+                this.isRegister = data;
+          },
+
             // <!--进入注册页-->
           gotoRegist: function () {
-                this.$router.push({
-                    path: '/RegisterAccount'
-                });
+                this.isRegister = false;
             }
         }
-    };
+    }
 </script>
 
 <style scoped>
