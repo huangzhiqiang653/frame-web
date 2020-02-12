@@ -4,6 +4,7 @@ const urls = {
     toLogin: '/auth/index/toLogin',
     login: '/auth/index/login',
     logout: '/auth/index/logout',
+    registerAccount: '/auth/index/register',
     getMenu: '',
     getSource: ''
   },

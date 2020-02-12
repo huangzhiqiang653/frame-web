@@ -2,7 +2,7 @@
   <div>
     <div class="register-wrapper" v-loading="loading">
       <div id="register">
-        <p class="title">登录</p>
+        <p class="title">注册页面</p>
         <el-form
           :model="dataForm"
           status-icon
@@ -19,8 +19,8 @@
                       placeholder="输入密码"></el-input>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="submitForm" style="width:100%;">登录</el-button>
-            <p class="login" @click="gotoRegist">没有账号？立即注册</p>
+            <el-button type="primary" @click="submitForm" style="width:100%;">注册</el-button>
+
           </el-form-item>
         </el-form>
       </div>
@@ -61,18 +61,19 @@
             }
         },
         methods: {
-            // <!--提交登录-->
+            // <!--提交注册-->
             submitForm: function () {
-                //登录
                 let _this = this
                 let params = this.dataForm
                 _this.loading = true
                 _this.FUNCTIONS.systemFunction.jsonPost(
-                    _this.CONFIG.urls.root + _this.CONFIG.urls.index.login,
+                    _this.CONFIG.urls.root + _this.CONFIG.urls.index.registerAccount,
                     params,
                     resultData => {
                         if (resultData.code === '0') {
-                            window.location.reload()
+                            this.$router.push({
+                                window.location.reload()
+                            })
                         } else {
                             _this.$message({
                                 showClose: true,
@@ -90,12 +91,6 @@
                     }
                 )
             },
-            // <!--进入注册页-->
-          gotoRegist: function () {
-                this.$router.push({
-                    path: '/RegisterAccount'
-                });
-            }
         }
     };
 </script>
