@@ -37,8 +37,13 @@
                             _this.toLogin = true
                         } else if (result.code === _this.GLOBAL.config.resultCode.success) {
                             // 基本数据缓存-----start--------------
-                            let userInfo = result.data.userInfo, dictionaryList = result.data.dictionaryList
+                            let userInfo = result.data.userInfo,
+                                dictionaryList = result.data.dictionaryList,
+                                orgInfoMap = result.data.orgInfoMap,
+                                authRoles = result.data.authRoles
                             userInfo && localStorage.setItem(_this.GLOBAL.config.userConfigName, JSON.stringify(userInfo))
+                            orgInfoMap && localStorage.setItem(_this.GLOBAL.config.orgConfigName, JSON.stringify(orgInfoMap))
+                            authRoles && localStorage.setItem(_this.GLOBAL.config.authConfigName, JSON.stringify(authRoles))
                             dictionaryList && dictionaryCache(dictionaryList)
                             // 基本数据缓存-----end----------------
                             _this.hasLogin = true

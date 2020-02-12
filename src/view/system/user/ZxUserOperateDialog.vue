@@ -102,7 +102,7 @@
             type: Function
         }
     },
-    data () {
+    data() {
         return {
             formData: {
                 id: '',
@@ -151,7 +151,7 @@
             }
         }
     },
-    mounted () {
+    mounted() {
         this.getTreeData()
     },
     methods: {
@@ -283,42 +283,42 @@
                 _this,
                 _this.GLOBAL.config.businessFlag.zxUser,
                 _this.GLOBAL.config.handleType.getInfoById,
-        _this.formData.id,
-        null,
-        resultData => {
-    _this.loading = false
-    resultData.sex = resultData.sex.toString()
-    if (resultData.organizationId) {
-        resultData.organizationId = resultData.organizationId.split(',').slice(0, resultData.organizationId.split(',').length - 1)
-    }
-    Object.assign(_this.formData, resultData)
-}
-)
-},
-// 组织树数据
-getTreeData: function () {
-    this.loading = true
-    let _this = this
-    // 3、 调接口获取数据
-    _this.FUNCTIONS.systemFunction.interactiveData(
-        _this,
-        _this.GLOBAL.config.businessFlag.zxOrganization,
-        _this.GLOBAL.config.handleType.getTree,
-        null,
-        null,
-        resultData => {
-            _this.loading = false
-            if (resultData) {
-                _this.dictionary.treeData = resultData
-            } else {
-                _this.$message.warning('获取组织数据失败～')
-            }
+                _this.formData.id,
+                null,
+                resultData => {
+                    _this.loading = false
+                    resultData.sex = resultData.sex.toString()
+                    if (resultData.organizationId) {
+                        resultData.organizationId = resultData.organizationId.split(',').slice(0, resultData.organizationId.split(',').length - 1)
+                    }
+                    Object.assign(_this.formData, resultData)
+                }
+            )
         },
-        () => {
-            _this.loading = false
+// 组织树数据
+        getTreeData: function () {
+            this.loading = true
+            let _this = this
+            // 3、 调接口获取数据
+            _this.FUNCTIONS.systemFunction.interactiveData(
+                _this,
+                _this.GLOBAL.config.businessFlag.zxOrganization,
+                _this.GLOBAL.config.handleType.getTree,
+                null,
+                null,
+                resultData => {
+                    _this.loading = false
+                    if (resultData) {
+                        _this.dictionary.treeData = resultData
+                    } else {
+                        _this.$message.warning('获取组织数据失败～')
+                    }
+                },
+                () => {
+                    _this.loading = false
+                }
+            )
         }
-    )
-}
-     }
+    }
 }
 </script>

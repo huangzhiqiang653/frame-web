@@ -2,6 +2,8 @@
 const config = {
   dictionaryPre: 'zx_auth_dictionary_',
   userConfigName: 'userInfo',
+  orgConfigName: 'orgInfoMap',
+  authConfigName: 'authRoles',
   systemSize: 'mini',
   dictionary: {
     dictionaryType: 'dictionaryType',
