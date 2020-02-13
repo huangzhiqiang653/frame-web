@@ -42,7 +42,7 @@
               style="width: 100%"
               v-model="formData.birthDay"
               type="date"
-              format="yyyy-MM-dd"
+              format="yyyy-MM-dd "
               value-format="yyyy-MM-dd"
               placeholder="选择出生年月日" prop="birthDay">
             </el-date-picker>

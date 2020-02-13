@@ -18,11 +18,41 @@
             <el-input type="password" v-model="dataForm.accountPassword" auto-complete="off"
                       placeholder="输入密码"></el-input>
           </el-form-item>
+          <!--注册用户名2020-2-13-->
+        <el-form-item prop="userAccountNameZhu">
+          <el-input v-model="dataForm.userAccountNameZhu" auto-complete="off" placeholder="姓名"></el-input>
+          </el-form-item>
+          <!--注册用户名2020-2-13-->
+          <el-form-item prop="userAccountPhone">
+            <el-input v-model="dataForm.userAccountPhone" auto-complete="off" placeholder="电话"></el-input>
+          </el-form-item>
+          <!--注册用户出生日期2020-2-13-->
+          <el-form-item prop="userAccountBirthdayZhu">
+            <!--<el-input v-model="dataForm.accountName" auto-complete="off" placeholder="账号"></el-input>-->
+            <el-date-picker
+              style="width: 100%"
+              v-model="dataForm.userAccountBirthdayZhu"
+              type="date"
+              format="yyyy-MM-dd"
+              value-format="yyyy-MM-dd"
+              placeholder="选择出生年月日" prop="birthDay">
+            </el-date-picker>
+          </el-form-item>
+          <!--性别2020-2-13-->
+          <el-form-item prop="userAccountSexZhu">
+            <!-- <el-input v-model="dataForm.userAccountSexZhu" auto-complete="off" placeholder="性别"></el-input>-->
+            <div >
+              <input type="radio" name="radios" value="1" v-model="dataForm.userAccountSexZhu"><label>男</label>
+              <input type="radio" name="radios" value="0" v-model="dataForm.userAccountSexZhu"><label>女</label>
+            </div>
+          </el-form-item>
+
           <el-form-item>
             <el-button type="primary" @click="submitForm" style="width:100%;">注册</el-button>
 
           </el-form-item>
         </el-form>
+
       </div>
     </div>
   </div>
@@ -45,11 +75,10 @@
                     callback(new Error("请输入密码"))
                 }
             }
-
             return {
                 dataForm: {
                     accountName: "",
-                    accountPassword: ""
+                    accountPassword: "",
                 },
                 rules: {
                     accountName: [{validator: checkName, trigger: 'change'}],
@@ -58,6 +87,7 @@
                 isDisabled: false, // 是否禁止点击发送验证码按钮
                 flag: true,
                 loading: false
+
             }
         },
         created: function () {
@@ -73,6 +103,7 @@
                     _this.CONFIG.urls.root + _this.CONFIG.urls.index.registerAccount,
                     params,
                     resultData => {
+                        _this.loading = false;
                         if (resultData.code === '0') {
                             _this.$emit("listenToChildEvent", true);
                         } else {
