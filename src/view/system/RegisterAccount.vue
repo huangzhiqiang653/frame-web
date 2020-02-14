@@ -61,29 +61,28 @@
     export default {
         name: 'RegisterAccount',
         data() {
-            // <!--验证手机号是否合法-->
-            let checkName = (rule, value, callback) => {
-                if (value === '' || value.trim() === '') {
-                    callback(new Error('请输入账号'))
-                } else {
-                    callback()
-                }
-            }
-            // <!--验证密码-->
-            let validatePass = (rule, value, callback) => {
-                if (value === "" || value.trim() === "") {
-                    callback(new Error("请输入密码"))
-                }
-            }
             return {
                 dataForm: {
                     accountName: "",
                     accountPassword: "",
+                    userAccountNameZhu: "",
+                    userAccountPhone: "",
                 },
-                rules: {
-                    accountName: [{validator: checkName, trigger: 'change'}],
-                    accountPassword: [{validator: validatePass, trigger: 'change'}],
+                formRules: {
+                    accountName: [
+                        {required: true, message: '请输入账号', trigger: 'blur'}
+                    ],
+                    accountPassword: [
+                        {required: true, message: '请输入密码', trigger: 'blur'}
+                    ],
+                    userAccountNameZhu: [
+                        {required: true, message: '请输入姓名', trigger: 'blur'}
+                    ],
+                    userAccountPhone: [
+                        {required: true, message: '请输入电话号码', trigger: 'blur'}
+                    ]
                 },
+                //校验
                 isDisabled: false, // 是否禁止点击发送验证码按钮
                 flag: true,
                 loading: false
@@ -109,7 +108,7 @@
                         } else {
                             _this.$message({
                                 showClose: true,
-                                message: '操作失败～',
+                                message: '操作失败～请填完信息',
                                 type: 'warning'
                             })
                         }
