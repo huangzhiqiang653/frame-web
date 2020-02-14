@@ -6,50 +6,46 @@
         <el-form
           :model="dataForm"
           status-icon
-          :rules="rules"
+          :rules="formRules"
           ref="dataForm"
           label-width="0"
           class="demo-ruleForm"
         >
-          <el-form-item prop="accountName">
-            <el-input v-model="dataForm.accountName" auto-complete="off" placeholder="账号"></el-input>
+          <el-form-item prop="account.accountName">
+            <el-input v-model="dataForm.account.accountName" auto-complete="off" placeholder="账号"></el-input>
           </el-form-item>
-          <el-form-item prop="accountPassword">
-            <el-input type="password" v-model="dataForm.accountPassword" auto-complete="off"
+          <el-form-item prop="account.accountPassword">
+            <el-input type="password" v-model="dataForm.account.accountPassword" auto-complete="off"
                       placeholder="输入密码"></el-input>
           </el-form-item>
-          <!--注册用户名2020-2-13-->
-        <el-form-item prop="userAccountNameZhu">
-          <el-input v-model="dataForm.userAccountNameZhu" auto-complete="off" placeholder="姓名"></el-input>
+          <!--注册用户名-->
+        <el-form-item prop="user.userName">
+          <el-input v-model="dataForm.user.userName" auto-complete="off" placeholder="姓名"></el-input>
           </el-form-item>
-          <!--注册用户名2020-2-13-->
-          <el-form-item prop="userAccountPhone">
-            <el-input v-model="dataForm.userAccountPhone" auto-complete="off" placeholder="电话"></el-input>
+          <!--注册用户电话-->
+          <el-form-item prop="user.phoneNumber">
+            <el-input v-model="dataForm.user.phoneNumber" auto-complete="off" placeholder="电话"></el-input>
           </el-form-item>
-          <!--注册用户出生日期2020-2-13-->
-          <el-form-item prop="userAccountBirthdayZhu">
-            <!--<el-input v-model="dataForm.accountName" auto-complete="off" placeholder="账号"></el-input>-->
+          <!--注册用户出生日期-->
+          <el-form-item prop="user.birthDay">
             <el-date-picker
               style="width: 100%"
-              v-model="dataForm.userAccountBirthdayZhu"
+              v-model="dataForm.user.birthDay"
               type="date"
               format="yyyy-MM-dd"
               value-format="yyyy-MM-dd"
               placeholder="选择出生年月日" prop="birthDay">
             </el-date-picker>
           </el-form-item>
-          <!--性别2020-2-13-->
-          <el-form-item prop="userAccountSexZhu">
-            <!-- <el-input v-model="dataForm.userAccountSexZhu" auto-complete="off" placeholder="性别"></el-input>-->
+          <!--性别-->
+          <el-form-item prop="user.sex">
             <div >
-              <input type="radio" name="radios" value="1" v-model="dataForm.userAccountSexZhu"><label>男</label>
-              <input type="radio" name="radios" value="0" v-model="dataForm.userAccountSexZhu"><label>女</label>
+              <input type="radio" name="radios" value="1" v-model="dataForm.user.sex"><label>男</label>
+              <input type="radio" name="radios" value="0" v-model="dataForm.user.sex"><label>女</label>
             </div>
           </el-form-item>
-
           <el-form-item>
             <el-button type="primary" @click="submitForm" style="width:100%;">注册</el-button>
-
           </el-form-item>
         </el-form>
 
@@ -63,10 +59,16 @@
         data() {
             return {
                 dataForm: {
-                    accountName: "",
-                    accountPassword: "",
-                    userAccountNameZhu: "",
-                    userAccountPhone: "",
+                    account: {
+                        accountName: "",
+                        accountPassword: ""
+                    },
+                    user: {
+                        userName: "",
+                        phoneNumber: "",
+                        birthDay: "",
+                        sex: ""
+                    }
                 },
                 formRules: {
                     accountName: [
@@ -75,18 +77,16 @@
                     accountPassword: [
                         {required: true, message: '请输入密码', trigger: 'blur'}
                     ],
-                    userAccountNameZhu: [
+                    userName: [
                         {required: true, message: '请输入姓名', trigger: 'blur'}
                     ],
-                    userAccountPhone: [
+                    phoneNumber: [
                         {required: true, message: '请输入电话号码', trigger: 'blur'}
                     ]
                 },
-                //校验
                 isDisabled: false, // 是否禁止点击发送验证码按钮
                 flag: true,
                 loading: false
-
             }
         },
         created: function () {
@@ -100,7 +100,7 @@
                 _this.loading = true
                 _this.FUNCTIONS.systemFunction.jsonPost(
                     _this.CONFIG.urls.root + _this.CONFIG.urls.index.registerAccount,
-                    params,
+                    {"info": params},
                     resultData => {
                         _this.loading = false;
                         if (resultData.code === '0') {
@@ -108,7 +108,7 @@
                         } else {
                             _this.$message({
                                 showClose: true,
-                                message: '操作失败～请填完信息',
+                                message: '操作失败～请填完信息或账号已有请修改',
                                 type: 'warning'
                             })
                         }
