@@ -15,7 +15,7 @@
             return {
                 hasLogin: false,
                 toLogin: false,
-                fullscreenLoading: true
+                fullscreenLoading: false
             }
         },
         components: {
@@ -23,7 +23,7 @@
             login
         },
         created: async function () {
-            this.hasLogin = false
+            this.hasLogin = true
             let _this = this
             validateAndInitData()
 

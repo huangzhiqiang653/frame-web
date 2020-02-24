@@ -18,55 +18,55 @@
           :collapse="isCollapse"
           @select="menuSelect"
         >
-          <el-menu-item index="/">
-            <i class="el-icon-guide"></i>
-            <span slot="title">代码生成</span>
-          </el-menu-item>
-          <el-menu-item index="/redis">
-            <i class="el-icon-present"></i>
-            <span slot="title">redis缓存</span>
-          </el-menu-item>
-          <el-menu-item index="/dictionary">
-            <i class="el-icon-notebook-2"></i>
-            <span slot="title">字典管理</span>
-          </el-menu-item>
+<!--          <el-menu-item index="/">-->
+<!--            <i class="el-icon-guide"></i>-->
+<!--            <span slot="title">代码生成</span>-->
+<!--          </el-menu-item>-->
+<!--          <el-menu-item index="/redis">-->
+<!--            <i class="el-icon-present"></i>-->
+<!--            <span slot="title">redis缓存</span>-->
+<!--          </el-menu-item>-->
+<!--          <el-menu-item index="/dictionary">-->
+<!--            <i class="el-icon-notebook-2"></i>-->
+<!--            <span slot="title">字典管理</span>-->
+<!--          </el-menu-item>-->
           <el-submenu index="1">
             <template slot="title">
               <i class="el-icon-s-tools"></i>
-              <span>系统管理</span>
+              <span>基本信息维护</span>
             </template>
             <el-menu-item-group>
-              <el-menu-item index="/account">
+              <el-menu-item index="/villager">
                 <i class="el-icon-postcard"></i>
-                <span slot="title">账号管理</span>
+                <span slot="title">村民信息管理</span>
               </el-menu-item>
               <el-menu-item index="/user">
-                <i class="el-icon-user"></i>
-                <span slot="title">用户管理</span>
+                <i class="el-icon-truck"></i>
+                <span slot="title">抽粪车辆管理</span>
               </el-menu-item>
               <el-menu-item index="/role">
-                <i class="el-icon-view"></i>
-                <span slot="title">角色管理</span>
+                <i class="el-icon-user"></i>
+                <span slot="title">维修人员管理</span>
               </el-menu-item>
-              <el-menu-item index="/menu">
-                <i class="el-icon-menu"></i>
-                <span slot="title">菜单资源</span>
+              <el-menu-item index="/">
+                <i class="el-icon-setting"></i>
+                <span slot="title">系统参数管理</span>
               </el-menu-item>
+            </el-menu-item-group>
+          </el-submenu>
+          <el-submenu index="/organisation">
+            <template slot="title">
+              <i class="el-icon-s-tools"></i>
+              <span>&nbsp;&nbsp;&nbsp;&nbsp;工作台&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            </template>
+            <el-menu-item-group>
               <el-menu-item index="/organisation">
-                <i class="el-icon-office-building"></i>
-                <span slot="title">组织管理</span>
+                <i class="el-icon-setting"></i>
+                <span slot="title">管理员工作台</span>
               </el-menu-item>
               <el-menu-item index="/dictionary">
-                <i class="el-icon-notebook-2"></i>
-                <span slot="title">字典管理</span>
-              </el-menu-item>
-              <el-menu-item index="/system/cron">
-                <i class="el-icon-date"></i>
-                <span slot="title">定时任务</span>
-              </el-menu-item>
-              <el-menu-item index="/system/log">
-                <i class="el-icon-takeaway-box"></i>
-                <span slot="title">日志管理</span>
+                <i class="el-icon-warning-outline"></i>
+                <span slot="title">人员审核</span>
               </el-menu-item>
             </el-menu-item-group>
           </el-submenu>
