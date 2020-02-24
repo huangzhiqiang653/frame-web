@@ -36,6 +36,7 @@
                         if (result.code === _this.GLOBAL.config.resultCode.notLogin) {
                             _this.toLogin = true
                         } else if (result.code === _this.GLOBAL.config.resultCode.success) {
+                            _this.hasLogin = true
                             // 基本数据缓存-----start--------------
                             let userInfo = result.data.userInfo,
                                 dictionaryList = result.data.dictionaryList,
@@ -46,7 +47,6 @@
                             authRoles && localStorage.setItem(_this.GLOBAL.config.authConfigName, JSON.stringify(authRoles))
                             dictionaryList && dictionaryCache(dictionaryList)
                             // 基本数据缓存-----end----------------
-                            _this.hasLogin = true
                         } else if (typeof result === _this.GLOBAL.config.dataType.string) {
                             validateAndInitData()
                         } else {
