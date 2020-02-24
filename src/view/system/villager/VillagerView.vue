@@ -53,7 +53,7 @@
         </el-button>
       </el-col>
       <el-col :span="2" class="margin-top-10">
-        <el-button type="primary" @click="doSearch" :size="GLOBAL.config.systemSize" icon="el-icon-plus">新增
+        <el-button type="primary" @click="addVillager" :size="GLOBAL.config.systemSize" icon="el-icon-plus">新增
         </el-button>
       </el-col>
     </el-row>
@@ -91,14 +91,17 @@
       :layout="pagination.layout"
       :total="pagination.total">
     </el-pagination>
+    <villagerAddDialog ref="villagerDialog" :dialogVisible="dialogVisible" :refresh="getTableData"></villagerAddDialog>
   </div>
 </template>
 <script>
-
+    import villagerAddDialog from './VillagerAddDialog'
     export default {
         name: 'Villager',
-        data() {
+        data () {
             return {
+                // 新增/编辑dialog
+                dialogVisible: false,
                 // 查询表单
                 searchForm: {
                     accountName: '',
@@ -143,9 +146,10 @@
             }
         },
         components: {
+            villagerAddDialog
         },
         mounted() {
-            this.init()
+            // this.init()
         },
         methods: {
             init: function () {
@@ -154,6 +158,11 @@
             },
             doSearch: function () {
                 this.getTableData('init')
+            },
+            // 新增
+            addVillager: function () {
+                this.dialogVisible = true
+                this.$refs.villagerDialog.open('add');
             },
             operationMethod: function (operateType, info) {
                 this.$refs.operationTemplate.init(operateType, info ? info.id : null)
