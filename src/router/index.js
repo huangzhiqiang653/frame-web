@@ -6,6 +6,7 @@ import VillagerInfo from '@/view/system/villager/VillagerInfo'
 import Cars from '@/view/system/car/CarsTable'
 import CarsInfo from '@/view/system/car/CarsInfo'
 import RepairUsers from '@/view/system/repair/RepairUserTable'
+import RepairUserInfo from '@/view/system/repair/RepairUserInfo'
 import Configs from '@/view/system/config/ConfigTable'
 import WorkApplys from '@/view/system/workbench/WorkApplyTable'
 import UserApplys from '@/view/system/workbench/UserApplyTable'
@@ -51,6 +52,11 @@ export default new Router({
       path: '/repairUsers',
       name: 'RepairUsers',
       component: RepairUsers
+    },
+    {
+      path: '/repairUsers/repairUserInfo',
+      name: 'RepairUserInfo',
+      component: RepairUserInfo
     },
     {
       // 配置管理
