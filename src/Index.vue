@@ -64,11 +64,11 @@
               <span>&nbsp;&nbsp;&nbsp;&nbsp;工作台&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
             </template>
             <el-menu-item-group>
-              <el-menu-item index="/organisation">
+              <el-menu-item index="/workApplys">
                 <i class="el-icon-setting"></i>
                 <span slot="title">管理员工作台</span>
               </el-menu-item>
-              <el-menu-item index="/dictionary">
+              <el-menu-item index="/userApplys">
                 <i class="el-icon-warning-outline"></i>
                 <span slot="title">人员审核</span>
               </el-menu-item>

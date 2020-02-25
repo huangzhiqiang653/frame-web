@@ -6,7 +6,8 @@ import Cars from '@/view/system/car/CarsTable'
 import CarsInfo from '@/view/system/car/CarsInfo'
 import RepairUsers from '@/view/system/repair/RepairUserTable'
 import Configs from '@/view/system/config/ConfigTable'
-import RegisterAccount from '@/view/system/RegisterAccount'
+import WorkApplys from '@/view/system/workbench/WorkApplyTable'
+import UserApplys from '@/view/system/workbench/UserApplyTable'
 
 Vue.use(Router)
 const VueRouterPush = Router.prototype.push
@@ -52,10 +53,16 @@ export default new Router({
       component: Configs
     },
     {
-      // 注册
-      path: '/RegisterAccount',
-      name: 'RegisterAccount',
-      component: RegisterAccount
-    }
+      // 配置管理
+      path: '/workApplys',
+      name: 'WorkApplys',
+      component: WorkApplys
+    },
+    {
+      // 配置管理
+      path: '/userApplys',
+      name: 'UserApplys',
+      component: UserApplys
+    },
   ]
 })
