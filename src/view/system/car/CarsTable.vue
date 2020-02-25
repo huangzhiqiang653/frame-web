@@ -11,6 +11,17 @@
     <el-row class="margin-top-10">
       <el-col :span="2" class="margin-top-10">
         <label class="search-label">
+          区域:
+        </label>
+      </el-col>
+      <el-col :span="4" class="margin-top-10">
+        <el-input v-model="searchForm.townCode"
+                  :size="GLOBAL.config.systemSize"
+                  placeholder="区域"
+                  maxlength="32"></el-input>
+      </el-col>
+      <el-col :span="2" class="margin-top-10">
+        <label class="search-label">
           当值司机:
         </label>
       </el-col>
@@ -18,28 +29,6 @@
         <el-input v-model="searchForm.dutyUserId"
                   :size="GLOBAL.config.systemSize"
                   placeholder="当值司机"
-                  maxlength="32"></el-input>
-      </el-col>
-      <el-col :span="2" class="margin-top-10">
-        <label class="search-label">
-          所属乡镇编码:
-        </label>
-      </el-col>
-      <el-col :span="4" class="margin-top-10">
-        <el-input v-model="searchForm.townCode"
-                  :size="GLOBAL.config.systemSize"
-                  placeholder="所属乡镇编码"
-                  maxlength="32"></el-input>
-      </el-col>
-      <el-col :span="2" class="margin-top-10">
-        <label class="search-label">
-          所属村居编码:
-        </label>
-      </el-col>
-      <el-col :span="4" class="margin-top-10">
-        <el-input v-model="searchForm.villageCode"
-                  :size="GLOBAL.config.systemSize"
-                  placeholder="所属村居编码"
                   maxlength="32"></el-input>
       </el-col>
       <el-col :span="2" class="margin-top-10">
@@ -52,26 +41,6 @@
                   :size="GLOBAL.config.systemSize"
                   placeholder="车牌号"
                   maxlength="32"></el-input>
-      </el-col>
-      <el-col :span="2" class="margin-top-10">
-        <label class="search-label">
-          更新时间:
-        </label>
-      </el-col>
-      <el-col :span="6" class="margin-top-10">
-        <el-date-picker
-          v-model="searchForm.updateTime"
-          :size="GLOBAL.config.systemSize"
-          type="daterange"
-          align="right"
-          unlink-panels
-          format="yyyy-MM-dd HH:mm:ss"
-          value-format="yyyy-MM-dd HH:mm:ss"
-          range-separator="至"
-          start-placeholder="开始"
-          end-placeholder="结束"
-          style="width: 100%;">
-        </el-date-picker>
       </el-col>
       <el-col :span="2" class="margin-top-10">
         <el-button type="primary" @click="doSearch" :size="GLOBAL.config.systemSize" icon="el-icon-search">查询
@@ -97,7 +66,7 @@
         </el-button>
         <el-button v-if="source.export"
                    type="primary"
-                   icon="el-icon-download"
+                   icon="el-icon-upload2"
                    :size="GLOBAL.config.systemSize"
                    style="float: left;"
                    @click="exportTableData">导出
@@ -122,11 +91,11 @@
       <!--当值司机-->
       <el-table-column prop="dutyUserId" label="当值司机" align="center"/>
       <!--所属乡镇编码-->
-      <el-table-column prop="townCode" label="所属乡镇编码" align="center"/>
-      <!--所属村居编码-->
-      <el-table-column prop="villageCode" label="所属村居编码" align="center"/>
+      <el-table-column prop="townCode" label="区域" align="center"/>
       <!--车牌号-->
       <el-table-column prop="carNo" label="车牌号" align="center"/>
+      <!--手机号-->
+      <el-table-column prop="phoneNum" label="手机号" align="center"/>
       <!--更新时间-->
       <el-table-column prop="updateTime"
                        label="更新时间">
@@ -193,14 +162,14 @@
                 searchForm: {
                     dutyUserId: '',
                     townCode: '',
-                    villageCode: '',
                     carNo: '',
-                    updateTime: '',
                 },
                 tableData: [{
                     index: '1',
+                    id: '1111',
                     dutyUserId: '张三',
-                    townCode: '桃花镇',
+                    phoneNum: '12345678900',
+                    orgName: '桃花镇',
                     villageCode: '古城村',
                     carNo: 'N123456'
                 }],
@@ -304,7 +273,7 @@
                     name: 'CarsInfo',
                     params: {
                         type: 'view',
-                        id: '12345'
+                        id: rowData.id
                     }
                 })
             },
@@ -314,7 +283,7 @@
                     name: 'CarsInfo',
                     params: {
                         type: 'edit',
-                        id: '12345'
+                        id: rowData.id
                     }
                 })
             },
@@ -368,6 +337,10 @@
                             _this.pagination.pageSize = resultData.size
                             _this.pagination.total = resultData.total
                             _this.pagination.currentPage = resultData.current
+                            resultData.records.forEach(item => {
+                                let orgMap = JSON.parse(unescape(localStorage.getItem(this.GLOBAL.config.orgConfigName)))
+                                item.orgName = orgMap[item.townCode] + orgMap[item.townCode]
+                            })
                             _this.tableData = resultData.records
                         } else {
                             _this.$message.warning('获取列表数据失败～')
