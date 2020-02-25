@@ -32,7 +32,7 @@
 <!--          </el-menu-item>-->
           <el-submenu index="1">
             <template slot="title">
-              <i class="el-icon-s-tools"></i>
+              <i class="el-icon-notebook-2"></i>
               <span>基本信息维护</span>
             </template>
             <el-menu-item-group>
