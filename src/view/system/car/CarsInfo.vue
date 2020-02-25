@@ -23,6 +23,18 @@
             <el-input v-model="formData.carNo" placeholder="车牌号" maxlength="64"></el-input>
           </el-form-item>
         </el-col>
+        <el-col :span="12">
+          <el-form-item label="管理区域：" prop="manageAreaCode">
+            <el-tree
+              :data="treeData"
+              :props="defaultProps"
+              show-checkbox
+              node-key="id"
+              ref="manageArea"
+            >
+            </el-tree>
+          </el-form-item>
+        </el-col>
         <el-col :span="8" v-if="editableFlag">
           <el-button v-if="source.add"
                      type="primary"
@@ -93,7 +105,11 @@
         data() {
             return {
                 formData: {
-                    id: ''
+                    id: '',
+                    townCode: '',
+                    villageCode: '',
+                    carNo: '',
+                    manageAreaCode: ''
                 },
                 //校验规则
                 formRules: {},
@@ -123,6 +139,16 @@
                     infoView: true,
                     infoEdit: true,
                     infoDelete: true,
+                },
+                treeData: [{
+                    id: '1',
+                    name: '肥西县',
+                    code: '0001',
+                    children: [{name: '上派镇', code: '00001', children: []}, {name: '桃花镇', code: '00002', children: []}]
+                }],
+                defaultProps: {
+                    children: 'children',
+                    label: 'name'
                 },
                 // 字典数据
                 dictionary: {},
@@ -236,43 +262,40 @@
                 this.getTableData()
             },
             saveForm: function () {
-                this.$refs.formData.validate(valid => {
-                    if (valid) {
-                        let params = this.formData
-                        // 参数处理======start==========
-                        ////////// 1、诉求，多选
-                        if (params.appeal && params.appeal.length > 0) {
-                            params.appeal = params.appeal.join(',')
-                        }
-
-                        delete params.filesCache
-                        // 参数处理======end============
-
-                        let _this = this
-                        _this.loading = true
-
-                        this.FUNCTIONS.systemFunction.interactiveData(
-                            _this,
-                            _this.GLOBAL.config.businessFlag.case,
-                            _this.GLOBAL.config.handleType.add,
-                            _this.FUNCTIONS.systemFunction.removeNullFields(this.formData),
-                            null,
-                            resultData => {
-                                _this.loading = false
-                                if (resultData) {
-                                    _this.$props.closeSelf && _this.$props.closeSelf()
-                                    _this.$props.refresh && _this.$props.refresh()
-                                    _this.$message.success('保存成功～')
-                                } else {
-                                    _this.$message.warning('保存失败～')
-                                }
-                            }
-                        )
-                    } else {
-                        this.$message.error('校验失败～')
-                        return false
-                    }
+                // 参数处理======start==========
+                let checkedMenusNode = this.$refs.manageArea.getCheckedNodes(true)
+                if (!checkedMenusNode) {
+                    this.$message.warning('请勾选区域～')
+                    return
+                }
+                let checkedAreaId = new Set()
+                checkedMenusNode.forEach(item => {
+                    checkedAreaId.add(item.id + "," + item.code)
                 })
+                this.formData.manageAreaCode = checkedAreaId
+                // 参数处理======end============
+                let _this = this
+                _this.loading = true
+                let params = this.formData
+                _this.FUNCTIONS.systemFunction.interactiveData(
+                    _this,
+                    _this.GLOBAL.config.businessFlag.zxRelationRoleMenu,
+                    _this.GLOBAL.config.handleType.add,
+                    _this.FUNCTIONS.systemFunction.removeNullFields(params),
+                    null,
+                    resultData => {
+                        _this.loading = false
+                        if (resultData) {
+                            _this.$message.success('保存成功～')
+                            _this.showFlag = false
+                            _this.$props.refresh && this.$props.refresh('init')
+                        } else {
+                            _this.$message.warning('保存失败～')
+                        }
+                    },
+                    () => {
+                        _this.loading = false
+                    })
             },
         }
     }
