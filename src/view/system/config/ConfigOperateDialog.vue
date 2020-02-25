@@ -12,23 +12,15 @@
                 element-loading-text="数据处理中...请稍等..."
                 :disabled="!editableFlag"
                 v-loading="loading">
-            <el-row class="margin-top-20">
-                <el-col :span="4">
                     <el-form-item label="配置名称：" prop="configName">
-                        <el-input v-model="formData.configName" placeholder="配置名称" maxlength="64"></el-input>
+                        <el-input v-model="formData.configName" placeholder="请输入配置名称" maxlength="64"></el-input>
                     </el-form-item>
-                </el-col>
-                <el-col :span="4">
                     <el-form-item label="配置编码：" prop="configCode">
-                        <el-input v-model="formData.configCode" placeholder="配置编码" maxlength="64"></el-input>
+                        <el-input v-model="formData.configCode" placeholder="请输入配置编码" maxlength="64"></el-input>
                     </el-form-item>
-                </el-col>
-                <el-col :span="4">
                     <el-form-item label="配置参数：" prop="configParam">
-                        <el-input v-model="formData.configParam" placeholder="配置参数" maxlength="64"></el-input>
+                        <el-input v-model="formData.configParam" placeholder="请输入配置参数" maxlength="64"></el-input>
                     </el-form-item>
-                </el-col>
-            </el-row>
         </el-form>
         <el-row class="margin-top-20">
             <el-button @click="closeDialog" style="margin: 0 20px;" :size="GLOBAL.config.systemSize">关闭</el-button>
@@ -69,7 +61,7 @@
                 },
                 editableFlag: true,
                 loading: false,
-                showTitle: '新增',
+                showTitle: '',
                 showFlag: false
             }
         },
@@ -77,14 +69,16 @@
             init: function (type, id) {
                 let _title = ''
                 if (type === 'add') {
-                    _title = '新增'
+                    _title = '新增配置'
+                    this.editableFlag = true
                 } else if (type === 'edit') {
-                    _title = '编辑'
+                    _title = '编辑配置'
+                    this.editableFlag = true
                 } else if (type === 'view') {
-                    _title = '查看'
+                    _title = '查看配置'
                     this.editableFlag = false
                 }
-                this.showTitle = this.showTitle || _title
+                this.showTitle = _title
                 this.showFlag = true
                 if (id) {
                     this.formData.id = id

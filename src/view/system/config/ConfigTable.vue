@@ -14,68 +14,68 @@
                     配置名称:
                 </label>
             </el-col>
-            <el-col :span="4" class="margin-top-10">
+            <el-col :span="2" class="margin-top-10">
                 <el-input v-model="searchForm.configName"
                           :size="GLOBAL.config.systemSize"
                           placeholder="配置名称"
-                          maxlength="32"></el-input>
+                          maxlength="24"></el-input>
             </el-col>
             <el-col :span="2" class="margin-top-10">
                 <label class="search-label">
                     配置编码:
                 </label>
             </el-col>
-            <el-col :span="4" class="margin-top-10">
+            <el-col :span="2" class="margin-top-10">
                 <el-input v-model="searchForm.configCode"
                           :size="GLOBAL.config.systemSize"
                           placeholder="配置编码"
-                          maxlength="32"></el-input>
+                          maxlength="24"></el-input>
             </el-col>
             <el-col :span="2" class="margin-top-10">
                 <label class="search-label">
                     配置参数:
                 </label>
             </el-col>
-            <el-col :span="4" class="margin-top-10">
+            <el-col :span="2" class="margin-top-10">
                 <el-input v-model="searchForm.configParam"
                           :size="GLOBAL.config.systemSize"
                           placeholder="配置参数"
-                          maxlength="32"></el-input>
+                          maxlength="24"></el-input>
             </el-col>
             <el-col :span="2" class="margin-top-10">
                 <label class="search-label">
                     更新时间:
                 </label>
             </el-col>
-            <el-col :span="4" class="margin-top-10">
+            <el-col :span="2" class="margin-top-10">
                 <el-input v-model="searchForm.updateTime"
                           :size="GLOBAL.config.systemSize"
                           placeholder="更新时间"
-                          maxlength="32"></el-input>
+                          maxlength="24"></el-input>
             </el-col>
-            <el-col :span="2" class="margin-top-10">
-                <el-button type="primary" @click="doSearch" :size="GLOBAL.config.systemSize" icon="el-icon-search">查询
-                </el-button>
-            </el-col>
-        </el-row>
-        <el-row class="margin-top-20">
-            <el-col :span="24">
-                <el-button v-if="source.add"
-                           type="primary"
-                           icon="el-icon-plus"
-                           :size="GLOBAL.config.systemSize"
-                           style="float: left;"
-                           @click="operationMethod('add')">新增
-                </el-button>
-                <el-button v-if="source.deleteBatch"
-                           type="danger"
-                           icon="el-icon-delete"
-                           :size="GLOBAL.config.systemSize"
-                           style="float: left;"
-                           :disabled="deleteBatchList.ids.length === 0"
-                           @click="deleteBatch">批量删除
-                </el-button>
-            </el-col>
+          <el-col :span="2" class="margin-top-10">
+            <el-button type="primary" @click="doSearch" :size="GLOBAL.config.systemSize" icon="el-icon-search">查询
+            </el-button>
+          </el-col>
+          <el-col :span="2" class="margin-top-10">
+            <el-button v-if="source.add"
+                       type="primary"
+                       icon="el-icon-plus"
+                       :size="GLOBAL.config.systemSize"
+                       style="float: left;"
+                       @click="operationMethod('add')">新增
+            </el-button>
+          </el-col>
+          <el-col :span="2" class="margin-top-10">
+            <el-button  v-if="source.deleteBatch"
+                        type="danger"
+                        icon="el-icon-delete"
+                        :size="GLOBAL.config.systemSize"
+                        style="float: left;"
+                        :disabled="deleteBatchList.ids.length === 0"
+                        @click="deleteBatch">批量删除
+            </el-button>
+          </el-col>
         </el-row>
         <el-table style="width: 100%"
                   :data="tableData"
