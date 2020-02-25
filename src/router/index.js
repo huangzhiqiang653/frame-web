@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import GenerateCode from '@/view/CodeGenerate'
 import Villager from '@/view/system/villager/VillagerView'
+import VillagerInfo from '@/view/system/villager/VillagerInfo'
 import Cars from '@/view/system/car/CarsTable'
 import CarsInfo from '@/view/system/car/CarsInfo'
 import RepairUsers from '@/view/system/repair/RepairUserTable'
@@ -27,6 +28,11 @@ export default new Router({
       path: '/villager',
       name: 'Villager',
       component: Villager
+    },
+    {
+      path: '/villager/villagerInfo',
+      name: 'VillagerInfo',
+      component: VillagerInfo
     },
     {
       // 抽粪车辆信息

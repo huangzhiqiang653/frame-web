@@ -44,16 +44,37 @@
         <el-button type="primary" @click="doSearch" :size="GLOBAL.config.systemSize" icon="el-icon-search">查询
         </el-button>
       </el-col>
-      <el-col :span="2" class="margin-top-10">
-        <el-button type="primary" @click="doSearch" :size="GLOBAL.config.systemSize" icon="el-icon-c-scale-to-original">导出
+    </el-row>
+    <el-row class="margin-top-20">
+      <el-col :span="24">
+        <el-button v-if="source.add"
+                   type="primary"
+                   icon="el-icon-plus"
+                   :size="GLOBAL.config.systemSize"
+                   style="float: left;"
+                   @click="addVillager('add')">新增
         </el-button>
-      </el-col>
-      <el-col :span="2" class="margin-top-10">
-        <el-button type="primary" @click="doSearch" :size="GLOBAL.config.systemSize" icon="el-icon-folder-add">导入
+        <el-button v-if="source.deleteBatch"
+                   type="danger"
+                   icon="el-icon-delete"
+                   :size="GLOBAL.config.systemSize"
+                   style="float: left;"
+                   :disabled="deleteBatchList.ids.length === 0"
+                   @click="deleteBatch">批量删除
         </el-button>
-      </el-col>
-      <el-col :span="2" class="margin-top-10">
-        <el-button type="primary" @click="addVillager" :size="GLOBAL.config.systemSize" icon="el-icon-plus">新增
+        <el-button v-if="source.export"
+                   type="primary"
+                   icon="el-icon-download"
+                   :size="GLOBAL.config.systemSize"
+                   style="float: left;"
+                   @click="exportTableData">导出
+        </el-button>
+        <el-button v-if="source.import"
+                   type="primary"
+                   icon="el-icon-download"
+                   :size="GLOBAL.config.systemSize"
+                   style="float: left;"
+                   @click="importTableData">导入
         </el-button>
       </el-col>
     </el-row>
@@ -62,6 +83,9 @@
               @selection-change="tableSelectionChange"
               element-loading-text="数据处理中...请稍等..."
               v-loading="loading">
+      <el-table-column
+        type="selection">
+      </el-table-column>
       <!--序号-->
       <el-table-column prop="index" label="序号" width="80px" align="center"/>
       <!--账户名称-->
@@ -75,10 +99,24 @@
         label="操作"
         width="200">
         <template slot-scope="scope">
-          <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
-          <el-button type="text" size="small">编辑</el-button>
-          <el-button @click="handleDelete(scope.row)" type="text" size="small">删除</el-button>
+          <el-dropdown>
+                <span class="el-dropdown-link operator-text">
+                  选择操作<i class="el-icon-arrow-down el-icon--right"></i>
+                </span>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item :icon="item.icon" v-for="item in getSource(scope.row)"
+                                :key="item.method"
+                                @click.native="handleCommon(item.method, scope.row)">
+                {{item.title}}
+              </el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
         </template>
+<!--        <template slot-scope="scope">-->
+<!--          <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>-->
+<!--          <el-button type="text" size="small">编辑</el-button>-->
+<!--          <el-button @click="handleDelete(scope.row)" type="text" size="small">删除</el-button>-->
+<!--        </template>-->
       </el-table-column>
     </el-table>
     <el-pagination
@@ -123,11 +161,11 @@
                 source: {
                     add: true,
                     deleteBatch: true,
+                    export: true,
+                    import: true,
                     infoEdit: true,
                     infoView: true,
-                    infoDelete: true,
-                    resetPwd: true,
-                    setRole: true
+                    infoDelete: true
                 },
                 // 分页参数
                 pagination: {
@@ -162,7 +200,7 @@
             // 新增
             addVillager: function () {
                 this.dialogVisible = true
-                this.$refs.villagerDialog.open('add');
+                this.$refs.villagerDialog.open('add')
             },
             operationMethod: function (operateType, info) {
                 this.$refs.operationTemplate.init(operateType, info ? info.id : null)
@@ -194,14 +232,40 @@
                     )
                 })
             },
+            getSource: function (rowData) {
+                let tempList = []
+                this.source.infoView && tempList.push({icon: 'el-icon-view', title: '查看', method: 'handleView'})
+                this.source.infoEdit && tempList.push({icon: 'el-icon-edit', title: '编辑', method: 'handleEdit'})
+                this.source.infoDelete && tempList.push({icon: 'el-icon-delete', title: '删除', method: 'handleDelete'})
+                return tempList
+            },
+            handleCommon: function (type, rowData) {
+                switch (type) {
+                    case 'handleView':
+                        this.handleView(rowData)
+                        break
+                    case 'handleEdit':
+                        this.handleEdit(rowData)
+                        break
+                    case 'handleDelete':
+                        this.handleDelete(rowData)
+                        break
+                }
+            },
             // 编辑
             handleEdit: function (rowData) {
-                this.operationMethod('edit', rowData)
-                // TODO
+                this.dialogVisible = true
+                this.$refs.villagerDialog.open('edit')
             },
             // 查看
             handleView: function (rowData) {
-                this.$refs.viewAllTemplate.init(rowData)
+                this.$router.push({
+                    name: 'VillagerInfo',
+                    params: {
+                        type: 'view',
+                        id: '12345'
+                    }
+                })
             },
             // 单条数据删除
             handleDelete: function (rowData) {
@@ -276,6 +340,32 @@
                 this.pagination.currentPage = current
                 this.getTableData()
             },
+            // 复选框选择事件
+            tableSelectionChange: function (targetList) {
+                let ids = []
+                targetList.forEach(item => {
+                    ids.push(item.id)
+                })
+                this.deleteBatchList.ids = ids
+                if (this.deleteBatchList.ids &&
+                    this.deleteBatchList.ids.length > 0) {
+                    this.deleteBatchList.deleteFlag = true
+                } else {
+                    this.deleteBatchList.deleteFlag = false
+                }
+            },
+            // 列表数据导出
+            exportTableData: function () {
+                let _this = this, searchParams = this.searchForm
+                _this.FUNCTIONS.systemFunction.removeNullFields(searchParams)
+                this.FUNCTIONS.systemFunction.postDownFile(this, {
+                    type: 'litigationCasesServiceImpl.downFile',
+                    info: searchParams
+                })
+            },
+            importTableData: function () {
+                // TODO
+            }
         }
     }
 </script>

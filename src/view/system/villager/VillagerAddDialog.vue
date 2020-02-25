@@ -1,17 +1,17 @@
 <template>
   <el-dialog :title="dialogTitle" :visible.sync="dialogFormVisible" :destroy-on-close="true">
     <el-form :model="form">
-      <el-form-item label="区划" prop="area">
-        <el-input v-model="form.area" placeholder="请选择区划" autocomplete="off"></el-input>
+      <el-form-item label="区划" prop="area" label-width="70px">
+        <el-input v-model="form.area" placeholder="请选择区划"></el-input>
       </el-form-item>
-      <el-form-item label="户主姓名" prop="name">
-        <el-input v-model="form.name" placeholder="请输入户主姓名" autocomplete="off"></el-input>
+      <el-form-item label="户主姓名" prop="name" label-width="70px">
+        <el-input v-model="form.name" placeholder="请输入户主姓名"></el-input>
       </el-form-item>
-      <el-form-item label="手机号码" prop="tel">
-        <el-input v-model="form.tel" placeholder="请输入手机号码" autocomplete="off"></el-input>
+      <el-form-item label="手机号码" prop="tel" label-width="70px">
+        <el-input v-model="form.tel" placeholder="请输入手机号码"></el-input>
       </el-form-item>
-      <el-form-item label="详细地址" prop="address">
-        <el-input v-model="form.address" placeholder="请输入详细地址" autocomplete="off"></el-input>
+      <el-form-item label="详细地址" prop="address" label-width="70px">
+        <el-input v-model="form.address" placeholder="请输入详细地址"></el-input>
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
@@ -50,6 +50,8 @@
           open: function (type) {
               if (type === 'add') {
                   this.dialogTitle = '新建村民档案'
+              } else if (type === 'edit') {
+                  this.dialogTitle = '编辑村民档案'
               }
               this.dialogFormVisible = true;
           }
