@@ -353,12 +353,12 @@
     data () {
       return {
         connectData: {
-          url: 'jdbc:mysql://127.0.0.1:3306/zx_frame_db?useUnicode=true&useSSL=false&characterEncoding=utf8',
+          url: 'jdbc:mysql://127.0.0.1:3306/zx_rts_db?useUnicode=true&useSSL=false&characterEncoding=utf8',
           driver: 'com.p6spy.engine.spy.P6SpyDriver',
           userName: 'root',
           password: 'root',
-          tablePre: 'auth_',
-          tableList: 'auth_zx_account,auth_zx_user,auth_zx_role,auth_zx_menu,auth_zx_resource,auth_zx_organization'
+          tablePre: 't_rt_',
+          tableList: 't_rt_cars,t_rt_user,t_rt_organization,t_rt_record_pump,t_rt_record_repair,t_rt_manage_area,t_rt_config'
         },
         formRules: {
           url: [

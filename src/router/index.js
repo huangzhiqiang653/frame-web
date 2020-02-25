@@ -2,6 +2,10 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import GenerateCode from '@/view/CodeGenerate'
 import Villager from '@/view/system/villager/VillagerView'
+import Cars from '@/view/system/car/CarsTable'
+import CarsInfo from '@/view/system/car/CarsInfo'
+import RepairUsers from '@/view/system/repair/RepairUserTable'
+import Configs from '@/view/system/config/ConfigTable'
 import RegisterAccount from '@/view/system/RegisterAccount'
 
 Vue.use(Router)
@@ -22,6 +26,30 @@ export default new Router({
       path: '/villager',
       name: 'Villager',
       component: Villager
+    },
+    {
+      // 抽粪车辆信息
+      path: '/cars/carsInfo',
+      name: 'CarsInfo',
+      component: CarsInfo
+    },
+    {
+      // 抽粪车辆管理
+      path: '/cars',
+      name: 'Cars',
+      component: Cars
+    },
+    {
+      // 维修人员管理
+      path: '/repairUsers',
+      name: 'RepairUsers',
+      component: RepairUsers
+    },
+    {
+      // 配置管理
+      path: '/configs',
+      name: 'Configs',
+      component: Configs
     },
     {
       // 注册

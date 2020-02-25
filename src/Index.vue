@@ -40,17 +40,21 @@
                 <i class="el-icon-postcard"></i>
                 <span slot="title">村民信息管理</span>
               </el-menu-item>
-              <el-menu-item index="/user">
+              <el-menu-item index="/cars">
                 <i class="el-icon-truck"></i>
                 <span slot="title">抽粪车辆管理</span>
               </el-menu-item>
-              <el-menu-item index="/role">
+              <el-menu-item index="/repairUsers">
                 <i class="el-icon-user"></i>
                 <span slot="title">维修人员管理</span>
               </el-menu-item>
               <el-menu-item index="/">
                 <i class="el-icon-setting"></i>
                 <span slot="title">系统参数管理</span>
+              </el-menu-item>
+              <el-menu-item index="/configs">
+                <i class="el-icon-set-up"></i>
+                <span slot="title">系统配置管理</span>
               </el-menu-item>
             </el-menu-item-group>
           </el-submenu>
