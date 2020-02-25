@@ -37,6 +37,10 @@
             </template>
             <el-menu-item-group>
               <el-menu-item index="/villager">
+                <i class="el-icon-map-location"></i>
+                <span slot="title">区划信息管理</span>
+              </el-menu-item>
+              <el-menu-item index="/villager">
                 <i class="el-icon-postcard"></i>
                 <span slot="title">村民信息管理</span>
               </el-menu-item>
