@@ -13,24 +13,24 @@
                 :disabled="!editableFlag"
                 v-loading="loading">
             <el-row class="margin-top-20">
-                <el-col :span="4">
-                    <el-form-item label="姓名：" prop="name">
-                        <el-input v-model="formData.name" placeholder="姓名" maxlength="64"></el-input>
+              <el-col :span="24">
+                <el-form-item label="区划：" prop="villageCode">
+                  <el-input v-model="formData.villageCode" placeholder="请选择区划" maxlength="64"></el-input>
+                </el-form-item>
+              </el-col>
+                <el-col :span="24">
+                    <el-form-item label="人员姓名：" prop="name">
+                        <el-input v-model="formData.name" placeholder="请输入姓名" maxlength="64"></el-input>
                     </el-form-item>
                 </el-col>
-                <el-col :span="4">
-                    <el-form-item label="手机号：" prop="phoneNumber">
-                        <el-input v-model="formData.phoneNumber" placeholder="手机号" maxlength="64"></el-input>
+                <el-col :span="24">
+                    <el-form-item label="手机号码：" prop="phoneNumber">
+                        <el-input v-model="formData.phoneNumber" placeholder="请输入手机号码" maxlength="64"></el-input>
                     </el-form-item>
                 </el-col>
-                <el-col :span="4">
-                    <el-form-item label="所属乡镇编码：" prop="townCode">
-                        <el-input v-model="formData.townCode" placeholder="所属乡镇编码" maxlength="64"></el-input>
-                    </el-form-item>
-                </el-col>
-                <el-col :span="4">
-                    <el-form-item label="所属村居编码：" prop="villageCode">
-                        <el-input v-model="formData.villageCode" placeholder="所属村居编码" maxlength="64"></el-input>
+                <el-col :span="24">
+                    <el-form-item label="管理区域：" prop="townCode">
+                        <el-input v-model="formData.townCode" placeholder="请选择管理区域" maxlength="64"></el-input>
                     </el-form-item>
                 </el-col>
             </el-row>
@@ -91,7 +91,7 @@
                     _title = '查看'
                     this.editableFlag = false
                 }
-                this.showTitle = this.showTitle || _title
+                this.showTitle = _title
                 this.showFlag = true
                 if (id) {
                     this.formData.id = id
