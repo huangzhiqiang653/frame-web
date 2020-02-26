@@ -2,132 +2,99 @@
 <!--参数添加，1、config.js business中添加：recordRepair: '后台地址'-->
 <!--参数添加，2、global.js businessFlag中添加：recordRepair: 'recordRepair'-->
 <template>
-    <div class="main-area">
-        <el-breadcrumb separator=":">
-            <el-breadcrumb-item>当前位置</el-breadcrumb-item>
-            <el-breadcrumb-item>报修记录列表</el-breadcrumb-item>
-        </el-breadcrumb>
-        <!--查询区域-->
-        <el-row class="margin-top-10">
-            <el-col :span="2" class="margin-top-10">
-                <label class="search-label">
-                    类型:
-                </label>
-            </el-col>
-            <el-col :span="4" class="margin-top-10">
-                <el-input v-model="searchForm.type"
-                          :size="GLOBAL.config.systemSize"
-                          placeholder="类型"
-                          maxlength="32"></el-input>
-            </el-col>
-            <el-col :span="2" class="margin-top-10">
-                <label class="search-label">
-                    待修人主键:
-                </label>
-            </el-col>
-            <el-col :span="4" class="margin-top-10">
-                <el-input v-model="searchForm.targetUserId"
-                          :size="GLOBAL.config.systemSize"
-                          placeholder="待修人主键"
-                          maxlength="32"></el-input>
-            </el-col>
-            <el-col :span="2" class="margin-top-10">
-                <label class="search-label">
-                    报修时间:
-                </label>
-            </el-col>
-            <el-col :span="6" class="margin-top-10">
-                <el-date-picker
-                        v-model="searchForm.reportTime"
-                        :size="GLOBAL.config.systemSize"
-                        type="daterange"
-                        align="right"
-                        unlink-panels
-                        format="yyyy-MM-dd"
-                        value-format="yyyy-MM-dd"
-                        range-separator="至"
-                        start-placeholder="开始"
-                        end-placeholder="结束"
-                        style="width: 100%;">
-                </el-date-picker>
-            </el-col>
-            <el-col :span="2" class="margin-top-10">
-                <label class="search-label">
-                    维修人主键:
-                </label>
-            </el-col>
-            <el-col :span="4" class="margin-top-10">
-                <el-input v-model="searchForm.operationUserId"
-                          :size="GLOBAL.config.systemSize"
-                          placeholder="维修人主键"
-                          maxlength="32"></el-input>
-            </el-col>
-            <el-col :span="2" class="margin-top-10">
-                <el-button type="primary" @click="doSearch" :size="GLOBAL.config.systemSize" icon="el-icon-search">查询
-                </el-button>
-            </el-col>
-        </el-row>
-        <el-row class="margin-top-20">
-            <el-col :span="24">
-                <el-button v-if="source.export"
-                           type="primary"
-                           icon="el-icon-download"
-                           :size="GLOBAL.config.systemSize"
-                           style="float: left;"
-                           @click="exportTableData">导出
-                </el-button>
-            </el-col>
-        </el-row>
-        <el-table style="width: 100%"
-                  :data="tableData"
-                  @selection-change="tableSelectionChange"
-                  element-loading-text="数据处理中...请稍等..."
-                  v-loading="loading">
-            <!--类型 0报修，1报抽-->
-            <el-table-column prop="type" label="类型" align="center"/>
-            <!--待修人主键-->
-            <el-table-column prop="targetUserId" label="待修人主键" align="center"/>
-            <!--报修时间-->
-            <el-table-column prop="reportTime"
-                             label="报修时间">
-                <template slot-scope="scope">
-                    {{ scope.row.reportTime
-                    ?$moment(scope.row.reportTime
-                    ).format('yyyy-MM-dd'):'' }}
-                </template>
-            </el-table-column>
-            <!--维修人主键-->
-            <el-table-column prop="operationUserId" label="维修人主键" align="center"/>
-            <el-table-column prop="scope" label="操作" align="center">
-                <template slot-scope="scope">
-                    <el-dropdown>
+  <div class="main-area">
+    <el-breadcrumb separator=":">
+      <el-breadcrumb-item>当前位置</el-breadcrumb-item>
+      <el-breadcrumb-item>报修记录列表</el-breadcrumb-item>
+    </el-breadcrumb>
+    <!--查询区域-->
+    <el-row class="margin-top-10">
+      <el-col :span="2" class="margin-top-10">
+        <label class="search-label">
+          状态:
+        </label>
+      </el-col>
+      <el-col :span="4" class="margin-top-10">
+        <el-select v-model="searchForm.status"
+                   :size="GLOBAL.config.systemSize"
+                   placeholder="--请选择--"
+                   style="width: 100%;"
+        >
+          <el-option :label="item.name" :value="item.code"
+                     v-for="item in dictionary.accountStatus"
+                     :key="item.id"></el-option>
+        </el-select>
+      </el-col>
+      <el-col :span="2" class="margin-top-10">
+        <label class="search-label">
+          类型:
+        </label>
+      </el-col>
+      <el-col :span="4" class="margin-top-10">
+        <el-select v-model="searchForm.status"
+                   :size="GLOBAL.config.systemSize"
+                   placeholder="--请选择--"
+                   style="width: 100%;"
+        >
+          <el-option :label="item.name" :value="item.code"
+                     v-for="item in dictionary.accountStatus"
+                     :key="item.id"></el-option>
+        </el-select>
+      </el-col>
+      <el-col :span="2" class="margin-top-10">
+        <el-button type="primary" @click="doSearch" :size="GLOBAL.config.systemSize" icon="el-icon-search">查询
+        </el-button>
+      </el-col>
+      <el-col :span="2" class="margin-top-10">
+        <el-button v-if="source.export"
+                   type="primary"
+                   icon="el-icon-download"
+                   :size="GLOBAL.config.systemSize"
+                   style="float: left;"
+                   @click="exportTableData">导出
+        </el-button>
+      </el-col>
+    </el-row>
+    <el-table style="width: 100%"
+              :data="tableData"
+              @selection-change="tableSelectionChange"
+              element-loading-text="数据处理中...请稍等..."
+              v-loading="loading">
+      <el-table-column prop="index" label="序号" align="center"/>
+      <el-table-column prop="type" label="类型" align="center"/>
+      <el-table-column prop="area" label="所属区划" align="center"/>
+      <el-table-column prop="accountName" label="户主姓名" align="center"/>
+      <el-table-column prop="tel" label="手机号码" align="center"/>
+      <el-table-column prop="reportTime" label="接收时间" width="200px" align="center"/>
+      <el-table-column prop="state" label="状态" align="center"/>
+      <el-table-column prop="scope" label="操作" align="center">
+        <template slot-scope="scope">
+          <el-dropdown>
                 <span class="el-dropdown-link operator-text">
                   选择操作<i class="el-icon-arrow-down el-icon--right"></i>
                 </span>
-                        <el-dropdown-menu slot="dropdown">
-                            <el-dropdown-item :icon="item.icon" v-for="item in getSource(scope.row)"
-                                              :key="item.method"
-                                              @click.native="handleCommon(item.method, scope.row)">
-                                {{item.title}}
-                            </el-dropdown-item>
-                        </el-dropdown-menu>
-                    </el-dropdown>
-                </template>
-            </el-table-column>
-        </el-table>
-        <el-pagination
-                class="margin-top-10 margin-bottom-20"
-                @size-change="tableSizeChange"
-                @current-change="currentChange"
-                :current-page="pagination.currentPage"
-                :page-sizes="pagination.pageSizeList"
-                :page-size="pagination.pageSize"
-                :layout="pagination.layout"
-                :total="pagination.total">
-        </el-pagination>
-        <!--操作-->
-        <operationTemplate ref="operationTemplate" :refresh="getTableData"/>
-    </div>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item :icon="item.icon" v-for="item in getSource(scope.row)"
+                                :key="item.method"
+                                @click.native="handleCommon(item.method, scope.row)">
+                {{item.title}}
+              </el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
+        </template>
+      </el-table-column>
+    </el-table>
+    <el-pagination
+      class="margin-top-10 margin-bottom-20"
+      @size-change="tableSizeChange"
+      @current-change="currentChange"
+      :current-page="pagination.currentPage"
+      :page-sizes="pagination.pageSizeList"
+      :page-size="pagination.pageSize"
+      :layout="pagination.layout"
+      :total="pagination.total">
+    </el-pagination>
+  </div>
 </template>
 <script>
     // 替换成相应的模板
@@ -139,15 +106,21 @@
             return {
                 // 查询表单
                 searchForm: {
+                    state: '',
                     type: '',
-                    targetUserId: '',
-                    reportTime: '',
-                    operationUserId: '',
                 },
-                tableData: [],
+                tableData: [{
+                    index: '1',
+                    type: '类型',
+                    area: '2',
+                    accountName: '小张',
+                    tel: '15077825632',
+                    reportTime: '2020-2-25 09:37:13',
+                    state: '未分派',
+                }
+                ],
                 // 字典数据
-                dictionary: {
-                },
+                dictionary: {},
                 // 资源权限控制，有的系统不需这么细，则全部为true
                 source: {
                     export: true,
@@ -181,12 +154,13 @@
                 this.getTableData('init')
             },
             operationMethod: function (operateType, info) {
+            debugger
                 this.$refs.operationTemplate.init(operateType, info ? info.id : null)
             },
             getSource: function (rowData) {
                 let tempList = []
                 this.source.infoView && tempList.push({icon: 'el-icon-view', title: '查看', method: 'handleView'})
-                this.source.infoSubmit && tempList.push({icon: 'el-icon-bell', title: '提交', method: 'handleSubmit'})
+                this.source.infoSubmit && tempList.push({icon: 'el-icon-bell', title: '分派', method: 'handleSubmit'})
                 return tempList
             },
             handleCommon: function (type, rowData) {
@@ -201,8 +175,14 @@
             },
             // 查看
             handleView: function (rowData) {
-                this.operationMethod('view', rowData)
-                // TODO
+                this.$router.push({
+                    name: 'WorkApplyOperateDialog',
+                    query: {
+                        type: 'view',
+                        id: '12345',
+                        mytype: '1' // rowData.type
+                    }
+                })
             },
             // 提交
             handleSubmit: function (rowData) {
@@ -239,7 +219,7 @@
                     () => {
                         _this.loading = false
                     }
-            )
+                )
             },
             // 分页方法
             tableSizeChange: function (pageSize) {

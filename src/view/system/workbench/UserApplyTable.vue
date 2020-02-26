@@ -2,170 +2,170 @@
 <!--参数添加，1、config.js business中添加：user: '后台地址'-->
 <!--参数添加，2、global.js businessFlag中添加：user: 'user'-->
 <template>
-    <div class="main-area">
-        <el-breadcrumb separator=":">
-            <el-breadcrumb-item>当前位置</el-breadcrumb-item>
-            <el-breadcrumb-item>用户列表</el-breadcrumb-item>
-        </el-breadcrumb>
-        <!--查询区域-->
-        <el-row class="margin-top-10">
-            <el-col :span="2" class="margin-top-10">
-                <label class="search-label">
-                    姓名:
-                </label>
-            </el-col>
-            <el-col :span="4" class="margin-top-10">
-                <el-input v-model="searchForm.name"
-                          :size="GLOBAL.config.systemSize"
-                          placeholder="姓名"
-                          maxlength="32"></el-input>
-            </el-col>
-            <el-col :span="2" class="margin-top-10">
-                <label class="search-label">
-                    所属乡镇编码:
-                </label>
-            </el-col>
-            <el-col :span="4" class="margin-top-10">
-                <el-input v-model="searchForm.townCode"
-                          :size="GLOBAL.config.systemSize"
-                          placeholder="所属乡镇编码"
-                          maxlength="32"></el-input>
-            </el-col>
-            <el-col :span="2" class="margin-top-10">
-                <label class="search-label">
-                    所属村居编码:
-                </label>
-            </el-col>
-            <el-col :span="4" class="margin-top-10">
-                <el-input v-model="searchForm.villageCode"
-                          :size="GLOBAL.config.systemSize"
-                          placeholder="所属村居编码"
-                          maxlength="32"></el-input>
-            </el-col>
-            <el-col :span="2" class="margin-top-10">
-                <label class="search-label">
-                    手机号:
-                </label>
-            </el-col>
-            <el-col :span="4" class="margin-top-10">
-                <el-input v-model="searchForm.phoneNumber"
-                          :size="GLOBAL.config.systemSize"
-                          placeholder="手机号"
-                          maxlength="32"></el-input>
-            </el-col>
-            <el-col :span="2" class="margin-top-10">
-                <label class="search-label">
-                    更新时间:
-                </label>
-            </el-col>
-            <el-col :span="6" class="margin-top-10">
-                <el-date-picker
-                        v-model="searchForm.updateTime"
-                        :size="GLOBAL.config.systemSize"
-                        type="daterange"
-                        align="right"
-                        unlink-panels
-                        format="yyyy-MM-dd"
-                        value-format="yyyy-MM-dd"
-                        range-separator="至"
-                        start-placeholder="开始"
-                        end-placeholder="结束"
-                        style="width: 100%;">
-                </el-date-picker>
-            </el-col>
-            <el-col :span="2" class="margin-top-10">
-                <el-button type="primary" @click="doSearch" :size="GLOBAL.config.systemSize" icon="el-icon-search">查询
-                </el-button>
-            </el-col>
-        </el-row>
-        <el-row class="margin-top-20">
-            <el-col :span="24">
-                <el-button v-if="source.add"
-                           type="primary"
-                           icon="el-icon-plus"
-                           :size="GLOBAL.config.systemSize"
-                           style="float: left;"
-                           @click="operationMethod('add')">新增
-                </el-button>
-                <el-button v-if="source.deleteBatch"
-                           type="danger"
-                           icon="el-icon-delete"
-                           :size="GLOBAL.config.systemSize"
-                           style="float: left;"
-                           :disabled="deleteBatchList.ids.length === 0"
-                           @click="deleteBatch">批量删除
-                </el-button>
-                <el-button v-if="source.export"
-                           type="primary"
-                           icon="el-icon-download"
-                           :size="GLOBAL.config.systemSize"
-                           style="float: left;"
-                           @click="exportTableData">导出
-                </el-button>
-                <el-button v-if="source.import"
-                           type="primary"
-                           icon="el-icon-download"
-                           :size="GLOBAL.config.systemSize"
-                           style="float: left;"
-                           @click="importTableData">导入
-                </el-button>
-            </el-col>
-        </el-row>
-        <el-table style="width: 100%"
-                  :data="tableData"
-                  @selection-change="tableSelectionChange"
-                  element-loading-text="数据处理中...请稍等..."
-                  v-loading="loading">
-            <el-table-column
-                    type="selection">
-            </el-table-column>
-            <!--姓名-->
-            <el-table-column prop="name" label="姓名" align="center"/>
-            <!--所属乡镇编码-->
-            <el-table-column prop="townCode" label="所属乡镇编码" align="center"/>
-            <!--所属村居编码-->
-            <el-table-column prop="villageCode" label="所属村居编码" align="center"/>
-            <!--手机号-->
-            <el-table-column prop="phoneNumber" label="手机号" align="center"/>
-            <!--更新时间-->
-            <el-table-column prop="updateTime"
-                             label="更新时间">
-                <template slot-scope="scope">
-                    {{ scope.row.updateTime
-                    ?$moment(scope.row.updateTime
-                    ).format('yyyy-MM-dd'):'' }}
-                </template>
-            </el-table-column>
-            <el-table-column prop="scope" label="操作" align="center">
-                <template slot-scope="scope">
-                    <el-dropdown>
+  <div class="main-area">
+    <el-breadcrumb separator=":">
+      <el-breadcrumb-item>当前位置</el-breadcrumb-item>
+      <el-breadcrumb-item>用户列表</el-breadcrumb-item>
+    </el-breadcrumb>
+    <!--查询区域-->
+    <el-row class="margin-top-10">
+      <el-col :span="2" class="margin-top-10">
+        <label class="search-label">
+          姓名:
+        </label>
+      </el-col>
+      <el-col :span="2" class="margin-top-10">
+        <el-input v-model="searchForm.name"
+                  :size="GLOBAL.config.systemSize"
+                  placeholder="姓名"
+                  maxlength="32"></el-input>
+      </el-col>
+      <el-col :span="3" class="margin-top-10">
+        <label class="search-label">
+          所属乡镇编码:
+        </label>
+      </el-col>
+      <el-col :span="2" class="margin-top-10">
+        <el-input v-model="searchForm.townCode"
+                  :size="GLOBAL.config.systemSize"
+                  placeholder="所属乡镇编码"
+                  maxlength="32"></el-input>
+      </el-col>
+      <el-col :span="3" class="margin-top-10">
+        <label class="search-label">
+          所属村居编码:
+        </label>
+      </el-col>
+      <el-col :span="2" class="margin-top-10">
+        <el-input v-model="searchForm.villageCode"
+                  :size="GLOBAL.config.systemSize"
+                  placeholder="所属村居编码"
+                  maxlength="32"></el-input>
+      </el-col>
+      <el-col :span="2" class="margin-top-10">
+        <label class="search-label">
+          手机号:
+        </label>
+      </el-col>
+      <el-col :span="2" class="margin-top-10">
+        <el-input v-model="searchForm.phoneNumber"
+                  :size="GLOBAL.config.systemSize"
+                  placeholder="手机号"
+                  maxlength="32"></el-input>
+      </el-col>
+      <el-col :span="2" class="margin-top-10">
+        <label class="search-label">
+          更新时间:
+        </label>
+      </el-col>
+      <el-col :span="3" class="margin-top-10">
+        <el-date-picker
+          v-model="searchForm.updateTime"
+          :size="GLOBAL.config.systemSize"
+          type="daterange"
+          align="right"
+          unlink-panels
+          format="yyyy-MM-dd"
+          value-format="yyyy-MM-dd"
+          range-separator="至"
+          start-placeholder="开始"
+          end-placeholder="结束"
+          style="width: 100%;">
+        </el-date-picker>
+      </el-col>
+
+      <el-col :span="2" class="margin-top-10">
+        <el-button type="primary" @click="doSearch" :size="GLOBAL.config.systemSize" icon="el-icon-search">查询
+        </el-button>
+      </el-col>
+      <el-col :span="2" class="margin-top-10">
+        <el-button v-if="source.add"
+                   type="primary"
+                   icon="el-icon-plus"
+                   :size="GLOBAL.config.systemSize"
+                   style="float: left;"
+                   @click="operationMethod('add')">新增
+        </el-button>
+      </el-col>
+      <el-col :span="2" class="margin-top-10">
+        <el-button v-if="source.export"
+                   type="primary"
+                   icon="el-icon-download"
+                   :size="GLOBAL.config.systemSize"
+                   style="float: left;"
+                   @click="exportTableData">导出
+        </el-button>
+      </el-col>
+      <el-col :span="2" class="margin-top-10">
+        <el-button v-if="source.import"
+                   type="primary"
+                   icon="el-icon-download"
+                   :size="GLOBAL.config.systemSize"
+                   style="float: left;"
+                   @click="importTableData">导入
+        </el-button>
+      </el-col>
+      <el-col :span="3" class="margin-top-10">
+        <el-button v-if="source.deleteBatch"
+                   type="danger"
+                   icon="el-icon-delete"
+                   :size="GLOBAL.config.systemSize"
+                   style="float: left;"
+                   :disabled="deleteBatchList.ids.length === 0"
+                   @click="deleteBatch">批量删除
+        </el-button>
+      </el-col>
+    </el-row>
+    <el-table style="width: 100%"
+              :data="tableData"
+              @selection-change="tableSelectionChange"
+              element-loading-text="数据处理中...请稍等..."
+              v-loading="loading">
+      <el-table-column
+        type="selection">
+      </el-table-column>
+      <!--序号-->
+      <el-table-column prop="index" label="序号" align="center"/>
+      <!--姓名-->
+      <el-table-column prop="name" label="姓名" align="center"/>
+      <!--所属乡镇编码-->
+      <el-table-column prop="townCode" label="所属乡镇编码" align="center"/>
+      <!--所属村居编码-->
+      <el-table-column prop="villageCode" label="所属村居编码" align="center"/>
+      <!--手机号-->
+      <el-table-column prop="phoneNumber" label="手机号" align="center"/>
+      <!--更新时间-->
+      <el-table-column prop="updateTime" label="更新时间" align="center"/>
+      <el-table-column prop="scope" label="操作" align="center">
+        <template slot-scope="scope">
+          <el-dropdown>
                 <span class="el-dropdown-link operator-text">
                   选择操作<i class="el-icon-arrow-down el-icon--right"></i>
                 </span>
-                        <el-dropdown-menu slot="dropdown">
-                            <el-dropdown-item :icon="item.icon" v-for="item in getSource(scope.row)"
-                                              :key="item.method"
-                                              @click.native="handleCommon(item.method, scope.row)">
-                                {{item.title}}
-                            </el-dropdown-item>
-                        </el-dropdown-menu>
-                    </el-dropdown>
-                </template>
-            </el-table-column>
-        </el-table>
-        <el-pagination
-                class="margin-top-10 margin-bottom-20"
-                @size-change="tableSizeChange"
-                @current-change="currentChange"
-                :current-page="pagination.currentPage"
-                :page-sizes="pagination.pageSizeList"
-                :page-size="pagination.pageSize"
-                :layout="pagination.layout"
-                :total="pagination.total">
-        </el-pagination>
-        <!--操作-->
-        <operationTemplate ref="operationTemplate" :refresh="getTableData"/>
-    </div>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item :icon="item.icon" v-for="item in getSource(scope.row)"
+                                :key="item.method"
+                                @click.native="handleCommon(item.method, scope.row)">
+                {{item.title}}
+              </el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
+        </template>
+      </el-table-column>
+    </el-table>
+    <el-pagination
+      class="margin-top-10 margin-bottom-20"
+      @size-change="tableSizeChange"
+      @current-change="currentChange"
+      :current-page="pagination.currentPage"
+      :page-sizes="pagination.pageSizeList"
+      :page-size="pagination.pageSize"
+      :layout="pagination.layout"
+      :total="pagination.total">
+    </el-pagination>
+    <!--操作-->
+    <operationTemplate ref="operationTemplate" :refresh="getTableData"/>
+  </div>
 </template>
 <script>
     // 替换成相应的模板
@@ -181,12 +181,18 @@
                     townCode: '',
                     villageCode: '',
                     phoneNumber: '',
-                    updateTime: '',
+                    updateTime: ''
                 },
-                tableData: [],
+                tableData: [{
+                    index: '1',
+                    name: '小张',
+                    townCode: '01',
+                    villageCode: '01',
+                    phoneNumber: '15255663322',
+                    updateTime: '2020-2-25 09:37:13'
+                }],
                 // 字典数据
-                dictionary: {
-                },
+                dictionary: {},
                 // 资源权限控制，有的系统不需这么细，则全部为true
                 source: {
                     add: true,
@@ -195,7 +201,7 @@
                     import: true,
                     infoEdit: true,
                     infoView: true,
-                    infoDelete: true,
+                    infoDelete: true
                 },
                 // 分页参数
                 pagination: {
@@ -345,7 +351,7 @@
                     () => {
                         _this.loading = false
                     }
-            )
+                )
             },
             // 分页方法
             tableSizeChange: function (pageSize) {
