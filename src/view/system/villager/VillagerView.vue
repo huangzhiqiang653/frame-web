@@ -184,7 +184,7 @@
             }
         },
         components: {
-            villagerAddDialog
+            villagerAddDialog,
         },
         mounted() {
             // this.init()
