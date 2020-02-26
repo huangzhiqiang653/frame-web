@@ -12,11 +12,11 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       // 请求代理配置
-      '/zxauth': {
-        target: 'http://127.0.0.1:9073/zxauth',
+      '/rts': {
+        target: 'http://127.0.0.1:9073/rts',
         changeOrigin: true,
         pathRewrite: {
-          '^/zxauth': ''
+          '^/rts': ''
         }
       }
     },

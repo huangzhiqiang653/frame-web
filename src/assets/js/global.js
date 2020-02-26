@@ -31,7 +31,7 @@ const config = {
   },
   businessFlag: {
     system: 'system',
-    zxAccount: 'zxAccount',
+    rtCar: 'rtCar',
     zxRole: 'zxRole',
     zxMenu: 'zxMenu',
     zxUser: 'zxUser',
