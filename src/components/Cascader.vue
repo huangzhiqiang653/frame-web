@@ -131,9 +131,10 @@
             },
             // 遍历数据源，返回节点对象
             getCascaderObj: function (val, opt) {
+                let _this = this
                 return val.map(function (value, index, array) {
                     for (let itm of opt) {
-                        if (itm.value === value) {
+                        if (itm[_this.setMore['value']] === value) {
                             opt = itm.children
                             return itm
                         }

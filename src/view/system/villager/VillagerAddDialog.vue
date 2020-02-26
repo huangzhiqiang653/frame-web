@@ -47,14 +47,14 @@
                 address: ''
             },
             options: [{
-                value: '111',
+                code: '111',
                 label: '测试1',
                 children: [
                     {
-                        value: '222',
+                        code: '222',
                         label: 'ceshi'
                     }, {
-                        value: '333',
+                        code: '333',
                         label: 'jksld'
                     }
                 ]
@@ -62,7 +62,7 @@
             setProps: {
                 multiple: true, // 多选
                 checkStrictly: true, // 父节点取消选中关联
-                value: 'value',
+                value: 'code',
                 label: 'label',
                 children: 'children',
                 leaf: 'leaf'
