@@ -15,7 +15,7 @@
         </label>
       </el-col>
       <el-col :span="4" class="margin-top-10">
-        <el-input v-model="searchForm.townCode"
+        <el-input v-model="searchForm.villageCode"
                   :size="GLOBAL.config.systemSize"
                   placeholder="区域"
                   maxlength="32"></el-input>
@@ -26,7 +26,7 @@
         </label>
       </el-col>
       <el-col :span="4" class="margin-top-10">
-        <el-input v-model="searchForm.dutyUserId"
+        <el-input v-model="searchForm.name"
                   :size="GLOBAL.config.systemSize"
                   placeholder="当值司机"
                   maxlength="32"></el-input>
@@ -89,20 +89,20 @@
         type="selection">
       </el-table-column>
       <!--当值司机-->
-      <el-table-column prop="dutyUserId" label="当值司机" align="center"/>
+      <el-table-column prop="name" label="当值司机" align="center"/>
       <!--所属乡镇编码-->
-      <el-table-column prop="townCode" label="区域" align="center"/>
+      <el-table-column prop="orgName" label="区域" align="center"/>
       <!--车牌号-->
       <el-table-column prop="carNo" label="车牌号" align="center"/>
       <!--手机号-->
-      <el-table-column prop="phoneNum" label="手机号" align="center"/>
+      <el-table-column prop="phoneNumber" label="手机号" align="center"/>
       <!--更新时间-->
       <el-table-column prop="updateTime"
                        label="更新时间">
         <template slot-scope="scope">
           {{ scope.row.updateTime
           ?$moment(scope.row.updateTime
-          ).format('yyyy-MM-dd HH:mm:ss'):'' }}
+          ).format(GLOBAL.config.dateFormat.ymdhms):'' }}
         </template>
       </el-table-column>
       <el-table-column prop="scope" label="操作" align="center">
@@ -160,19 +160,12 @@
             return {
                 // 查询表单
                 searchForm: {
-                    dutyUserId: '',
-                    townCode: '',
                     carNo: '',
+                    villageCode: '',
+                    name: '',
+                    phoneNumber: ''
                 },
-                tableData: [{
-                    index: '1',
-                    id: '1111',
-                    dutyUserId: '张三',
-                    phoneNum: '12345678900',
-                    orgName: '桃花镇',
-                    villageCode: '古城村',
-                    carNo: 'N123456'
-                }],
+                tableData: [],
                 // 字典数据
                 dictionary: {},
                 // 资源权限控制，有的系统不需这么细，则全部为true
@@ -207,7 +200,7 @@
             operationEdit
         },
         mounted() {
-            // this.init()
+            this.init()
         },
         methods: {
             init: function () {
@@ -298,7 +291,7 @@
                     _this.loading = true
                     _this.FUNCTIONS.systemFunction.interactiveData(
                         _this,
-                        _this.GLOBAL.config.businessFlag.cars,
+                        _this.GLOBAL.config.businessFlag.rtCar,
                         _this.GLOBAL.config.handleType.deleteLogical,
                         rowData.id,
                         null,
@@ -326,7 +319,7 @@
                 // 3、 调接口获取数据
                 _this.FUNCTIONS.systemFunction.interactiveData(
                     _this,
-                    _this.GLOBAL.config.businessFlag.cars,
+                    _this.GLOBAL.config.businessFlag.rtCar,
                     _this.GLOBAL.config.handleType.getPage,
                     paginationData,
                     null,
@@ -338,8 +331,7 @@
                             _this.pagination.total = resultData.total
                             _this.pagination.currentPage = resultData.current
                             resultData.records.forEach(item => {
-                                let orgMap = JSON.parse(unescape(localStorage.getItem(this.GLOBAL.config.orgConfigName)))
-                                item.orgName = orgMap[item.townCode] + orgMap[item.townCode]
+                                item.orgName = _this.FUNCTIONS.systemFunction.getAreaName(_this, item.villageCode)
                             })
                             _this.tableData = resultData.records
                         } else {

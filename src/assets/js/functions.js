@@ -170,7 +170,7 @@ const systemFunction = {
     }
   },
   formatTime: function (number, format) {
-    function formatNumber (n) {
+    function formatNumber(n) {
       n = n.toString()
       return n[1] ? n : '0' + n
     }
@@ -430,6 +430,20 @@ const systemFunction = {
     }).catch((error) => {
       _this.$message.error('请求异常～请联系管理员')
     })
+  },
+  //获取区域名称
+  getAreaName: function (_this, code) {
+    let orgInfoMap = JSON.parse(unescape(localStorage.getItem(_this.GLOBAL.config.orgConfigName)))
+    if (!orgInfoMap) {
+      return
+    }
+    let orgName = orgInfoMap[code].name
+    let parentCode = orgInfoMap[code].parentCode
+    if (parentCode) {
+      let cCode = orgInfoMap[parentCode].code
+      orgName = _this.FUNCTIONS.systemFunction.getAreaName(_this, cCode) + "" + orgName
+    }
+    return orgName;
   }
 }
 
