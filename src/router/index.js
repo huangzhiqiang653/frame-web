@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import GenerateCode from '@/view/CodeGenerate'
+import Organization from '@/view/system/organization/OrganizationTable'
 import Villager from '@/view/system/villager/VillagerView'
 import VillagerInfo from '@/view/system/villager/VillagerInfo'
 import Cars from '@/view/system/car/CarsTable'
@@ -24,6 +25,12 @@ export default new Router({
       path: '/',
       name: 'GenerateCode',
       component: GenerateCode
+    },
+    {
+      // 区域信息管理
+      path: '/organization',
+      name: 'Organization',
+      component: Organization
     },
     {
       // 村民信息管理

@@ -94,11 +94,12 @@
       :layout="pagination.layout"
       :total="pagination.total">
     </el-pagination>
+    <operationTemplate1 ref="operationTemplate1" :refresh="getTableData"/>
   </div>
 </template>
 <script>
     // 替换成相应的模板
-    import operationTemplate from './WorkApplyOperateDialog'
+    import operationTemplate1 from './WorkApplyAssign'
 
     export default {
         name: 'RecordRepairTable',
@@ -107,16 +108,16 @@
                 // 查询表单
                 searchForm: {
                     state: '',
-                    type: '',
+                    type: ''
                 },
                 tableData: [{
                     index: '1',
-                    type: '类型',
+                    type: '报修',
                     area: '2',
                     accountName: '小张',
                     tel: '15077825632',
                     reportTime: '2020-2-25 09:37:13',
-                    state: '未分派',
+                    state: '未分派'
                 }
                 ],
                 // 字典数据
@@ -125,7 +126,7 @@
                 source: {
                     export: true,
                     infoView: true,
-                    infoSubmit: true,
+                    infoSubmit: true
                 },
                 // 分页参数
                 pagination: {
@@ -140,7 +141,7 @@
             }
         },
         components: {
-            operationTemplate
+            operationTemplate1
         },
         mounted () {
             // this.init()
@@ -154,8 +155,7 @@
                 this.getTableData('init')
             },
             operationMethod: function (operateType, info) {
-            debugger
-                this.$refs.operationTemplate.init(operateType, info ? info.id : null)
+                this.$refs.operationTemplate1.init(operateType, info ? info.id : null)
             },
             getSource: function (rowData) {
                 let tempList = []
@@ -184,9 +184,9 @@
                     }
                 })
             },
-            // 提交
+            // 分派
             handleSubmit: function (rowData) {
-                // TODO
+                this.operationMethod('bell', rowData)
             },
             // 获取列表
             getTableData: function (initPageFlag) {
@@ -238,7 +238,7 @@
                     type: 'litigationCasesServiceImpl.downFile',
                     info: searchParams
                 })
-            },
+            }
         }
     }
 </script>

@@ -32,7 +32,7 @@ const config = {
   businessFlag: {
     system: 'system',
     rtCar: 'rtCar',
-    zxRole: 'zxRole',
+    rtUser: 'rtUser',
     zxMenu: 'zxMenu',
     zxUser: 'zxUser',
     zxDictionary: 'zxDictionary',

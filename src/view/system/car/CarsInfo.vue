@@ -14,8 +14,8 @@
       v-loading="loading">
       <el-row class="margin-top-20">
         <el-col :span="8">
-          <el-form-item label="区域：" prop="townCode">
-            <el-input v-model="formData.townCode" placeholder="所属区域" maxlength="64"></el-input>
+          <el-form-item label="区域：" prop="villageCode">
+            <el-input v-model="formData.villageCode" placeholder="所属区域" maxlength="64"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="8">
@@ -104,6 +104,9 @@
         name: 'OperationAdd',
         data() {
             return {
+                searchForm: {
+                    carNo: ''
+                },
                 formData: {
                     id: '',
                     townCode: '',
@@ -167,8 +170,12 @@
         },
         methods: {
             init: function () {
+                let _this = this
                 if (this.$route.params) {
-                    this.formData.id = this.$route.params.id
+                    let carInfo = this.$route.params.carInfo
+                    carInfo.orgName = _this.FUNCTIONS.systemFunction.getAreaName(_this, carInfo.villageCode)
+                    _this.formData = carInfo
+                    _this.searchForm.carNo = carInfo.carNo
                     let type = this.$route.params.type
                     if (type === 'add') {
                         this.showTitle = '新增'
@@ -179,7 +186,7 @@
                         this.showTitle = '查看'
                     }
                 }
-                // this.getTableData('init')
+                this.getTableData('init')
             },
             goBack: function () {
                 this.$router.go(-1)
@@ -231,7 +238,7 @@
                 // 3、 调接口获取数据
                 _this.FUNCTIONS.systemFunction.interactiveData(
                     _this,
-                    _this.GLOBAL.config.businessFlag.cars,
+                    _this.GLOBAL.config.businessFlag.rtUser,
                     _this.GLOBAL.config.handleType.getPage,
                     paginationData,
                     null,
