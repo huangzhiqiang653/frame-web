@@ -1,7 +1,7 @@
 const urls = {
-  root: '/zxauth',
+  root: '/rts',
   index: {
-    toLogin: '/auth/index/toLogin',
+    toLogin: '/rts/index/toLogin',
     login: '/auth/index/login',
     logout: '/auth/index/logout',
     registerAccount: '/auth/index/register',

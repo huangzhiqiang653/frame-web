@@ -5,73 +5,42 @@
     <div class="main-area">
         <el-breadcrumb separator=":">
             <el-breadcrumb-item>当前位置</el-breadcrumb-item>
-            <el-breadcrumb-item>用户列表</el-breadcrumb-item>
+            <el-breadcrumb-item>维修人员管理</el-breadcrumb-item>
         </el-breadcrumb>
         <!--查询区域-->
         <el-row class="margin-top-10">
             <el-col :span="2" class="margin-top-10">
                 <label class="search-label">
-                    姓名:
+                    区划:
                 </label>
             </el-col>
             <el-col :span="4" class="margin-top-10">
                 <el-input v-model="searchForm.name"
                           :size="GLOBAL.config.systemSize"
-                          placeholder="姓名"
+                          placeholder="请选择区划"
                           maxlength="32"></el-input>
             </el-col>
             <el-col :span="2" class="margin-top-10">
                 <label class="search-label">
-                    所属乡镇编码:
+                    人员姓名:
                 </label>
             </el-col>
             <el-col :span="4" class="margin-top-10">
                 <el-input v-model="searchForm.townCode"
                           :size="GLOBAL.config.systemSize"
-                          placeholder="所属乡镇编码"
+                          placeholder="请输入人员姓名"
                           maxlength="32"></el-input>
             </el-col>
             <el-col :span="2" class="margin-top-10">
                 <label class="search-label">
-                    所属村居编码:
+                    手机号码:
                 </label>
             </el-col>
             <el-col :span="4" class="margin-top-10">
                 <el-input v-model="searchForm.villageCode"
                           :size="GLOBAL.config.systemSize"
-                          placeholder="所属村居编码"
+                          placeholder="请输入手机号码"
                           maxlength="32"></el-input>
-            </el-col>
-            <el-col :span="2" class="margin-top-10">
-                <label class="search-label">
-                    手机号:
-                </label>
-            </el-col>
-            <el-col :span="4" class="margin-top-10">
-                <el-input v-model="searchForm.phoneNumber"
-                          :size="GLOBAL.config.systemSize"
-                          placeholder="手机号"
-                          maxlength="32"></el-input>
-            </el-col>
-            <el-col :span="2" class="margin-top-10">
-                <label class="search-label">
-                    更新时间:
-                </label>
-            </el-col>
-            <el-col :span="6" class="margin-top-10">
-                <el-date-picker
-                        v-model="searchForm.updateTime"
-                        :size="GLOBAL.config.systemSize"
-                        type="daterange"
-                        align="right"
-                        unlink-panels
-                        format="yyyy-MM-dd"
-                        value-format="yyyy-MM-dd"
-                        range-separator="至"
-                        start-placeholder="开始"
-                        end-placeholder="结束"
-                        style="width: 100%;">
-                </el-date-picker>
             </el-col>
             <el-col :span="2" class="margin-top-10">
                 <el-button type="primary" @click="doSearch" :size="GLOBAL.config.systemSize" icon="el-icon-search">查询
@@ -119,23 +88,13 @@
             <el-table-column
                     type="selection">
             </el-table-column>
+            <el-table-column type="index" label="序号" align="center"></el-table-column>
             <!--姓名-->
-            <el-table-column prop="name" label="姓名" align="center"/>
+            <el-table-column prop="name" label="人员姓名" align="center"/>
             <!--所属乡镇编码-->
-            <el-table-column prop="townCode" label="所属乡镇编码" align="center"/>
-            <!--所属村居编码-->
-            <el-table-column prop="villageCode" label="所属村居编码" align="center"/>
+            <el-table-column prop="townCode" label="所属区划" align="center"/>
             <!--手机号-->
             <el-table-column prop="phoneNumber" label="手机号" align="center"/>
-            <!--更新时间-->
-            <el-table-column prop="updateTime"
-                             label="更新时间">
-                <template slot-scope="scope">
-                    {{ scope.row.updateTime
-                    ?$moment(scope.row.updateTime
-                    ).format('yyyy-MM-dd'):'' }}
-                </template>
-            </el-table-column>
             <el-table-column prop="scope" label="操作" align="center">
                 <template slot-scope="scope">
                     <el-dropdown>
@@ -183,7 +142,11 @@
                     phoneNumber: '',
                     updateTime: '',
                 },
-                tableData: [],
+                tableData: [{
+                    name: '泰迪',
+                    townCode: '鞍山市蘑菇屯',
+                    phoneNumber: '13112345678'
+                }],
                 // 字典数据
                 dictionary: {
                 },
@@ -222,7 +185,7 @@
         methods: {
             init: function () {
                 // TODO 加载列表数据
-                this.getTableData('init')
+                // this.getTableData('init')
             },
             doSearch: function () {
                 this.getTableData('init')
@@ -259,8 +222,8 @@
             },
             getSource: function (rowData) {
                 let tempList = []
-                this.source.infoEdit && tempList.push({icon: 'el-icon-edit', title: '编辑', method: 'handleEdit'})
                 this.source.infoView && tempList.push({icon: 'el-icon-view', title: '查看', method: 'handleView'})
+                this.source.infoEdit && tempList.push({icon: 'el-icon-edit', title: '编辑', method: 'handleEdit'})
                 this.source.infoDelete && tempList.push({icon: 'el-icon-delete', title: '删除', method: 'handleDelete'})
                 return tempList
             },
@@ -284,8 +247,13 @@
             },
             // 查看
             handleView: function (rowData) {
-                this.operationMethod('view', rowData)
-                // TODO
+                this.$router.push({
+                    name: 'RepairUserInfo',
+                    params: {
+                        type: 'view',
+                        id: '12345'
+                    }
+                })
             },
             // 单条数据删除
             handleDelete: function (rowData) {

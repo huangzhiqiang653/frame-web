@@ -1,6 +1,6 @@
 <template>
   <el-dialog :title="dialogTitle" :visible.sync="dialogFormVisible" :destroy-on-close="true">
-    <el-form :model="form">
+    <el-form :inline="true" :model="form" label-width="100px">
       <el-form-item label="区划" prop="area" label-width="70px">
         <el-input v-model="form.area" placeholder="请选择区划"></el-input>
       </el-form-item>
