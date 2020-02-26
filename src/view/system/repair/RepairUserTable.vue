@@ -15,10 +15,11 @@
                 </label>
             </el-col>
             <el-col :span="4" class="margin-top-10">
-                <el-input v-model="searchForm.name"
-                          :size="GLOBAL.config.systemSize"
-                          placeholder="请选择区划"
-                          maxlength="32"></el-input>
+              <cascader :set-props="setProps" :set-options="options" :set-data-type="'value'" :set-size="GLOBAL.config.systemSize" ref="cascaderTemplete"></cascader>
+<!--                <el-input v-model="searchForm.name"-->
+<!--                          :size="GLOBAL.config.systemSize"-->
+<!--                          placeholder="请选择区划"-->
+<!--                          maxlength="32"></el-input>-->
             </el-col>
             <el-col :span="2" class="margin-top-10">
                 <label class="search-label">
@@ -129,6 +130,7 @@
 <script>
     // 替换成相应的模板
     import operationTemplate from './RepairUserOperateDialog'
+    import cascader from '../../../components/Cascader'
 
     export default {
         name: 'UserTable',
@@ -177,7 +179,8 @@
             }
         },
         components: {
-            operationTemplate
+            operationTemplate,
+            cascader
         },
         mounted () {
             this.init()
