@@ -8,6 +8,7 @@ import CarsInfo from '@/view/system/car/CarsInfo'
 import RepairUsers from '@/view/system/repair/RepairUserTable'
 import Configs from '@/view/system/config/ConfigTable'
 import WorkApplys from '@/view/system/workbench/WorkApplyTable'
+import WorkApplyOperateDialog from '@/view/system/workbench/WorkApplyOperateDialog'
 import UserApplys from '@/view/system/workbench/UserApplyTable'
 
 Vue.use(Router)
@@ -63,6 +64,12 @@ export default new Router({
       path: '/workApplys',
       name: 'WorkApplys',
       component: WorkApplys
+    },
+    {
+      // 配置管理
+      path: '/workApplys/WorkApplyOperateDialog',
+      name: 'WorkApplyOperateDialog',
+      component: WorkApplyOperateDialog
     },
     {
       // 配置管理
