@@ -17,7 +17,7 @@ const urls = {
   },
   business: {
     rtCar: '/rts/rt-cars/base',
-    zxRole: '/auth/zx-role/base',
+    rtUser: '/rts/rt-user/base',
     zxMenu: '/auth/zx-menu/base',
     zxUser: '/auth/zx-user/base',
     zxDictionary: '/auth/zx-dictionary/base',

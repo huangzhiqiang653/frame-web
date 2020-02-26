@@ -266,7 +266,7 @@
                     name: 'CarsInfo',
                     params: {
                         type: 'view',
-                        id: rowData.id
+                        carInfo: rowData
                     }
                 })
             },
@@ -276,7 +276,7 @@
                     name: 'CarsInfo',
                     params: {
                         type: 'edit',
-                        id: rowData.id
+                        carInfo: rowData
                     }
                 })
             },

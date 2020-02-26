@@ -36,7 +36,7 @@
               <span>基本信息维护</span>
             </template>
             <el-menu-item-group>
-              <el-menu-item index="/">
+              <el-menu-item index="/organization">
                 <i class="el-icon-map-location"></i>
                 <span slot="title">区划信息管理</span>
               </el-menu-item>
