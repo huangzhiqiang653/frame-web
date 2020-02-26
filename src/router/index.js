@@ -66,22 +66,22 @@ export default new Router({
       component: Configs
     },
     {
-      // 配置管理
+      // 工作台列表
       path: '/workApplys',
       name: 'WorkApplys',
       component: WorkApplys
     },
     {
-      // 配置管理
+      // 工作台详细
       path: '/workApplys/WorkApplyOperateDialog',
       name: 'WorkApplyOperateDialog',
       component: WorkApplyOperateDialog
     },
     {
-      // 配置管理
+      // 人员审核
       path: '/userApplys',
       name: 'UserApplys',
       component: UserApplys
-    },
+    }
   ]
 })
