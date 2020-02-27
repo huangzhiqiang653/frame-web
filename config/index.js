@@ -13,7 +13,7 @@ module.exports = {
     proxyTable: {
       // 请求代理配置
       '/rts': {
-        target: 'http://127.0.0.1:9073/rts',
+        target: 'http://192.168.1.224:9073/rts',
         changeOrigin: true,
         pathRewrite: {
           '^/rts': ''

@@ -13,26 +13,21 @@
       :disabled="!editableFlag"
       v-loading="loading">
       <el-row class="margin-top-20">
-        <el-col :span="8">
+        <el-col :span="10">
           <el-form-item label="区域：" prop="villageCode">
             <el-input v-model="formData.villageCode" placeholder="所属区域" maxlength="64"></el-input>
           </el-form-item>
         </el-col>
-        <el-col :span="8">
+        <el-col :span="10">
           <el-form-item label="车牌号：" prop="carNo">
             <el-input v-model="formData.carNo" placeholder="车牌号" maxlength="64"></el-input>
           </el-form-item>
         </el-col>
-        <el-col :span="12">
-          <el-form-item label="管理区域：" prop="manageAreaCode">
-            <el-tree
-              :data="treeData"
-              :props="defaultProps"
-              show-checkbox
-              node-key="id"
-              ref="manageArea"
-            >
-            </el-tree>
+        <el-col :span="10">
+          <el-form-item label="管理区域：" prop="listManageArea">
+            <cascader :set-props="setProps" :set-options="treeData" :set-data-type="'value'"
+                      :set-size="GLOBAL.config.systemSize" maxlength="64"
+                      ref="manageArea"></cascader>
           </el-form-item>
         </el-col>
         <el-col :span="8" v-if="editableFlag">
@@ -53,20 +48,20 @@
         <!--序号-->
         <el-table-column prop="index" label="序号" width="80px" align="center"/>
         <!--当值司机-->
-        <el-table-column prop="dutyUserId" label="当值司机" align="center"/>
+        <el-table-column prop="name" label="当值司机" align="center"/>
         <!--所属乡镇编码-->
-        <el-table-column prop="townCode" label="区域" align="center"/>
+        <el-table-column prop="orgName" label="区域" align="center"/>
         <!--车牌号-->
         <el-table-column prop="carNo" label="车牌号" align="center"/>
         <!--手机号-->
-        <el-table-column prop="phoneNum" label="手机号" align="center"/>
+        <el-table-column prop="phoneNumber" label="手机号" align="center"/>
         <!--更新时间-->
         <el-table-column prop="updateTime"
                          label="更新时间">
           <template slot-scope="scope">
             {{ scope.row.updateTime
             ?$moment(scope.row.updateTime
-            ).format('yyyy-MM-dd HH:mm:ss'):'' }}
+            ).format(GLOBAL.config.dateFormat.ymdhms):'' }}
           </template>
         </el-table-column>
         <el-table-column prop="scope" label="操作" align="center" v-if="editableFlag">
@@ -99,9 +94,21 @@
 </template>
 <script>
     import addCarUserTemplate from '.././villager/VillagerSimpleTableDialog'
+    import cascader from '../../../components/Cascader'
 
     export default {
         name: 'OperationAdd',
+        props: {
+            id: {
+                type: String,
+            },
+            refresh: {
+                type: Function
+            },
+            closeSelf: {
+                type: Function
+            }
+        },
         data() {
             return {
                 searchForm: {
@@ -109,22 +116,23 @@
                 },
                 formData: {
                     id: '',
-                    townCode: '',
                     villageCode: '',
                     carNo: '',
-                    manageAreaCode: ''
+                    listManageArea: [],
                 },
                 //校验规则
-                formRules: {},
-                tableData: [{
-                    id: '1',
-                    index: '1',
-                    dutyUserId: '张三',
-                    phoneNum: '12345678900',
-                    townCode: '桃花镇',
-                    villageCode: '古城村',
-                    carNo: 'N123456'
-                }],
+                formRules: {
+                    villageCode: [
+                        {required: true, message: '请设置所属区域', trigger: 'blur'}
+                    ],
+                    carNo: [
+                        {required: true, message: '请设置所属区域', trigger: 'blur'}
+                    ],
+                    manageAreaCode: [
+                        {required: true, message: '请设置所属区域', trigger: 'blur'}
+                    ]
+                },
+                tableData: [],
                 // 分页参数
                 pagination: {
                     pageSizeList: [10, 20, 30, 40, 50],
@@ -144,19 +152,21 @@
                     infoDelete: true,
                 },
                 treeData: [{
-                    id: '1',
+                    id: '10000',
                     name: '肥西县',
                     code: '0001',
-                    children: [{name: '上派镇', code: '00001', children: []}, {name: '桃花镇', code: '00002', children: []}]
+                    children: [{id: '100000', name: '上派镇', code: '00001'}, {id: '100001', name: '桃花镇', code: '00002'}]
                 }],
-                defaultProps: {
+                setProps: {
+                    multiple: true, // 多选
+                    checkStrictly: true, // 父节点取消选中关联
+                    value: 'code',
+                    label: 'name',
                     children: 'children',
-                    label: 'name'
+                    leaf: 'leaf'
                 },
                 // 字典数据
                 dictionary: {},
-                costDisabledInput: true,
-                outsideLawyerYes: false,
                 loading: false,
                 editableFlag: false,
                 showTitle: "查看"
@@ -166,7 +176,8 @@
             this.init()
         },
         components: {
-            addCarUserTemplate
+            addCarUserTemplate,
+            cascader
         },
         methods: {
             init: function () {
@@ -174,7 +185,10 @@
                 if (this.$route.params) {
                     let carInfo = this.$route.params.carInfo
                     carInfo.orgName = _this.FUNCTIONS.systemFunction.getAreaName(_this, carInfo.villageCode)
-                    _this.formData = carInfo
+                    _this.formData.id = carInfo.id
+                    _this.formData.villageCode = carInfo.villageCode
+                    _this.formData.carNo = carInfo.carNo
+                    _this.formData.listManageArea = carInfo.listManageArea
                     _this.searchForm.carNo = carInfo.carNo
                     let type = this.$route.params.type
                     if (type === 'add') {
@@ -193,7 +207,7 @@
             },
             //添加驾驶员
             addCarUsers: function () {
-                this.$refs.addCarUserTemplate.init(this.formData.id)
+                this.$refs.addCarUserTemplate.init(this.formData.carNo)
             },
             //删除驾驶员
             handleDelete: function (rowData) {
@@ -249,6 +263,9 @@
                             _this.pagination.pageSize = resultData.size
                             _this.pagination.total = resultData.total
                             _this.pagination.currentPage = resultData.current
+                            resultData.records.forEach(item => {
+                                item.orgName = _this.FUNCTIONS.systemFunction.getAreaName(_this, item.villageCode)
+                            })
                             _this.tableData = resultData.records
                         } else {
                             _this.$message.warning('获取列表数据失败～')
@@ -269,33 +286,34 @@
                 this.getTableData()
             },
             saveForm: function () {
+                let _this = this
                 // 参数处理======start==========
-                let checkedMenusNode = this.$refs.manageArea.getCheckedNodes(true)
-                if (!checkedMenusNode) {
-                    this.$message.warning('请勾选区域～')
+                let checkedNode = _this.$refs.manageArea.radioObj
+                if (!checkedNode) {
+                    _this.$message.warning('请勾选区域～')
                     return
                 }
-                let checkedAreaId = new Set()
-                checkedMenusNode.forEach(item => {
-                    checkedAreaId.add(item.id + "," + item.code)
+                let checkedAreaId = []
+                checkedNode.forEach(item => {
+                    checkedAreaId.push({"orgCode": item.code, "orgId": item.id})
                 })
-                this.formData.manageAreaCode = checkedAreaId
+                _this.formData.listManageArea = checkedAreaId
                 // 参数处理======end============
-                let _this = this
                 _this.loading = true
                 let params = this.formData
                 _this.FUNCTIONS.systemFunction.interactiveData(
                     _this,
-                    _this.GLOBAL.config.businessFlag.zxRelationRoleMenu,
-                    _this.GLOBAL.config.handleType.add,
+                    _this.GLOBAL.config.businessFlag.rtCar,
+                    _this.GLOBAL.config.handleType.updateAll,
                     _this.FUNCTIONS.systemFunction.removeNullFields(params),
                     null,
                     resultData => {
                         _this.loading = false
                         if (resultData) {
                             _this.$message.success('保存成功～')
-                            _this.showFlag = false
-                            _this.$props.refresh && this.$props.refresh('init')
+                            this.$router.push({
+                                name: 'Cars'
+                            })
                         } else {
                             _this.$message.warning('保存失败～')
                         }

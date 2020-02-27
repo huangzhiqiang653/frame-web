@@ -59,25 +59,10 @@
         data() {
             return {
                 formData: {
-                    carId: '',
+                    carNo: '',
                     userIds: []
                 },
-                tableData: [{
-                    id: '1',
-                    index: '1',
-                    accountName: '林夕',
-                    area: '吉祥村',
-                    tel: '15112345678',
-                    isdisabled: false
-                },
-                    {
-                        id: '12',
-                        index: '2',
-                        accountName: '林夕',
-                        area: '吉祥村',
-                        tel: '15112345678',
-                        isdisabled: false
-                    }],
+                tableData: [],
                 // 字典数据
                 dictionary: {
                     accountStatus: JSON.parse(unescape(localStorage.getItem(this.GLOBAL.config.dictionaryPre + this.GLOBAL.config.dictionary.accountStatus)))
@@ -109,28 +94,11 @@
         mounted() {
         },
         methods: {
-            init: function (id) {
-                console.log(id)
+            init: function (carNo) {
                 this.showFlag = true
-                if (id) {
-                    this.formData.carId = id
-                    // this.getTableData()
-                    this.tableData = [{
-                        id: '1',
-                        index: '1',
-                        accountName: '林夕',
-                        area: '吉祥村',
-                        tel: '15112345678',
-                        isdisabled: false
-                    },
-                        {
-                            id: '12',
-                            index: '2',
-                            accountName: '林夕',
-                            area: '吉祥村',
-                            tel: '15112345678',
-                            isdisabled: false
-                        }]
+                if (carNo) {
+                    this.formData.carId = carNo
+                    this.getTableData('init')
                 }
             },
             doSearch: function () {
@@ -148,7 +116,7 @@
                 // 3、 调接口获取数据
                 _this.FUNCTIONS.systemFunction.interactiveData(
                     _this,
-                    _this.GLOBAL.config.businessFlag.zxAccount,
+                    _this.GLOBAL.config.businessFlag.rtUser,
                     _this.GLOBAL.config.handleType.getPage,
                     paginationData,
                     null,
