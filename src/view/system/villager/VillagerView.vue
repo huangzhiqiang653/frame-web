@@ -91,7 +91,7 @@
       <!--账户名称-->
       <el-table-column prop="name" label="户主姓名" width="240px" align="center"/>
       <!--所属用户-->
-      <el-table-column prop="twonCode" label="所属区划" align="center"/>
+      <el-table-column prop="villageCode" label="所属区划" align="center"/>
       <el-table-column prop="phoneNumber" label="手机号码" width="200px" align="center"/>
       <el-table-column
         align="center"
@@ -150,7 +150,7 @@
                 tableData: [{
                     id: '22',
                     name: '林夕',
-                    townCode: '吉祥村',
+                    villageCode: '吉祥村',
                     phoneNumber: '15112345678'
                 }],
                 // 字典数据
@@ -255,7 +255,7 @@
             // 编辑
             handleEdit: function (rowData) {
                 this.dialogVisible = true
-                this.$refs.villagerDialog.open('edit')
+                this.$refs.villagerDialog.open('edit', rowData)
             },
             // 查看
             handleView: function (rowData) {

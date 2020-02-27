@@ -12,7 +12,7 @@
       @blur="blur"
       @expand-change="expandChange"
       :getCheckedNodes="getCheckedNodes"
-      v-model="val"
+      :value="val"
       clearable>
     </el-cascader>
   </div>
@@ -95,8 +95,6 @@
                     let length = temp.length - 1
                     _this.selectObj.push(temp[length])
                     _this.selectValue = temp[length][_this.setMore['value']]
-                    console.log(_this.selectObj)
-                    console.log(_this.selectValue)
                 } else {
                     // 多选
                     _this.radioValue = []
@@ -109,7 +107,6 @@
                     for (let val of _this.radioObj) {
                         _this.radioValue.push(val[_this.setMore['value']])
                     }
-                    console.log(_this.radioValue)
                 }
             },
             // 当展开节点发生变化时触发 各父级选项值组成的数组
@@ -117,6 +114,7 @@
             },
             // 当失去焦点时触发
             blur: function () {
+                this.$emit('getValue', this.selectValue)
             },
             // 当获取焦点时触发
             focus: function () {

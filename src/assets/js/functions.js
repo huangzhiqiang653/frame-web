@@ -78,7 +78,6 @@ const systemFunction = {
               type: 'warning'
             })
           }
-
         }
       },
       () => {
