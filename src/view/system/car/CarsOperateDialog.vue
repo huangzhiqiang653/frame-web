@@ -12,20 +12,19 @@
       element-loading-text="数据处理中...请稍等..."
       v-loading="loading">
       <el-form-item label="区域：" prop="villageCode">
-        <el-input v-model="formData.villageCode" placeholder="所属村居编码" maxlength="64"></el-input>
+        <cascader :set-props="setProps" :set-options="treeData" :set-data-type="'value'"
+                  :set-size="GLOBAL.config.systemSize" maxlength="64"
+                  v-model="formData.villageCode"
+                  ref="myArea"></cascader>
       </el-form-item>
       <el-form-item label="车牌号：" prop="carNo">
         <el-input v-model="formData.carNo" placeholder="车牌号" maxlength="64"></el-input>
       </el-form-item>
-      <el-form-item label="管理区域：" prop="manageAreaCode">
-        <el-tree
-          :data="treeData"
-          :props="defaultProps"
-          show-checkbox
-          node-key="id"
-          ref="manageArea"
-        >
-        </el-tree>
+      <el-form-item label="管理区域：" prop="listManageArea">
+        <cascader :set-props="setManageProps" :set-options="treeData" :set-data-type="'value'"
+                  :set-size="GLOBAL.config.systemSize" maxlength="64"
+                  v-model="formData.listManageArea"
+                  ref="manageArea"></cascader>
       </el-form-item>
     </el-form>
     <el-row class="margin-top-20">
@@ -37,6 +36,8 @@
   </el-dialog>
 </template>
 <script>
+    import cascader from '../../../components/Cascader'
+
     export default {
         name: 'cars',
         props: {
@@ -60,16 +61,28 @@
                 },
                 // 校验规则
                 formRules: {
-                    townCode: [],
                     villageCode: [],
                     carNo: [],
                 },
-                treeData: [{
-                    id: '1',
-                    name: '肥西县',
-                    code: '0001',
-                    children: [{name: '上派镇', code: '00001', children: []}, {name: '桃花镇', code: '00002', children: []}]
-                }],
+                treeData: JSON.parse(unescape(localStorage.getItem(this.GLOBAL.config.orgTreeName))),
+                //管理区域
+                setManageProps: {
+                    multiple: true, // 多选
+                    checkStrictly: true, // 父节点取消选中关联
+                    value: 'code',
+                    label: 'name',
+                    children: 'children',
+                    leaf: 'leaf'
+                },
+                //所属区域
+                setProps: {
+                    multiple: false, // 单选
+                    checkStrictly: true, // 父节点取消选中关联
+                    value: 'code',
+                    label: 'name',
+                    children: 'children',
+                    leaf: 'leaf'
+                },
                 defaultProps: {
                     children: 'children',
                     label: 'name'
@@ -81,6 +94,9 @@
                 showTitle: '新增',
                 showFlag: false
             }
+        },
+        components: {
+            cascader
         },
         methods:
             {

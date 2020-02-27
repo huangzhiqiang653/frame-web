@@ -125,8 +125,8 @@
         name: 'Index',
         data() {
             return {
-                systemName: '卓新科技权限系统',
-                systemSubName: 'zoxin Auth System',
+                systemName: '旱厕改造系统',
+                systemSubName: 'PitToilet Reform System',
                 footer: 'Copyright © 2019 - 2029 安徽卓新科技 版权所有',
                 headPic: 'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png',
                 isCollapse: false,

@@ -15,7 +15,10 @@
       <el-row class="margin-top-20">
         <el-col :span="10">
           <el-form-item label="区域：" prop="villageCode">
-            <el-input v-model="formData.villageCode" placeholder="所属区域" maxlength="64"></el-input>
+            <cascader :set-props="setProps" :set-options="treeData" :set-data-type="'value'"
+                      :set-size="GLOBAL.config.systemSize" maxlength="64"
+                      v-model="formData.villageCode"
+                      ref="myArea"></cascader>
           </el-form-item>
         </el-col>
         <el-col :span="10">
@@ -25,8 +28,9 @@
         </el-col>
         <el-col :span="10">
           <el-form-item label="管理区域：" prop="listManageArea">
-            <cascader :set-props="setProps" :set-options="treeData" :set-data-type="'value'"
+            <cascader :set-props="setManageProps" :set-options="treeData" :set-data-type="'value'"
                       :set-size="GLOBAL.config.systemSize" maxlength="64"
+                      v-model="formData.listManageArea"
                       ref="manageArea"></cascader>
           </el-form-item>
         </el-col>
@@ -128,7 +132,7 @@
                     carNo: [
                         {required: true, message: '请设置所属区域', trigger: 'blur'}
                     ],
-                    manageAreaCode: [
+                    listManageArea: [
                         {required: true, message: '请设置所属区域', trigger: 'blur'}
                     ]
                 },
@@ -151,14 +155,19 @@
                     infoEdit: true,
                     infoDelete: true,
                 },
-                treeData: [{
-                    id: '10000',
-                    name: '肥西县',
-                    code: '0001',
-                    children: [{id: '100000', name: '上派镇', code: '00001'}, {id: '100001', name: '桃花镇', code: '00002'}]
-                }],
-                setProps: {
+                treeData: JSON.parse(unescape(localStorage.getItem(this.GLOBAL.config.orgTreeName))),
+                //管理区域
+                setManageProps: {
                     multiple: true, // 多选
+                    checkStrictly: true, // 父节点取消选中关联
+                    value: 'code',
+                    label: 'name',
+                    children: 'children',
+                    leaf: 'leaf'
+                },
+                //所属区域
+                setProps: {
+                    multiple: false, // 单选
                     checkStrictly: true, // 父节点取消选中关联
                     value: 'code',
                     label: 'name',
@@ -207,7 +216,8 @@
             },
             //添加驾驶员
             addCarUsers: function () {
-                this.$refs.addCarUserTemplate.init(this.formData.carNo)
+                let _this = this
+                _this.$refs.addCarUserTemplate.init(_this.formData.carNo, _this.GLOBAL.config.userType.driver, false)
             },
             //删除驾驶员
             handleDelete: function (rowData) {
@@ -219,13 +229,13 @@
                 }).then(() => {
                     _this.loading = true
                     let params = {
-                        id: _this.formData.id,
-                        userId: rowData.id
+                        id: rowData.id,
+                        userType: _this.GLOBAL.config.userType.driver
                     }
                     _this.FUNCTIONS.systemFunction.interactiveData(
                         _this,
-                        _this.GLOBAL.config.businessFlag.cars,
-                        _this.GLOBAL.config.handleType.deleteLogicalBatch,
+                        _this.GLOBAL.config.businessFlag.rtUser,
+                        _this.GLOBAL.config.handleType.removeUserRole,
                         params,
                         null,
                         resultData => {

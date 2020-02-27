@@ -65,19 +65,11 @@ const systemFunction = {
           callback && callback(resultData.data)
         } else {
           errorback && errorback()
-          if (resultData.msg) {
-            _this.$message({
-              showClose: true,
-              message: resultData.msg,
-              type: 'warning'
-            })
-          } else {
-            _this.$message({
-              showClose: true,
-              message: '操作失败～',
-              type: 'warning'
-            })
-          }
+          _this.$message({
+            showClose: true,
+            message: '操作失败～',
+            type: 'warning'
+          })
         }
       },
       () => {
