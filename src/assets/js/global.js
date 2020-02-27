@@ -33,6 +33,7 @@ const config = {
     system: 'system',
     rtCar: 'rtCar',
     rtUser: 'rtUser',
+    getTree: 'getTree',
     zxMenu: 'zxMenu',
     zxUser: 'zxUser',
     zxDictionary: 'zxDictionary',

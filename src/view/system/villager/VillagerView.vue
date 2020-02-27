@@ -87,12 +87,12 @@
         type="selection">
       </el-table-column>
       <!--序号-->
-      <el-table-column prop="index" label="序号" width="80px" align="center"/>
+      <el-table-column type="index" label="序号" width="80px" align="center"/>
       <!--账户名称-->
-      <el-table-column prop="accountName" label="户主姓名" width="240px" align="center"/>
+      <el-table-column prop="name" label="户主姓名" width="240px" align="center"/>
       <!--所属用户-->
-      <el-table-column prop="area" label="所属区划" align="center"/>
-      <el-table-column prop="tel" label="手机号码" width="200px" align="center"/>
+      <el-table-column prop="twonCode" label="所属区划" align="center"/>
+      <el-table-column prop="phoneNumber" label="手机号码" width="200px" align="center"/>
       <el-table-column
         align="center"
         fixed="right"
@@ -148,10 +148,10 @@
                     updateTime: ''
                 },
                 tableData: [{
-                    index: '1',
-                    accountName: '林夕',
-                    area: '吉祥村',
-                    tel: '15112345678'
+                    id: '22',
+                    name: '林夕',
+                    townCode: '吉祥村',
+                    phoneNumber: '15112345678'
                 }],
                 // 字典数据
                 dictionary: {
@@ -187,12 +187,12 @@
             villagerAddDialog,
         },
         mounted() {
-            // this.init()
+            this.init()
         },
         methods: {
             init: function () {
                 // TODO 加载列表数据
-                // this.getTableData('init')
+                this.getTableData('init')
             },
             doSearch: function () {
                 this.getTableData('init')
@@ -310,7 +310,7 @@
                 // 3、 调接口获取数据
                 _this.FUNCTIONS.systemFunction.interactiveData(
                     _this,
-                    _this.GLOBAL.config.businessFlag.zxAccount,
+                    _this.GLOBAL.config.businessFlag.rtUser,
                     _this.GLOBAL.config.handleType.getPage,
                     paginationData,
                     null,

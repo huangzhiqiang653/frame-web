@@ -2,7 +2,7 @@
   <el-dialog :title="dialogTitle" :visible.sync="dialogFormVisible" :destroy-on-close="true">
     <el-form :inline="true" :model="form" label-width="100px">
       <el-form-item label="区划" prop="area" label-width="70px">
-        <cascader :set-props="setProps" :set-options="options" :set-data-type="'value'" ref="cascaderTemplete"></cascader>
+        <cascader :set-props="setProps" :set-options="options" :set-data-type="'value'" :val="form.area" ref="cascaderTemplete"></cascader>
 <!--        <el-input v-model="form.area" placeholder="请选择区划"></el-input>-->
       </el-form-item>
       <el-form-item label="户主姓名" prop="name" label-width="70px">
@@ -41,29 +41,29 @@
             dialogTitle: '',
             dialogFormVisible: false,
             form: {
-                area: '',
+                area: '666',
                 name: '',
                 tel: '',
                 address: ''
             },
             options: [{
                 code: '111',
-                label: '测试1',
+                name: '测试1',
                 children: [
                     {
                         code: '222',
-                        label: 'ceshi'
+                        name: 'ceshi'
                     }, {
                         code: '333',
-                        label: 'jksld'
+                        name: 'jksld'
                     }
                 ]
             }],
             setProps: {
-                multiple: true, // 多选
+                multiple: false, // 多选
                 checkStrictly: true, // 父节点取消选中关联
                 value: 'code',
-                label: 'label',
+                label: 'name',
                 children: 'children',
                 leaf: 'leaf'
             },
@@ -71,6 +71,9 @@
       },
       components: {
           cascader
+      },
+      mounted () {
+          this.getAreaData()
       },
       methods: {
           sureClick: function () {
@@ -85,6 +88,27 @@
                   this.dialogTitle = '编辑村民档案'
               }
               this.dialogFormVisible = true
+          },
+          // 请求区划数据
+          getAreaData: function () {
+              console.log('111111')
+              debugger
+              let _this = this
+              _this.FUNCTIONS.systemFunction.interactiveData(
+                  _this,
+                  _this.GLOBAL.config.businessFlag.getTree,
+                  _this.GLOBAL.config.handleType.getTree,
+                  null,
+                  null,
+                  resultData => {
+                      if (resultData) {
+                          _this.options = resultData
+                          console.log(_this.options)
+                      } else {
+                          _this.$message.warning('获取区划数据失败～')
+                      }
+                  }
+              )
           }
       }
   }

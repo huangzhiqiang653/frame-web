@@ -12,6 +12,7 @@
       @blur="blur"
       @expand-change="expandChange"
       :getCheckedNodes="getCheckedNodes"
+      v-model="val"
       clearable>
     </el-cascader>
   </div>
@@ -32,6 +33,9 @@
             },
             setSize: {
                 type: String // medium / small / mini
+            },
+            val: {
+                type: String
             }
 
         },

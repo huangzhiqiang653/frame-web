@@ -31,28 +31,27 @@
             ref="formData"
             :size="GLOBAL.config.systemSize"
             element-loading-text="数据处理中...请稍等..."
-            :disabled="!formData.parentId"
             v-loading="loading">
 
-            <el-divider content-position="left">区域信息{{formData.shortName? '(' + formData.shortName+ ')':''}}
+            <el-divider content-position="left">区域信息{{formData.name? '(' + formData.name+ ')':''}}
             </el-divider>
             <el-alert
               title="根节点数据不允许操作"
-              v-if="!formData.parentId && formData.id"
+              v-if="!formData.parentCode && formData.id"
               style="margin-bottom: 10px;"
               :closable="false"
               type="warning">
             </el-alert>
             <el-alert
               title="请选择左侧待操作区域数据"
-              v-if="!formData.parentId && !formData.id"
+              v-if="!formData.parentCode && !formData.id"
               style="margin-bottom: 10px;"
               :closable="false"
               type="success">
             </el-alert>
             <el-col :span="12">
-              <el-form-item label="区域名称：" prop="fullName">
-                <el-input v-model="formData.fullName" placeholder="区域名称" maxlength="64"></el-input>
+              <el-form-item label="区域名称：" prop="name">
+                <el-input v-model="formData.name" placeholder="区域名称" maxlength="64"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="12">
@@ -61,9 +60,9 @@
               </el-form-item>
             </el-col>
             <el-col :span="12">
-              <el-form-item label="类型：" prop="code">
-                <el-radio v-model="formData.type" label="1">村居</el-radio>
-                <el-radio v-model="formData.type" label="2">乡镇</el-radio>
+              <el-form-item label="类型：" prop="type">
+                <el-radio v-model="formData.type" :label="0">村居</el-radio>
+                <el-radio v-model="formData.type" :label="1">乡镇</el-radio>
               </el-form-item>
             </el-col>
             <el-col :span="12">
@@ -109,11 +108,11 @@
               :size="GLOBAL.config.systemSize">删除
             </el-button>
           </el-col>
-          <el-col :span="24">
-            <el-divider content-position="left">区域人员{{formData.name? '(' + formData.name+ ')':''}}
-            </el-divider>
-            <zxUser ref="zxUser"/>
-          </el-col>
+<!--          <el-col :span="24">-->
+<!--            <el-divider content-position="left">区域人员{{formData.name? '(' + formData.name+ ')':''}}-->
+<!--            </el-divider>-->
+<!--            <zxUser ref="zxUser"/>-->
+<!--          </el-col>-->
         </el-row>
       </el-container>
     </el-container>
@@ -134,14 +133,15 @@
                 treeData: [],
                 defaultProps: {
                     children: 'children',
-                    label: 'shortName'
+                    label: 'name'
                 },
                 formData: {
                     id: '',
                     fullName: '',
-                    shortName: '',
+                    name: '',
                     code: '',
                     sort: '',
+                    type: '',
                     parentId: '',
                     remark: ''
                 },
@@ -150,7 +150,7 @@
                     fullName: [
                         {required: true, message: '请输入部门全称', trigger: 'blur'}
                     ],
-                    shortName: [
+                    name: [
                         {required: true, message: '请输入简称', trigger: 'blur'}
                     ],
                     code: [
@@ -179,7 +179,7 @@
         methods: {
             init: function () {
                 this.getTreeData()
-                this.$refs.zxUser.init()
+                // this.$refs.zxUser.init()
             },
             doSearch: function () {
             },
@@ -210,7 +210,7 @@
                 // 3、 调接口获取数据
                 _this.FUNCTIONS.systemFunction.interactiveData(
                     _this,
-                    _this.GLOBAL.config.businessFlag.zxOrganization,
+                    _this.GLOBAL.config.businessFlag.getTree,
                     _this.GLOBAL.config.handleType.getTree,
                     null,
                     null,
@@ -242,7 +242,7 @@
 
                 f(node)
                 this.formData = target
-                this.$refs.zxUser.init(ids)
+                // this.$refs.zxUser.init(ids)
             },
             appendDepartment: function () {
                 this.formData = {
