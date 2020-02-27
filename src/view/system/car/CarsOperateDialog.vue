@@ -14,7 +14,7 @@
       <el-form-item label="区域：" prop="villageCode">
         <cascader :set-props="setProps" :set-options="treeData" :set-data-type="'value'"
                   :set-size="GLOBAL.config.systemSize" maxlength="64"
-                  v-model="formData.villageCode"
+                  :val="formData.villageCode"
                   ref="myArea"></cascader>
       </el-form-item>
       <el-form-item label="车牌号：" prop="carNo">
@@ -23,7 +23,7 @@
       <el-form-item label="管理区域：" prop="listManageArea">
         <cascader :set-props="setManageProps" :set-options="treeData" :set-data-type="'value'"
                   :set-size="GLOBAL.config.systemSize" maxlength="64"
-                  v-model="formData.listManageArea"
+                  :val="formData.listManageArea"
                   ref="manageArea"></cascader>
       </el-form-item>
     </el-form>
@@ -57,7 +57,7 @@
                     townCode: '',
                     villageCode: '',
                     carNo: '',
-                    manageAreaCode: ''
+                    listManageArea: []
                 },
                 // 校验规则
                 formRules: {
@@ -147,23 +147,30 @@
                 },
                 saveOrUpdateForm: function () {
                     // 参数处理======start==========
-                    let checkedMenusNode = this.$refs.manageArea.getCheckedNodes(true)
-                    if (!checkedMenusNode) {
+                    let myAreaCode = this.$refs.myArea.selectValue
+                    if (!myAreaCode) {
                         this.$message.warning('请勾选区域～')
                         return
                     }
-                    let checkedAreaId = new Set()
-                    checkedMenusNode.forEach(item => {
-                        checkedAreaId.add(item.id + "," + item.code)
+
+                    let checkedNode = this.$refs.manageArea.radioObj
+                    if (!checkedNode) {
+                        _this.$message.warning('请勾选区域～')
+                        return
+                    }
+                    let checkedAreaId = []
+                    checkedNode.forEach(item => {
+                        checkedAreaId.push({"orgCode": item.code, "orgId": item.id})
                     })
-                    this.formData.manageAreaCode = checkedAreaId
+                    this.formData.villageCode = myAreaCode
+                    this.formData.listManageArea = checkedAreaId
                     // 参数处理======end============
                     let _this = this
                     _this.loading = true
                     let params = this.formData
                     _this.FUNCTIONS.systemFunction.interactiveData(
                         _this,
-                        _this.GLOBAL.config.businessFlag.zxRelationRoleMenu,
+                        _this.GLOBAL.config.businessFlag.rtCar,
                         _this.GLOBAL.config.handleType.add,
                         _this.FUNCTIONS.systemFunction.removeNullFields(params),
                         null,

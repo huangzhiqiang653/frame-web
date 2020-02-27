@@ -34,6 +34,7 @@ const config = {
     system: 'system',
     rtCar: 'rtCar',
     rtUser: 'rtUser',
+    rtManageArea: 'rtManageArea',
     rtOrganization: 'rtOrganization',
     zxMenu: 'zxMenu',
     zxUser: 'zxUser',

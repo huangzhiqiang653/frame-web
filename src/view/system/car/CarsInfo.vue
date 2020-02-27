@@ -17,7 +17,7 @@
           <el-form-item label="区域：" prop="villageCode">
             <cascader :set-props="setProps" :set-options="treeData" :set-data-type="'value'"
                       :set-size="GLOBAL.config.systemSize" maxlength="64"
-                      v-model="formData.villageCode"
+                      :val="formData.villageCode"
                       ref="myArea"></cascader>
           </el-form-item>
         </el-col>
@@ -30,7 +30,7 @@
           <el-form-item label="管理区域：" prop="listManageArea">
             <cascader :set-props="setManageProps" :set-options="treeData" :set-data-type="'value'"
                       :set-size="GLOBAL.config.systemSize" maxlength="64"
-                      v-model="formData.listManageArea"
+                      :val="formData.listManageArea"
                       ref="manageArea"></cascader>
           </el-form-item>
         </el-col>
@@ -197,7 +197,6 @@
                     _this.formData.id = carInfo.id
                     _this.formData.villageCode = carInfo.villageCode
                     _this.formData.carNo = carInfo.carNo
-                    _this.formData.listManageArea = carInfo.listManageArea
                     _this.searchForm.carNo = carInfo.carNo
                     let type = this.$route.params.type
                     if (type === 'add') {
@@ -209,6 +208,7 @@
                         this.showTitle = '查看'
                     }
                 }
+                this.getManageArea()
                 this.getTableData('init')
             },
             goBack: function () {
@@ -249,6 +249,28 @@
                         }
                     )
                 })
+            },
+            //获取管理区域
+            getManageArea: function () {
+                let _this = this
+                _this.FUNCTIONS.systemFunction.interactiveData(
+                    _this,
+                    _this.GLOBAL.config.businessFlag.rtManageArea,
+                    _this.GLOBAL.config.handleType.getListByCondition,
+                    {"targetId": _this.formData.id},
+                    null,
+                    resultData => {
+                        _this.loading = false
+                        if (resultData) {
+                            // 结果参数赋值
+                            let manageAreaIds = []
+                            resultData.forEach(item => {
+                                manageAreaIds.push(item.orgCode)
+                            })
+                            _this.formData.listManageArea = manageAreaIds
+                        }
+                    }
+                )
             },
             // 获取列表
             getTableData: function (initPageFlag) {
@@ -298,6 +320,12 @@
             saveForm: function () {
                 let _this = this
                 // 参数处理======start==========
+                let myAreaCode = this.$refs.myArea.selectValue
+                if (!myAreaCode) {
+                    this.$message.warning('请勾选区域～')
+                    return
+                }
+
                 let checkedNode = _this.$refs.manageArea.radioObj
                 if (!checkedNode) {
                     _this.$message.warning('请勾选区域～')
@@ -307,6 +335,7 @@
                 checkedNode.forEach(item => {
                     checkedAreaId.push({"orgCode": item.code, "orgId": item.id})
                 })
+                _this.formData.villageCode = myAreaCode
                 _this.formData.listManageArea = checkedAreaId
                 // 参数处理======end============
                 _this.loading = true

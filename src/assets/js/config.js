@@ -16,6 +16,7 @@ const urls = {
     getTableData: '/auth/zx-system/getTableData'
   },
   business: {
+    rtManageArea: '/rts/rt-manage-area/base',
     rtCar: '/rts/rt-cars/base',
     rtUser: '/rts/rt-user/base',
     rtOrganization: '/rts/rt-organization/base',
