@@ -96,7 +96,7 @@
               let _this = this
               _this.FUNCTIONS.systemFunction.interactiveData(
                   _this,
-                  _this.GLOBAL.config.businessFlag.getTree,
+                  _this.GLOBAL.config.businessFlag.rtOrganization,
                   _this.GLOBAL.config.handleType.getTree,
                   null,
                   null,

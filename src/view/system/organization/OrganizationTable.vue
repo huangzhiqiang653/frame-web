@@ -51,18 +51,18 @@
             </el-alert>
             <el-col :span="12">
               <el-form-item label="区域名称：" prop="name">
-                <el-input v-model="formData.name" placeholder="区域名称" maxlength="64"></el-input>
+                <el-input v-model="formData.name" placeholder="区域名称" maxlength="64" :disabled="codeDisabled(formData.parentCode,formData.id)"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="12">
               <el-form-item label="区域编码：" prop="code">
-                <el-input v-model="formData.code" placeholder="区域编码" maxlength="64"></el-input>
+                <el-input v-model="formData.code" placeholder="区域编码" maxlength="64" :disabled="codeAuth(formData.parentCode,formData.id)"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="12">
               <el-form-item label="类型：" prop="type">
-                <el-radio v-model="formData.type" :label="0">村居</el-radio>
-                <el-radio v-model="formData.type" :label="1">乡镇</el-radio>
+                <el-radio v-model="formData.type" :label="0" :disabled="codeAuth(formData.parentCode,formData.id)">村居</el-radio>
+                <el-radio v-model="formData.type" :label="1" :disabled="codeAuth(formData.parentCode,formData.id)">乡镇</el-radio>
               </el-form-item>
             </el-col>
             <el-col :span="12">
@@ -70,6 +70,7 @@
                 <el-input-number
                   v-model="formData.sort"
                   placeholder="排序"
+                  :disabled="codeDisabled(formData.parentCode,formData.id)"
                   :min="1"
                   :step="1"
                   style="width: 100%;">
@@ -78,7 +79,7 @@
             </el-col>
             <el-col :span="24">
               <el-form-item label="备注：" prop="remark">
-                <el-input type="textarea" :rows="2" v-model="formData.remark" placeholder="备注"
+                <el-input type="textarea" :rows="2" v-model="formData.remark" placeholder="备注" :disabled="codeDisabled(formData.parentCode,formData.id)"
                           maxlength="64"></el-input>
               </el-form-item>
             </el-col>
@@ -88,7 +89,6 @@
               v-if="editableFlag"
               type="primary"
               @click="saveOrUpdateForm"
-              :disabled="!formData.parentId"
               style="margin: 0 20px;"
               :size="GLOBAL.config.systemSize">保存
             </el-button>
@@ -96,7 +96,7 @@
               v-if="editableFlag"
               type="primary"
               @click="appendDepartment"
-              :disabled="!formData.id"
+              :disabled="childArea(formData.id, formData.type, formData.parentCode)"
               style="margin: 0 20px;"
               :size="GLOBAL.config.systemSize">增加子区域
             </el-button>
@@ -104,15 +104,15 @@
               v-if="editableFlag"
               @click="handleDelete"
               style="margin: 0 20px;"
-              :disabled="!formData.parentId"
+              :disabled="!formData.parentCode"
               :size="GLOBAL.config.systemSize">删除
             </el-button>
           </el-col>
-<!--          <el-col :span="24">-->
-<!--            <el-divider content-position="left">区域人员{{formData.name? '(' + formData.name+ ')':''}}-->
-<!--            </el-divider>-->
-<!--            <zxUser ref="zxUser"/>-->
-<!--          </el-col>-->
+          <el-col :span="24">
+            <el-divider content-position="left">区域人员{{formData.name? '(' + formData.name+ ')':''}}
+            </el-divider>
+            <zxUser ref="zxUser"/>
+          </el-col>
         </el-row>
       </el-container>
     </el-container>
@@ -142,6 +142,7 @@
                     code: '',
                     sort: '',
                     type: '',
+                    parentCode: '',
                     parentId: '',
                     remark: ''
                 },
@@ -177,9 +178,38 @@
             this.init()
         },
         methods: {
+            // 判断新增子区域
+            childArea: function (id, type, parentCode) {
+                if (!id) {
+                    return true
+                } else if (type == 1 && !id) {
+                    return true
+                } else if (type == 1 && id) {
+                    return false
+                } else {
+                    return true
+                }
+            },
+            codeDisabled: function (parentCode, id) {
+                if (!parentCode && id) {
+                    return true
+                } else if (parentCode && id) {
+                    return false
+                } else {
+                    return false
+                }
+            },
+            // 判断区域编码可编辑
+            codeAuth: function (parentCode, id) {
+                if (!id) {
+                    return false
+                } else {
+                    return true
+                }
+            },
             init: function () {
                 this.getTreeData()
-                // this.$refs.zxUser.init()
+                this.$refs.zxUser.init()
             },
             doSearch: function () {
             },
@@ -210,7 +240,7 @@
                 // 3、 调接口获取数据
                 _this.FUNCTIONS.systemFunction.interactiveData(
                     _this,
-                    _this.GLOBAL.config.businessFlag.getTree,
+                    _this.GLOBAL.config.businessFlag.rtOrganization,
                     _this.GLOBAL.config.handleType.getTree,
                     null,
                     null,
@@ -228,7 +258,8 @@
                 )
             },
             handleNodeClick: function (target, node) {
-                let ids = target.shortName
+                debugger
+                let ids = target.code
 
                 function f (tmpNode) {
                     if (tmpNode &&
@@ -240,22 +271,23 @@
                     }
                 }
 
-                f(node)
+                // f(node)
                 this.formData = target
-                // this.$refs.zxUser.init(ids)
+                this.$refs.zxUser.init(ids)
             },
             appendDepartment: function () {
                 this.formData = {
                     id: '',
                     fullName: '',
-                    shortName: '',
+                    name: '',
                     code: '',
                     type: '',
                     sort: '',
-                    parentId: this.formData.id,
+                    parentId: this.formData.id ? this.formData.id : null,
+                    parentCode: this.formData.code ? this.formData.code : null,
                     remark: ''
                 }
-                this.$refs.zxUser.init()
+                // this.$refs.zxUser.init()
             },
             saveOrUpdateForm: function () {
                 this.formData.id ? this.updateForm() : this.saveForm()
@@ -264,6 +296,7 @@
                 this.$refs.formData.validate(valid => {
                     if (valid) {
                         let params = this.formData
+                        debugger
                         // 参数处理======start==========
                         // TODO 对于单选、复选、多选、附件等需要进行单独处理
                         // 参数处理======end============
@@ -271,7 +304,7 @@
                         _this.loading = true
                         this.FUNCTIONS.systemFunction.interactiveData(
                             _this,
-                            _this.GLOBAL.config.businessFlag.zxOrganization,
+                            _this.GLOBAL.config.businessFlag.rtOrganization,
                             _this.GLOBAL.config.handleType.add,
                             _this.FUNCTIONS.systemFunction.removeNullFields(params),
                             null,
@@ -282,7 +315,9 @@
                                     _this.$message.success('保存成功～')
                                     _this.showFlag = false
                                     _this.getTreeData()
-                                    _this.$refs.zxUser.init(resultData.id)
+                                    if (_this.treeData.length > 0) {
+                                        _this.$refs.zxUser.init(resultData.code)
+                                    }
                                 } else {
                                     _this.$message.warning('保存失败～')
                                 }
@@ -309,7 +344,7 @@
                         _this.loading = true
                         this.FUNCTIONS.systemFunction.interactiveData(
                             _this,
-                            _this.GLOBAL.config.businessFlag.zxOrganization,
+                            _this.GLOBAL.config.businessFlag.rtOrganization,
                             _this.GLOBAL.config.handleType.updateAll,
                             _this.FUNCTIONS.systemFunction.removeNullFields(params),
                             null,
@@ -319,7 +354,7 @@
                                     _this.$message.success('修改成功～')
                                     _this.showFlag = false
                                     _this.getTreeData()
-                                    _this.$refs.zxUser.init(resultData.id)
+                                    _this.$refs.zxUser.init(resultData.code)
                                 } else {
                                     _this.$message.warning('修改失败～')
                                 }
@@ -348,7 +383,7 @@
                     _this.loading = true
                     _this.FUNCTIONS.systemFunction.interactiveData(
                         _this,
-                        _this.GLOBAL.config.businessFlag.zxOrganization,
+                        _this.GLOBAL.config.businessFlag.rtOrganization,
                         _this.GLOBAL.config.handleType.deleteLogical,
                         _this.formData.id,
                         null,
@@ -360,6 +395,9 @@
                             } else {
                                 _this.$message.warning('删除失败～')
                             }
+                        },
+                        () => {
+                            _this.loading = false
                         }
                     )
                 })

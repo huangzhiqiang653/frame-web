@@ -18,7 +18,7 @@ const urls = {
   business: {
     rtCar: '/rts/rt-cars/base',
     rtUser: '/rts/rt-user/base',
-    getTree: '/rts/rt-organization/base',
+    rtOrganization: '/rts/rt-organization/base',
     zxMenu: '/auth/zx-menu/base',
     zxUser: '/auth/zx-user/base',
     zxDictionary: '/auth/zx-dictionary/base',

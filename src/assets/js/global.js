@@ -34,6 +34,7 @@ const config = {
     rtCar: 'rtCar',
     rtUser: 'rtUser',
     getTree: 'getTree',
+    rtOrganization: 'rtOrganization',
     zxMenu: 'zxMenu',
     zxUser: 'zxUser',
     zxDictionary: 'zxDictionary',

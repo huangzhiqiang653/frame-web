@@ -1,56 +1,54 @@
 <template>
   <div>
     <!--查询区域-->
-    <el-row class="margin-top-10">
-      <el-col :span="2" class="margin-top-10">
-        <label class="search-label">
-          关键词:
-        </label>
-      </el-col>
-      <el-col :span="8" class="margin-top-10">
-        <el-input v-model="searchForm.keyWords"
-                  :size="GLOBAL.config.systemSize"
-                  placeholder="关键词(姓名/电话)"
-                  maxlength="32"></el-input>
-      </el-col>
-      <el-col :span="4" class="margin-top-10">
-        <el-checkbox
-          :size="GLOBAL.config.systemSize"
-          @change="getTableData('init')"
-          v-model="searchForm.childrenInclude">含子区域人员
-        </el-checkbox>
-      </el-col>
-      <el-col :span="4" class="margin-top-10">
-        <el-button type="primary" @click="doSearch" :size="GLOBAL.config.systemSize" icon="el-icon-search">查询
-        </el-button>
-      </el-col>
-    </el-row>
+<!--    <el-row class="margin-top-10">-->
+<!--      <el-col :span="2" class="margin-top-10">-->
+<!--        <label class="search-label">-->
+<!--          关键词:-->
+<!--        </label>-->
+<!--      </el-col>-->
+<!--      <el-col :span="8" class="margin-top-10">-->
+<!--        <el-input v-model="searchForm.keyWords"-->
+<!--                  :size="GLOBAL.config.systemSize"-->
+<!--                  placeholder="关键词(姓名/电话)"-->
+<!--                  maxlength="32"></el-input>-->
+<!--      </el-col>-->
+<!--      <el-col :span="4" class="margin-top-10">-->
+<!--        <el-checkbox-->
+<!--          :size="GLOBAL.config.systemSize"-->
+<!--          @change="getTableData('init')"-->
+<!--          v-model="searchForm.childrenInclude">含子区域人员-->
+<!--        </el-checkbox>-->
+<!--      </el-col>-->
+<!--      <el-col :span="4" class="margin-top-10">-->
+<!--        <el-button type="primary" @click="doSearch" :size="GLOBAL.config.systemSize" icon="el-icon-search">查询-->
+<!--        </el-button>-->
+<!--      </el-col>-->
+<!--    </el-row>-->
     <el-table style="width: 100%"
               :data="tableData"
               element-loading-text="数据处理中...请稍等..."
               v-loading="loading">
       <!--姓名-->
-      <el-table-column prop="userName" label="姓名" align="center" width="100"/>
+      <el-table-column prop="name" label="姓名" align="center" width="100"/>
       <!--性别 0女，1男，2未知(默认)-->
-      <el-table-column prop="sex"
-                       label="性别" align="center" width="50">
-        <template slot-scope="scope">
-          {{
-          FUNCTIONS.systemFunction.getConfigValue(
-          scope.row.sex.toString(),
-          GLOBAL.config.dictionaryPre +
-          GLOBAL.config.dictionary.sex)
-          }}
-        </template>
-      </el-table-column>
+<!--      <el-table-column prop="sex"-->
+<!--                       label="性别" align="center" width="50">-->
+<!--        <template slot-scope="scope">-->
+<!--          {{-->
+<!--          FUNCTIONS.systemFunction.getConfigValue(-->
+<!--          scope.row.sex.toString(),-->
+<!--          GLOBAL.config.dictionaryPre +-->
+<!--          GLOBAL.config.dictionary.sex)-->
+<!--          }}-->
+<!--        </template>-->
+<!--      </el-table-column>-->
       <!--所属机构-->
-      <el-table-column prop="organizationId" label="所属机构" align="center">
-        <template slot-scope="scope">
-          {{scope.row.organizationId.split(',').slice(-1).join('')}}
-        </template>
-      </el-table-column>
-      <!--邮箱-->
-      <el-table-column prop="email" label="邮箱" align="center"/>
+<!--      <el-table-column prop="organizationId" label="所属机构" align="center">-->
+<!--        <template slot-scope="scope">-->
+<!--          {{scope.row.organizationId.split(',').slice(-1).join('')}}-->
+<!--        </template>-->
+<!--      </el-table-column>-->
       <!--手机号码-->
       <el-table-column prop="phoneNumber" label="手机号码" align="center"/>
       <!--更新时间-->
@@ -113,7 +111,7 @@
         methods: {
             init: function (orgId) {
                 if (orgId) {
-                    this.searchForm.organizationId = orgId
+                    this.searchForm.villageCode = orgId
                     this.getTableData('init')
                 } else {
                     this.tableData = []
@@ -141,7 +139,7 @@
                 // 3、 调接口获取数据
                 _this.FUNCTIONS.systemFunction.interactiveData(
                     _this,
-                    _this.GLOBAL.config.businessFlag.zxUser,
+                    _this.GLOBAL.config.businessFlag.rtUser,
                     _this.GLOBAL.config.handleType.getPage,
                     paginationData,
                     null,
