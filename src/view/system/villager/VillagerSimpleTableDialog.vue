@@ -5,7 +5,7 @@
               element-loading-text="数据处理中...请稍等..."
               v-loading="loading">
       <!--序号-->
-      <el-table-column prop="index" label="序号" align="center"/>
+      <el-table-column type="index" label="序号" align="center"/>
       <!--账户名称-->
       <el-table-column prop="name" label="姓名" align="center"/>
       <!--所属用户-->
@@ -64,7 +64,7 @@
                 },
                 formData: {
                     carNo: '',
-                    userIds: []
+                    ids: []
                 },
                 tableData: [],
                 // 字典数据
@@ -172,8 +172,7 @@
                     }
                 })
 
-                _this.formData.userIds.push(rowData.id)
-                console.log(this.formData.userIds)
+                _this.formData.ids.push(rowData.id)
             },
             //取消选择人员
             unSelectUser: function (rowData) {
@@ -184,13 +183,12 @@
                     }
                 })
                 //去除已选择人员id
-                _this.formData.userIds.some((item, i) => {
+                _this.formData.ids.some((item, i) => {
                     if (item === rowData.id) {
-                        _this.formData.userIds.splice(i, 1)
+                        _this.formData.ids.splice(i, 1)
                         return true
                     }
                 })
-                console.log(this.formData.userIds)
             },
             closeDialog: function () {
                 this.showFlag = false
@@ -205,7 +203,8 @@
                 let _this = this
                 // 参数处理======end============
                 _this.loading = true
-                let params = this.formData
+                let params = _this.formData
+                params.ids = params.ids.join(',')
                 _this.FUNCTIONS.systemFunction.interactiveData(
                     _this,
                     _this.GLOBAL.config.businessFlag.rtUser,
