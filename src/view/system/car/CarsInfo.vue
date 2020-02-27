@@ -50,7 +50,7 @@
                 element-loading-text="数据处理中...请稍等..."
                 v-loading="loading">
         <!--序号-->
-        <el-table-column prop="index" label="序号" width="80px" align="center"/>
+        <el-table-column type="index" label="序号" width="80px" align="center"/>
         <!--当值司机-->
         <el-table-column prop="name" label="当值司机" align="center"/>
         <!--所属乡镇编码-->
@@ -193,7 +193,6 @@
                 let _this = this
                 if (this.$route.params) {
                     let carInfo = this.$route.params.carInfo
-                    carInfo.orgName = _this.FUNCTIONS.systemFunction.getAreaName(_this, carInfo.villageCode)
                     _this.formData.id = carInfo.id
                     _this.formData.villageCode = carInfo.villageCode
                     _this.formData.carNo = carInfo.carNo
@@ -217,7 +216,9 @@
             //添加驾驶员
             addCarUsers: function () {
                 let _this = this
-                _this.$refs.addCarUserTemplate.init(_this.formData.carNo, _this.GLOBAL.config.userType.driver, false)
+                if (_this.formData.carNo) {
+                    _this.$refs.addCarUserTemplate.init(_this.formData.carNo, _this.GLOBAL.config.userType.driver, false)
+                }
             },
             //删除驾驶员
             handleDelete: function (rowData) {

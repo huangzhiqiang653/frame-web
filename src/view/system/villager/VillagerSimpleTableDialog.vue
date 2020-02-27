@@ -5,7 +5,7 @@
               element-loading-text="数据处理中...请稍等..."
               v-loading="loading">
       <!--序号-->
-      <el-table-column prop="index" label="序号" align="center"/>
+      <el-table-column type="index" label="序号" align="center"/>
       <!--账户名称-->
       <el-table-column prop="name" label="姓名" align="center"/>
       <!--所属用户-->

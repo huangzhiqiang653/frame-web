@@ -17,7 +17,7 @@
       <el-col :span="4" class="margin-top-10">
         <cascader :set-props="setProps" :set-options="treeData" :set-data-type="'value'"
                   :set-size="GLOBAL.config.systemSize" maxlength="64"
-                  v-model="searchForm.villageCode"
+                  :val="searchForm.villageCode"
                   ref="myArea"></cascader>
       </el-col>
       <el-col :span="2" class="margin-top-10">
