@@ -4,6 +4,7 @@ const config = {
   userConfigName: 'userInfo',
   orgConfigName: 'orgInfoMap',
   authConfigName: 'authRoles',
+  orgTreeName: 'orgTree',
   systemSize: 'mini',
   dictionary: {
     dictionaryType: 'dictionaryType',
@@ -33,7 +34,6 @@ const config = {
     system: 'system',
     rtCar: 'rtCar',
     rtUser: 'rtUser',
-    getTree: 'getTree',
     rtOrganization: 'rtOrganization',
     zxMenu: 'zxMenu',
     zxUser: 'zxUser',
@@ -69,7 +69,11 @@ const config = {
     listRoleByAccountId: 'listRoleByAccountId',
     addRoleAccountsRelation: 'addRoleAccountsRelation',
     addAccountRolesRelation: 'addAccountRolesRelation',
-    initialAccountPwd: 'initialAccountPwd'
+    initialAccountPwd: 'initialAccountPwd',
+
+    //rts
+    updateBatchPersonnel: "updateBatchPersonnel",
+    removeUserRole: "removeUserRole"
   },
   dateFormat: {
     YMD: 'YYYY-MM-DD',
@@ -83,6 +87,13 @@ const config = {
     remind: 5,
     process: 10,
     hear: 5
+  },
+  userType: {
+    villager: 'villager',
+    villageManage: 'villageManage',
+    systemManage: 'systemManage',
+    repairPersonnel: 'repairPersonnel',
+    driver: 'driver',
   }
 }
 const message = {

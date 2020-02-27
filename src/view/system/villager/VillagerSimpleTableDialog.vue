@@ -7,10 +7,10 @@
       <!--序号-->
       <el-table-column prop="index" label="序号" align="center"/>
       <!--账户名称-->
-      <el-table-column prop="accountName" label="户主姓名" align="center"/>
+      <el-table-column prop="name" label="姓名" align="center"/>
       <!--所属用户-->
-      <el-table-column prop="area" label="所属区划" align="center"/>
-      <el-table-column prop="tel" label="手机号码" align="center"/>
+      <el-table-column prop="orgName" label="区划" align="center"/>
+      <el-table-column prop="phoneNumber" label="手机号码" align="center"/>
       <el-table-column
         align="center"
         fixed="right"
@@ -44,7 +44,7 @@
 </template>
 <script>
     export default {
-        name: 'VillagerSimple',
+        name: 'VillagerSimpleTableDialog',
         props: {
             id: {
                 type: String
@@ -58,6 +58,10 @@
         },
         data() {
             return {
+                searchForm: {
+                    userType: '',
+                    remark: ''
+                },
                 formData: {
                     carNo: '',
                     userIds: []
@@ -94,11 +98,20 @@
         mounted() {
         },
         methods: {
-            init: function (carNo) {
-                this.showFlag = true
+            init: function (carNo, userType, includeFlag) {
+                let _this = this
+                _this.showFlag = true
                 if (carNo) {
-                    this.formData.carId = carNo
-                    this.getTableData('init')
+                    _this.formData.carNo = carNo
+                    _this.getTableData('init')
+                }
+                //用户类型
+                if (userType) {
+                    _this.searchForm.userType = userType
+                }
+                //是否查询当前用户类型用户的标识：false 查询除当前用户类型外的所有用户
+                if (!includeFlag) {
+                    _this.searchForm.remark = 'notListRole'
                 }
             },
             doSearch: function () {
@@ -127,6 +140,10 @@
                             _this.pagination.pageSize = resultData.size
                             _this.pagination.total = resultData.total
                             _this.pagination.currentPage = resultData.current
+                            resultData.records.forEach(item => {
+                                item.orgName = _this.FUNCTIONS.systemFunction.getAreaName(_this, item.villageCode)
+                                item.isdisabled = false
+                            })
                             _this.tableData = resultData.records
                         } else {
                             _this.$message.warning('获取列表数据失败～')
@@ -180,7 +197,7 @@
             },
             //保存
             saveForm: function () {
-                if (!this.formData.carId) {
+                if (!this.formData.carNo) {
                     this.$message.warning('请先选择车辆～')
                     return
                 }
@@ -191,8 +208,8 @@
                 let params = this.formData
                 _this.FUNCTIONS.systemFunction.interactiveData(
                     _this,
-                    _this.GLOBAL.config.businessFlag.zxRelationAccountRole,
-                    _this.GLOBAL.config.handleType.addAccountRolesRelation,
+                    _this.GLOBAL.config.businessFlag.rtUser,
+                    _this.GLOBAL.config.handleType.updateBatchPersonnel,
                     _this.FUNCTIONS.systemFunction.removeNullFields(params),
                     null,
                     resultData => {

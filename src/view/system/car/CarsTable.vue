@@ -15,10 +15,10 @@
         </label>
       </el-col>
       <el-col :span="4" class="margin-top-10">
-        <el-input v-model="searchForm.villageCode"
-                  :size="GLOBAL.config.systemSize"
-                  placeholder="区域"
-                  maxlength="32"></el-input>
+        <cascader :set-props="setProps" :set-options="treeData" :set-data-type="'value'"
+                  :set-size="GLOBAL.config.systemSize" maxlength="64"
+                  v-model="searchForm.villageCode"
+                  ref="myArea"></cascader>
       </el-col>
       <el-col :span="2" class="margin-top-10">
         <label class="search-label">
@@ -153,6 +153,7 @@
     // 替换成相应的模板
     import operationTemplate from './CarsOperateDialog'
     import operationEdit from './CarsInfo'
+    import cascader from '../../../components/Cascader'
 
     export default {
         name: 'CarsTable',
@@ -164,6 +165,16 @@
                     villageCode: '',
                     name: '',
                     phoneNumber: ''
+                },
+                treeData: JSON.parse(unescape(localStorage.getItem(this.GLOBAL.config.orgTreeName))),
+                //所属区域
+                setProps: {
+                    multiple: false, // 单选
+                    checkStrictly: true, // 父节点取消选中关联
+                    value: 'code',
+                    label: 'name',
+                    children: 'children',
+                    leaf: 'leaf'
                 },
                 tableData: [],
                 // 字典数据
@@ -197,14 +208,14 @@
         },
         components: {
             operationTemplate,
-            operationEdit
+            operationEdit,
+            cascader
         },
         mounted() {
             this.init()
         },
         methods: {
             init: function () {
-                // TODO 加载列表数据
                 this.getTableData('init')
             },
             doSearch: function () {

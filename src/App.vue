@@ -26,6 +26,7 @@
             this.hasLogin = true
             let _this = this
             validateAndInitData()
+            getOrgTree()
 
             // 登陆及初始化页面数据
             function validateAndInitData() {
@@ -51,6 +52,24 @@
                             validateAndInitData()
                         } else {
                             _this.$message.error('登陆校验失败～请联系管理员')
+                        }
+                    }
+                )
+            }
+
+            //获取区域树并放入缓存
+            function getOrgTree() {
+                // 调接口获取数据
+                _this.FUNCTIONS.systemFunction.interactiveData(
+                    _this,
+                    _this.GLOBAL.config.businessFlag.rtOrganization,
+                    _this.GLOBAL.config.handleType.getTree,
+                    null,
+                    null,
+                    resultData => {
+                        if (resultData) {
+                            let orgTree = resultData
+                            orgTree && localStorage.setItem(_this.GLOBAL.config.orgTreeName, JSON.stringify(resultData))
                         }
                     }
                 )
