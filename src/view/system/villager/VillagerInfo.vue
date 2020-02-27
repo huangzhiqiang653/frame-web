@@ -218,6 +218,9 @@
             goBack: function () {
                 this.$router.go(-1)
             },
+            // 基本信息请求
+            // 报修列表请求
+            // 报抽列表请求
             // 报修分页方法
             tableSizeChangeRepairs: function (pageSize) {
                 this.paginationRepairs.pageSize = pageSize

@@ -4,12 +4,7 @@
       <el-form-item label="区划" label-width="70px" v-loading="loading">
         <cascader
           :set-props="setProps"
-          :set-options="options"
-          :set-data-type="'value'"
-          :val="form.villageCode"
-          @getValue="getValue"
           ref="cascaderTemplete"></cascader>
-<!--        <el-input v-model="form.area" placeholder="请选择区划"></el-input>-->
       </el-form-item>
       <el-form-item label="户主姓名" prop="name" label-width="70px">
         <el-input v-model="form.name" placeholder="请输入户主姓名"></el-input>
@@ -56,14 +51,32 @@
             tempValue: '',
             options: [{
                 code: '111',
-                name: '测试1',
+                name: '肥西县',
                 children: [
                     {
                         code: '100000',
-                        name: 'ceshi'
+                        name: '大王镇',
+                        children: [
+                            {
+                                code: '112',
+                                name: '小王村'
+                            }, {
+                                code: '1001',
+                                name: '德庄'
+                            }, {
+                                code: '1002',
+                                name: '先林'
+                            }
+                        ]
                     }, {
                         code: '333',
-                        name: 'jksld'
+                        name: '东西镇',
+                        children: [
+                            {
+                                code: '543',
+                                name: '觉得村'
+                            }
+                        ]
                     }
                 ]
             }],
@@ -85,22 +98,25 @@
           this.getAreaData()
       },
       methods: {
-          getValue: function (value) {
-              console.log(value)
-          },
           open: function (type, rowData) {
-              this.type = type
+              let _this = this
+              _this.type = type
+              _this.dialogFormVisible = true
               if (type === 'add') {
-                  this.dialogTitle = '新建村民档案'
+                  _this.dialogTitle = '新建村民档案'
               } else if (type === 'edit') {
-                  this.dialogTitle = '编辑村民档案'
-                  this.form = rowData
+                  _this.dialogTitle = '编辑村民档案'
+                  _this.form = rowData
+                  // 调用级联组建内 init 方法重组默认值
+                  setTimeout(function () {
+                      _this.$refs.cascaderTemplete.init(_this.form.villageCode)
+                  }, 100)
               }
-              this.dialogFormVisible = true
           },
           // 确定按钮
           makesure: function () {
-              let temp = this.$refs.cascaderTemplete.sendToParent()
+              let temp = this.$refs.cascaderTemplete.sendToParent('value')
+              debugger
               this.form.villageCode = temp
               if (this.type === 'add') {
                   this.addVillager()
@@ -114,6 +130,7 @@
                   if (valid) {
                       let params = this.form
                       let _this = this
+                      debugger
                       _this.loading = true
                       this.FUNCTIONS.systemFunction.interactiveData(
                           _this,
@@ -149,6 +166,7 @@
                   if (valid) {
                       let params = this.form
                       let _this = this
+                      debugger
                       _this.loading = true
                       this.FUNCTIONS.systemFunction.interactiveData(
                           _this,
@@ -175,27 +193,6 @@
                       return false
                   }
               })
-          },
-          // 请求区划数据
-          getAreaData: function () {
-              console.log('111111')
-              debugger
-              let _this = this
-              _this.FUNCTIONS.systemFunction.interactiveData(
-                  _this,
-                  _this.GLOBAL.config.businessFlag.rtOrganization,
-                  _this.GLOBAL.config.handleType.getTree,
-                  null,
-                  null,
-                  resultData => {
-                      if (resultData) {
-                          _this.options = resultData
-                          console.log(_this.options)
-                      } else {
-                          _this.$message.warning('获取区划数据失败～')
-                      }
-                  }
-              )
           }
       }
   }

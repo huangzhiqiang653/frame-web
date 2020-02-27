@@ -1,3 +1,11 @@
+<!--级联选择器默认值-->
+/*
+  级联选择器默认值回显传值方法
+  单选，传code字符串，
+  多选，传所有code以逗号','拼接的字符串；如：'112,221,3342'
+  注：code为所选中节点的code
+      使用 init 方法设置默认值
+*/
 <template>
   <div class="block">
     <el-cascader
@@ -11,8 +19,7 @@
       @focus="focus"
       @blur="blur"
       @expand-change="expandChange"
-      :getCheckedNodes="getCheckedNodes"
-      :value="val"
+      v-model="checkedValue"
       clearable>
     </el-cascader>
   </div>
@@ -25,19 +32,10 @@
             setProps: {
                 type: Object
             },
-            setOptions: {
-                type: Array
-            },
-            setDataType: { // 返回的参数类型 value obj
-                type: String
-            },
             setSize: {
+                value: 'mini',
                 type: String // medium / small / mini
-            },
-            val: {
-                type: String
             }
-
         },
         data () {
             return {
@@ -51,6 +49,9 @@
                     leaf: 'leaf'
                 },
                 options: [],
+                checkedValue: [],
+                oldSelectValue: null, // change事件中单选原始值
+                oldRadioValue: null, // change事件中多选原始值
                 selectValue: null, // 单选值
                 radioValue: [], // 多选值
                 selectObj: [], // 单选节点对象
@@ -58,29 +59,64 @@
             }
         },
         mounted () {
-            this.init()
+            this.getAreaData()
         },
         methods: {
-            init: function () {
+            // 数据重组
+            init: function (val) {
+                let _this = this
+                if (this.setMore.multiple === true) {
+                    // 多选
+                    let arr = val.split(',')
+                    let temp = []
+                    // 对每一个选项进行重组
+                    for (let i = 0; i < arr.length; i++) {
+                        let nodeArr = _this.fitData(arr[i])
+                        temp.push(nodeArr)
+                    }
+                    _this.checkedValue = temp
+                } else {
+                    // 单选
+                    _this.checkedValue = _this.fitData(val)
+                }
+            },
+            // 请求区划数据
+            getAreaData: function () {
                 if (!this.setSize) {
                     this.setSize = 'medium'
                 }
                 this.setMore = this.setProps
-                this.options = this.setOptions
+                let _this = this
+                _this.FUNCTIONS.systemFunction.interactiveData(
+                    _this,
+                    _this.GLOBAL.config.businessFlag.rtOrganization,
+                    _this.GLOBAL.config.handleType.getTree,
+                    null,
+                    null,
+                    resultData => {
+                        if (resultData) {
+                            _this.options = resultData
+                            console.log(_this.options)
+                        } else {
+                            _this.$message.warning('获取区划数据失败～')
+                        }
+                    }
+                )
             },
             // 向父组建传值
-            sendToParent: function () {
+            // type 为返回值类型 type==value 返回当前节点的code type==obj 返回当前节点对象
+            sendToParent: function (type) {
                 let _this = this
                 if (_this.setMore.multiple === true) {
-                    if (_this.setDataType === 'value') {
+                    if (type === 'value') {
                         return _this.radioValue
-                    } else if (_this.setDataType === 'obj') {
+                    } else {
                         return _this.radioObj
                     }
                 } else {
-                    if (_this.setDataType === 'value') {
+                    if (type === 'value') {
                         return _this.selectValue
-                    } else if (_this.setDataType === 'obj') {
+                    } else {
                         return _this.selectObj
                     }
                 }
@@ -88,8 +124,10 @@
             // 当选中节点变化时触发 选中节点的值
             selectChange: function (e) {
                 let _this = this
+                console.log(e)
                 // 单选
                 if (_this.setMore.multiple === false) {
+                    _this.oldSelectValue = e
                     _this.selectObj = []
                     let temp = _this.getCascaderObj(e, _this.options)
                     let length = temp.length - 1
@@ -97,6 +135,7 @@
                     _this.selectValue = temp[length][_this.setMore['value']]
                 } else {
                     // 多选
+                    _this.oldRadioValue = e
                     _this.radioValue = []
                     _this.radioObj = []
                     for (let itm of e) {
@@ -114,22 +153,9 @@
             },
             // 当失去焦点时触发
             blur: function () {
-                this.$emit('getValue', this.selectValue)
             },
             // 当获取焦点时触发
             focus: function () {
-            },
-            // 获取选中的节点
-            getCheckedNodes: function (e) {
-                console.log(e)
-                let _this = this
-                // 单选
-                if (_this.setMore.multiple === false) {
-                    _this.selectValue = e
-                } else {
-                    // 多选
-                    _this.radioValue = e
-                }
             },
             // 遍历数据源，返回节点对象
             getCascaderObj: function (val, opt) {
@@ -143,6 +169,29 @@
                     }
                     return null
                 })
+            },
+            // 获取父组建默认值并组装数据
+            fitData: function (data) {
+                let arr = [] // 在递归时操作的数组
+                let returnArr = [] // 存放结果的数组
+                let depth = 0 // 定义全局层级
+                function childrenEach (childrenData, depthN) {
+                    for (let j = 0; j < childrenData.length; j++) {
+                        depth = depthN // 将执行的层级赋值 到 全局层级
+                        arr[depthN] = (childrenData[j].code)
+                        if (childrenData[j].code === data) {
+                            returnArr = arr.slice(0, depthN + 1) // 将目前匹配的数组，截断并保存到结果数组
+                            break
+                        } else {
+                            if (childrenData[j].children) {
+                                depth++
+                                childrenEach(childrenData[j].children, depth)
+                            }
+                        }
+                    }
+                    return returnArr
+                }
+                return childrenEach(this.options, depth)
             }
         }
     }

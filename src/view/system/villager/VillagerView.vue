@@ -150,8 +150,9 @@
                 tableData: [{
                     id: '22',
                     name: '林夕',
-                    villageCode: '吉祥村',
-                    phoneNumber: '15112345678'
+                    villageCode: '112',
+                    phoneNumber: '15112345678',
+                    address: '世界的看法理解万岁'
                 }],
                 // 字典数据
                 dictionary: {
@@ -216,7 +217,7 @@
                     _this.loading = true
                     _this.FUNCTIONS.systemFunction.interactiveData(
                         _this,
-                        _this.GLOBAL.config.businessFlag.zxAccount,
+                        _this.GLOBAL.config.businessFlag.rtUser,
                         _this.GLOBAL.config.handleType.deleteLogicalBatch,
                         _this.deleteBatchList.ids,
                         'list',
@@ -263,7 +264,7 @@
                     name: 'VillagerInfo',
                     params: {
                         type: 'view',
-                        id: '12345'
+                        id: rowData.id
                     }
                 })
             },
@@ -276,26 +277,22 @@
                     type: 'warning'
                 }).then(() => {
                     _this.loading = true
-                    for (let i = 0; i < _this.tableData.length; i++) {
-                        if (rowData.index === _this.tableData[i].index) {
+                    _this.FUNCTIONS.systemFunction.interactiveData(
+                        _this,
+                        _this.GLOBAL.config.businessFlag.rtUser,
+                        _this.GLOBAL.config.handleType.deleteLogical,
+                        rowData.id,
+                        null,
+                        resultData => {
+                            _this.loading = false
+                            if (resultData) {
+                                _this.$message.success('删除成功～')
+                                _this.getTableData('init')
+                            } else {
+                                _this.$message.warning('删除失败～')
+                            }
                         }
-                    }
-                    // _this.FUNCTIONS.systemFunction.interactiveData(
-                    //     _this,
-                    //     _this.GLOBAL.config.businessFlag.zxAccount,
-                    //     _this.GLOBAL.config.handleType.deleteLogical,
-                    //     rowData.id,
-                    //     null,
-                    //     resultData => {
-                    //         _this.loading = false
-                    //         if (resultData) {
-                    //             _this.$message.success('删除成功～')
-                    //             _this.getTableData('init')
-                    //         } else {
-                    //             _this.$message.warning('删除失败～')
-                    //         }
-                    //     }
-                    // )
+                    )
                 })
             },
             // 获取列表
