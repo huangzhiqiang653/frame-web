@@ -15,10 +15,9 @@
       <el-row class="margin-top-20">
         <el-col :span="24">
           <el-form-item label="区域：" prop="villageCode">
-            <cascader :set-props="setProps" :set-options="treeData" :set-data-type="'value'"
+            <cascader :set-props="setProps" :set-data-type="'value'"
                       :set-size="GLOBAL.config.systemSize" maxlength="64"
                       :val="formData.villageCode"
-                      @getValue="getValue"
                       ref="myArea"></cascader>
           </el-form-item>
         </el-col>
@@ -34,7 +33,7 @@
         </el-col>
         <el-col :span="24">
           <el-form-item label="管理区域：" prop="townCode">
-            <cascader :set-props="setManageProps" :set-options="treeData" :set-data-type="'value'"
+            <cascader :set-props="setManageProps" :set-data-type="'value'"
                       :set-size="GLOBAL.config.systemSize" maxlength="64"
                       :val="formData.listManageArea"
                       ref="manageArea"></cascader>
@@ -101,7 +100,7 @@
                     children: 'children',
                     leaf: 'leaf'
                 },
-                treeData: JSON.parse(unescape(localStorage.getItem(this.GLOBAL.config.orgTreeName))),
+                // treeData: JSON.parse(unescape(localStorage.getItem(this.GLOBAL.config.orgTreeName))),
                 // 字典数据
                 dictionary: {},
                 editableFlag: true,

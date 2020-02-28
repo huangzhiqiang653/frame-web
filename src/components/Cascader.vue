@@ -1,10 +1,10 @@
 <!--级联选择器默认值-->
 /*
-  级联选择器默认值回显传值方法
-  单选，传code字符串，
-  多选，传所有code以逗号','拼接的字符串；如：'112,221,3342'
-  注：code为所选中节点的code
-      使用 init 方法设置默认值
+级联选择器默认值回显传值方法
+单选，传code字符串，
+多选，传所有code以逗号','拼接的字符串；如：'112,221,3342'
+注：code为所选中节点的code
+使用 init 方法设置默认值
 */
 <template>
   <div class="block">
@@ -37,7 +37,7 @@
                 type: String // medium / small / mini
             }
         },
-        data () {
+        data() {
             return {
                 showLevels: false, // 不显示完整路径
                 setMore: {
@@ -58,7 +58,7 @@
                 radioObj: [] // 多选节点对象
             }
         },
-        mounted () {
+        mounted() {
             this.getAreaData()
         },
         methods: {
@@ -87,21 +87,22 @@
                 }
                 this.setMore = this.setProps
                 let _this = this
-                _this.FUNCTIONS.systemFunction.interactiveData(
-                    _this,
-                    _this.GLOBAL.config.businessFlag.rtOrganization,
-                    _this.GLOBAL.config.handleType.getTree,
-                    null,
-                    null,
-                    resultData => {
-                        if (resultData) {
-                            _this.options = resultData
-                            console.log(_this.options)
-                        } else {
-                            _this.$message.warning('获取区划数据失败～')
-                        }
-                    }
-                )
+                _this.options = JSON.parse(unescape(localStorage.getItem(this.GLOBAL.config.orgTreeName)))
+                // _this.FUNCTIONS.systemFunction.interactiveData(
+                //     _this,
+                //     _this.GLOBAL.config.businessFlag.rtOrganization,
+                //     _this.GLOBAL.config.handleType.getTree,
+                //     null,
+                //     null,
+                //     resultData => {
+                //         if (resultData) {
+                //             _this.options = resultData
+                //             console.log(_this.options)
+                //         } else {
+                //             _this.$message.warning('获取区划数据失败～')
+                //         }
+                //     }
+                // )
             },
             // 向父组建传值
             // type 为返回值类型 type==value 返回当前节点的code type==obj 返回当前节点对象
@@ -175,7 +176,7 @@
                 let arr = [] // 在递归时操作的数组
                 let returnArr = [] // 存放结果的数组
                 let depth = 0 // 定义全局层级
-                function childrenEach (childrenData, depthN) {
+                function childrenEach(childrenData, depthN) {
                     for (let j = 0; j < childrenData.length; j++) {
                         depth = depthN // 将执行的层级赋值 到 全局层级
                         arr[depthN] = (childrenData[j].code)

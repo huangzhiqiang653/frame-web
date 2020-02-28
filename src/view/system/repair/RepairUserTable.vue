@@ -15,7 +15,7 @@
         </label>
       </el-col>
       <el-col :span="4" class="margin-top-10">
-        <cascader :set-props="setProps" :set-options="treeData" :set-data-type="'value'"
+        <cascader :set-props="setProps" :set-data-type="'value'"
                   :set-size="GLOBAL.config.systemSize" maxlength="64"
                   :val="searchForm.villageCode"
                   @getValue="getValue"
@@ -145,7 +145,7 @@
                 },
                 tableData: [],
                 //区域树
-                treeData: JSON.parse(unescape(localStorage.getItem(this.GLOBAL.config.orgTreeName))),
+                // treeData: JSON.parse(unescape(localStorage.getItem(this.GLOBAL.config.orgTreeName))),
                 //所属区域
                 setProps: {
                     multiple: false, // 单选

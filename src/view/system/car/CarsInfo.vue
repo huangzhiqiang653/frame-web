@@ -15,7 +15,7 @@
       <el-row class="margin-top-20">
         <el-col :span="10">
           <el-form-item label="区域：" prop="villageCode">
-            <cascader :set-props="setProps" :set-options="treeData" :set-data-type="'value'"
+            <cascader :set-props="setProps" :set-data-type="'value'"
                       :set-size="GLOBAL.config.systemSize" maxlength="64"
                       :val="formData.villageCode"
                       ref="myArea"></cascader>
@@ -28,7 +28,7 @@
         </el-col>
         <el-col :span="10">
           <el-form-item label="管理区域：" prop="listManageArea">
-            <cascader :set-props="setManageProps" :set-options="treeData" :set-data-type="'value'"
+            <cascader :set-props="setManageProps" :set-data-type="'value'"
                       :set-size="GLOBAL.config.systemSize" maxlength="64"
                       :val="formData.listManageArea"
                       ref="manageArea"></cascader>
@@ -155,7 +155,6 @@
                     infoEdit: true,
                     infoDelete: true,
                 },
-                treeData: JSON.parse(unescape(localStorage.getItem(this.GLOBAL.config.orgTreeName))),
                 //管理区域
                 setManageProps: {
                     multiple: true, // 多选
