@@ -21,9 +21,8 @@
         <el-input v-model="formData.carNo" placeholder="车牌号" maxlength="64"></el-input>
       </el-form-item>
       <el-form-item label="管理区域：" prop="listManageArea">
-        <cascader :set-props="setManageProps" :set-data-type="'value'"
+        <cascader :set-props="setManageProps"
                   :set-size="GLOBAL.config.systemSize" maxlength="64"
-                  :val="formData.listManageArea"
                   ref="manageArea"></cascader>
       </el-form-item>
     </el-form>
@@ -54,7 +53,7 @@
         data() {
             return {
                 formData: {
-                    townCode: '',
+                    id: '',
                     villageCode: '',
                     carNo: '',
                     listManageArea: []
@@ -99,7 +98,8 @@
         },
         methods:
             {
-                init: function (type, id) {
+                open: function (type, rowData) {
+                    let _this = this
                     let _title = ''
                     if (type === 'add') {
                         _title = '新增'
@@ -107,13 +107,19 @@
                         _title = '编辑'
                     } else if (type === 'view') {
                         _title = '查看'
-                        this.editableFlag = false
+                        _this.editableFlag = false
                     }
-                    this.showTitle = _title
-                    this.showFlag = true
-                    if (id) {
-                        this.formData.id = id
-                        this.getInfo()
+                    _this.showTitle = _title
+                    _this.showFlag = true
+                    if (rowData) {
+                        _this.formData.id = rowData.id
+                        _this.formData.carNo = rowData.name
+                        _this.formData.villageCode = rowData.villageCode
+                        _this.formData.listManageArea = rowData.listManageArea
+                        // 调用级联组建内 init 方法重组默认值
+                        setTimeout(function () {
+                            _this.$refs.myArea.init(_this.formData.villageCode)
+                        }, 100)
                     }
                 },
                 getTreeData: function () {
@@ -146,13 +152,13 @@
                 },
                 saveOrUpdateForm: function () {
                     // 参数处理======start==========
-                    let myAreaCode = this.$refs.myArea.selectValue
+                    let myAreaCode = this.$refs.myArea.sendToParent('value')
                     if (!myAreaCode) {
                         this.$message.warning('请勾选区域～')
                         return
                     }
 
-                    let checkedNode = this.$refs.manageArea.radioObj
+                    let checkedNode = this.$refs.manageArea.sendToParent('obj')
                     if (!checkedNode) {
                         _this.$message.warning('请勾选区域～')
                         return

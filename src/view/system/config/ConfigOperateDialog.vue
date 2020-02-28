@@ -48,13 +48,13 @@
                     id: '',
                     configName: '',
                     configCode: '',
-                    configParam: '',
+                    configParam: ''
                 },
                 // 校验规则
                 formRules: {
                     configName: [],
                     configCode: [],
-                    configParam: [],
+                    configParam: []
                 },
                 // 字典数据
                 dictionary: {
@@ -67,6 +67,7 @@
         },
         methods: {
             init: function (type, id) {
+                let _this = this
                 let _title = ''
                 if (type === 'add') {
                     _title = '新增配置'
@@ -74,6 +75,10 @@
                 } else if (type === 'edit') {
                     _title = '编辑配置'
                     this.editableFlag = true
+                    _this.form = id
+                    setTimeout(function () {
+                        _this.$refs.cascaderTemplete.init(_this.form.villageCode)
+                    }, 100)
                 } else if (type === 'view') {
                     _title = '查看配置'
                     this.editableFlag = false
@@ -102,7 +107,7 @@
                         _this.loading = true
                         this.FUNCTIONS.systemFunction.interactiveData(
                             _this,
-                            _this.GLOBAL.config.businessFlag.config,
+                            _this.GLOBAL.config.businessFlag.rtConfig,
                             _this.GLOBAL.config.handleType.add,
                             _this.FUNCTIONS.systemFunction.removeNullFields(params),
                             null,
@@ -136,7 +141,7 @@
                         _this.loading = true
                         this.FUNCTIONS.systemFunction.interactiveData(
                             _this,
-                            _this.GLOBAL.config.businessFlag.config,
+                            _this.GLOBAL.config.businessFlag.rtConfig,
                             _this.GLOBAL.config.handleType.updateAll,
                             _this.FUNCTIONS.systemFunction.removeNullFields(params),
                             null,
@@ -163,7 +168,7 @@
                 let _this = this
                 this.formData.id && this.FUNCTIONS.systemFunction.interactiveData(
                     _this,
-                    _this.GLOBAL.config.businessFlag.config,
+                    _this.GLOBAL.config.businessFlag.rtConfig,
                     _this.GLOBAL.config.handleType.getInfoById,
                     _this.formData.id,
                     null,
@@ -172,7 +177,7 @@
                         Object.assign(_this.formData, resultData)
                     }
                 )
-            },
+            }
         }
     }
 </script>

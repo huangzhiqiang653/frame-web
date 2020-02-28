@@ -15,9 +15,8 @@
         </label>
       </el-col>
       <el-col :span="4" class="margin-top-10">
-        <cascader :set-props="setProps" :set-data-type="'value'"
+        <cascader :set-props="setProps"
                   :set-size="GLOBAL.config.systemSize" maxlength="64"
-                  :val="searchForm.villageCode"
                   ref="myArea"></cascader>
       </el-col>
       <el-col :span="2" class="margin-top-10">
@@ -221,7 +220,7 @@
                 this.getTableData('init')
             },
             operationMethod: function (operateType, info) {
-                this.$refs.operationTemplate.init(operateType, info ? info.id : null)
+                this.$refs.operationTemplate.open(operateType, info)
             },
             deleteBatch: function () {
                 let _this = this
@@ -320,6 +319,8 @@
             // 获取列表
             getTableData: function (initPageFlag) {
                 this.loading = true
+                //参数处理
+                this.searchForm.villageCode = this.$refs.myArea.sendToParent('value')
                 let _this = this, searchParams = this.searchForm
                 _this.FUNCTIONS.systemFunction.removeNullFields(searchParams)
                 let paginationData = _this.FUNCTIONS.systemFunction.paginationSet(

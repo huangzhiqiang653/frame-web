@@ -15,10 +15,9 @@
       <el-row class="margin-top-20">
         <el-col :span="24">
           <el-form-item label="区域：" prop="villageCode">
-            <cascader :set-props="setProps" :set-data-type="'value'"
+            <cascader :set-props="setProps"
                       :set-size="GLOBAL.config.systemSize" maxlength="64"
-                      :val="formData.villageCode"
-                      ref="myArea"></cascader>
+                      ref="myAreaCascader"></cascader>
           </el-form-item>
         </el-col>
         <el-col :span="24">
@@ -33,10 +32,9 @@
         </el-col>
         <el-col :span="24">
           <el-form-item label="管理区域：" prop="townCode">
-            <cascader :set-props="setManageProps" :set-data-type="'value'"
+            <cascader :set-props="setManageProps"
                       :set-size="GLOBAL.config.systemSize" maxlength="64"
-                      :val="formData.listManageArea"
-                      ref="manageArea"></cascader>
+                      ref="manageAreaCascader"></cascader>
           </el-form-item>
         </el-col>
       </el-row>
@@ -72,7 +70,7 @@
                     name: '',
                     phoneNumber: '',
                     villageCode: '',
-                    userType: this.GLOBAL.config.userType.repairPersonnel,
+                    userType: this.GLOBAL.config.userType.villager + ',' + this.GLOBAL.config.userType.repairPersonnel,
                     listManageArea: [],
                 },
                 // 校验规则
@@ -113,7 +111,8 @@
             cascader
         },
         methods: {
-            init: function (type, id) {
+            open: function (type, rowData) {
+                let _this = this
                 let _title = ''
                 if (type === 'add') {
                     _title = '新增'
@@ -121,14 +120,21 @@
                     _title = '编辑'
                 } else if (type === 'view') {
                     _title = '查看'
-                    this.editableFlag = false
+                    _this.editableFlag = false
                 }
-                this.showTitle = _title
-                this.showFlag = true
-                if (id) {
-                    this.formData.id = id
-                    this.getManageArea()
-                    this.getInfo()
+                _this.showTitle = _title
+                _this.showFlag = true
+                if (rowData) {
+                    _this.formData.id = rowData.id
+                    _this.formData.name = rowData.name
+                    _this.formData.phoneNumber = rowData.phoneNumber
+                    _this.formData.villageCode = rowData.villageCode
+                    _this.formData.listManageArea = rowData.listManageArea
+                    // 调用级联组建内 init 方法重组默认值
+                    setTimeout(function () {
+                        _this.$refs.myAreaCascader.init(_this.formData.villageCode)
+                    }, 100)
+                    _this.getManageArea()
                 }
             },
             closeDialog: function () {
@@ -136,15 +142,15 @@
             },
             saveOrUpdateForm: function () {
                 // 参数处理======start==========
-                let myAreaCode = this.$refs.myArea.selectValue
+                let myAreaCode = this.$refs.myAreaCascader.sendToParent('value')
                 if (!myAreaCode) {
                     this.$message.warning('请勾选区域～')
                     return
                 }
 
-                let checkedNode = this.$refs.manageArea.radioObj
+                let checkedNode = this.$refs.manageAreaCascader.sendToParent('obj')
                 if (!checkedNode) {
-                    _this.$message.warning('请勾选区域～')
+                    this.$message.warning('请勾选区域～')
                     return
                 }
                 let checkedAreaId = []
@@ -256,6 +262,10 @@
                                 manageAreaIds.push(item.orgCode)
                             })
                             _this.formData.listManageArea = manageAreaIds
+                            // 调用级联组建内 init 方法重组默认值
+                            setTimeout(function () {
+                                _this.$refs.manageAreaCascader.init(manageAreaIds.join(','))
+                            }, 100)
                         }
                     }
                 )

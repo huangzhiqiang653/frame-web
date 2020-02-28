@@ -200,7 +200,6 @@
     },
     methods: {
         init: function () {
-            debugger
             let parm = this.$route.query
             if (parm.mytype === '0') {
                 this.msg = '报修信息'

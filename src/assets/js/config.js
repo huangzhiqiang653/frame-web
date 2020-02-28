@@ -29,7 +29,8 @@ const urls = {
     zxResource: '/auth/zx-resource/base',
     zxRelationRoleMenu: '/auth/zx-relation-role-menu/base',
     zxRelationRoleResource: '/auth/zx-relation-role-resource/base',
-    zxRelationAccountRole: '/auth/zx-relaiton-account-role/base'
+    zxRelationAccountRole: '/auth/zx-relaiton-account-role/base',
+    rtConfig: 'rts/rt-config/base'
   }
 
 }
