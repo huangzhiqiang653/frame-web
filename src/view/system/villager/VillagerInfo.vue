@@ -16,27 +16,27 @@
       <el-row class="margin-top-20">
         <el-col :span="6">
           <el-form-item label="区划：" prop="townCode">
-            <el-input autosize v-model="formData.townCode" placeholder="区划" maxlength="64"></el-input>
+            <el-input autosize v-model="formData.orgName" placeholder="区划" maxlength="64"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="户主姓名：" prop="villageCode">
-            <el-input autosize v-model="formData.villageCode" placeholder="户主姓名" maxlength="64"></el-input>
+          <el-form-item label="户主姓名：" prop="name">
+            <el-input autosize v-model="formData.name" placeholder="户主姓名" maxlength="64"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="手机号码：" prop="carNo">
-            <el-input autosize v-model="formData.carNo" placeholder="手机号码" maxlength="64"></el-input>
+          <el-form-item label="手机号码：" prop="phoneNumber">
+            <el-input autosize v-model="formData.phoneNumber" placeholder="手机号码" maxlength="64"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="建档时间：" prop="carNo">
-            <el-input autosize v-model="formData.carNo" placeholder="建档时间" maxlength="64"></el-input>
+          <el-form-item label="建档时间：" prop="createTime">
+            <el-input autosize v-model="formData.createTime" placeholder="建档时间" maxlength="64"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="详细地址：" prop="carNo">
-            <el-input autosize v-model="formData.carNo" placeholder="详细地址" maxlength="64"></el-input>
+          <el-form-item label="详细地址：" prop="address">
+            <el-input autosize v-model="formData.address" placeholder="详细地址" maxlength="64"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -53,25 +53,30 @@
         width="50">
       </el-table-column>
       <el-table-column
-        prop="date"
+        prop="createTime"
         label="报修时间"
         align="center"
         width="180">
+        <template slot-scope="scope">
+          {{ scope.row.createTime
+          ?$moment(scope.row.createTime
+          ).format(GLOBAL.config.dateFormat.ymdhms):'' }}
+        </template>
       </el-table-column>
       <el-table-column
-        prop="status"
+        prop="repairStatus"
         label="状态"
         align="center"
         width="180">
       </el-table-column>
       <el-table-column
-        prop="name"
+        prop="targetUserName"
         label="维修责任人"
         align="center"
         width="180">
       </el-table-column>
       <el-table-column
-        prop="address"
+        prop="problem"
         align="center"
         label="报修描述">
       </el-table-column>
@@ -93,7 +98,7 @@
     </el-pagination>
     <el-divider content-position="left">报抽信息</el-divider>
     <el-table
-      :data="repairsData"
+      :data="pumpData"
       border
       style="width: 100%">
       <el-table-column
@@ -103,25 +108,30 @@
         width="50">
       </el-table-column>
       <el-table-column
-        prop="date"
+        prop="createTime"
         label="报抽时间"
         align="center"
         width="180">
+        <template slot-scope="scope">
+          {{ scope.row.createTime
+          ?$moment(scope.row.createTime
+          ).format(GLOBAL.config.dateFormat.ymdhms):'' }}
+        </template>
       </el-table-column>
       <el-table-column
-        prop="status"
+        prop="repairStatus"
         label="状态"
         align="center"
         width="180">
       </el-table-column>
       <el-table-column
-        prop="name"
+        prop="targetUserName"
         label="维修责任人"
         align="center"
         width="180">
       </el-table-column>
       <el-table-column
-        prop="address"
+        prop="pumpCarId"
         align="center"
         label="抽粪责任车辆">
       </el-table-column>
@@ -183,6 +193,17 @@
 
                     }
                 ],
+                // 报抽数据
+                pumpData: [
+                    {
+                        date: '2019-12-11 15:33:23',
+                        status: '未处理',
+                        name: '张三',
+                        address: '修不了',
+                        evaluate: '4'
+
+                    }
+                ],
                 // 报修分页参数
                 paginationRepairs: {
                     pageSizeList: [10, 20, 30, 40, 50],
@@ -202,7 +223,8 @@
                 costDisabledInput: true,
                 outsideLawyerYes: false,
                 loading: false,
-                editableFlag: false
+                editableFlag: false,
+                currentId: null
             }
         },
         mounted () {
@@ -213,35 +235,114 @@
         },
         methods: {
             init: function () {
-                console.log(this.$router.params.id)
+                console.log(this.$route.params.id)
+                this.currentId = this.$route.params.id
+                debugger
+                this.getVillagerInfo()
+                this.getRepairList('init')
+                this.getPumpList('init')
             },
             goBack: function () {
                 this.$router.go(-1)
             },
             // 基本信息请求
+            getVillagerInfo: function () {
+                let _this = this
+                _this.FUNCTIONS.systemFunction.interactiveData(
+                    _this,
+                    _this.GLOBAL.config.businessFlag.rtUser,
+                    _this.GLOBAL.config.handleType.getInfoById,
+                    _this.currentId,
+                    null,
+                    resultData => {
+                        _this.loading = false
+                        if (resultData) {
+                            resultData.createTime = _this.$moment(resultData.createTime).format(_this.GLOBAL.config.dateFormat.ymdhms)
+                            resultData.orgName = _this.FUNCTIONS.systemFunction.getAreaName(_this, resultData.townCode)
+                            _this.formData = resultData
+                        } else {
+                            _this.$message.warning('获取村民信息失败～')
+                        }
+                    }
+                )
+            },
             // 报修列表请求
+            getRepairList: function (initPageFlag) {
+                let _this = this
+                let paginationData = _this.FUNCTIONS.systemFunction.paginationSet(
+                    initPageFlag ? 1 : _this.pagination.currentPage,
+                    initPageFlag ? 10 : _this.pagination.pageSize,
+                    {submitUserId: _this.currentId})
+                // 3、 调接口获取数据
+                _this.FUNCTIONS.systemFunction.interactiveData(
+                    _this,
+                    _this.GLOBAL.config.businessFlag.rtRepair,
+                    _this.GLOBAL.config.handleType.getPage,
+                    paginationData,
+                    null,
+                    resultData => {
+                        _this.loading = false
+                        if (resultData) {
+                            // 结果参数赋值
+                            _this.paginationRepairs.pageSize = resultData.size
+                            _this.paginationRepairs.total = resultData.total
+                            _this.paginationRepairs.currentPage = resultData.current
+                            // resultData.records.forEach(item => {
+                            //     item.orgName = _this.FUNCTIONS.systemFunction.getAreaName(_this, item.villageCode)
+                            // })
+                            _this.repairsData = resultData.records
+                        } else {
+                            _this.$message.warning('获取列表数据失败～')
+                        }
+                    })
+            },
             // 报抽列表请求
+            getPumpList: function (initPageFlag) {
+                let _this = this
+                let paginationData = _this.FUNCTIONS.systemFunction.paginationSet(
+                    initPageFlag ? 1 : _this.pagination.currentPage,
+                    initPageFlag ? 10 : _this.pagination.pageSize,
+                    {submitUserId: _this.currentId})
+                // 3、 调接口获取数据
+                _this.FUNCTIONS.systemFunction.interactiveData(
+                    _this,
+                    _this.GLOBAL.config.businessFlag.rtPump,
+                    _this.GLOBAL.config.handleType.getPage,
+                    paginationData,
+                    null,
+                    resultData => {
+                        _this.loading = false
+                        if (resultData) {
+                            // 结果参数赋值
+                            _this.paginationRepairs.pageSize = resultData.size
+                            _this.paginationRepairs.total = resultData.total
+                            _this.paginationRepairs.currentPage = resultData.current
+                            // resultData.records.forEach(item => {
+                            //     item.orgName = _this.FUNCTIONS.systemFunction.getAreaName(_this, item.villageCode)
+                            // })
+                            _this.pumpData = resultData.records
+                        } else {
+                            _this.$message.warning('获取列表数据失败～')
+                        }
+                    })
+            },
             // 报修分页方法
             tableSizeChangeRepairs: function (pageSize) {
                 this.paginationRepairs.pageSize = pageSize
-                this.getTableData()
+                this.getRepairList()
             },
             currentChangeRepairs: function (current) {
                 this.paginationRepairs.currentPage = current
-                this.getTableData()
+                this.getRepairList()
             },
             // 报抽分页方法
             tableSizeChange: function (pageSize) {
                 this.pagination.pageSize = pageSize
-                this.getTableData()
+                this.getPumpList()
             },
             currentChange: function (current) {
                 this.pagination.currentPage = current
-                this.getTableData()
-            },
-            // 页面请求
-            getTableData: function () {
-                console.log('请求数据')
+                this.getPumpList()
             }
         }
     }

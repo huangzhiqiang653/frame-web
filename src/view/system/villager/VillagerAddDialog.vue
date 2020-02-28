@@ -95,7 +95,6 @@
           cascader
       },
       mounted () {
-          this.getAreaData()
       },
       methods: {
           open: function (type, rowData) {

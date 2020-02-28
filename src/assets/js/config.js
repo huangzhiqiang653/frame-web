@@ -21,6 +21,7 @@ const urls = {
     rtUser: '/rts/rt-user/base',
     rtOrganization: '/rts/rt-organization/base',
     rtRepair: '/rts/rt-record-repair/base',
+    rtPump: '/rts/rt-record-pump/base',
     zxMenu: '/auth/zx-menu/base',
     zxUser: '/auth/zx-user/base',
     zxDictionary: '/auth/zx-dictionary/base',

@@ -37,6 +37,7 @@ const config = {
     rtManageArea: 'rtManageArea',
     rtOrganization: 'rtOrganization',
     rtRepair: 'rtRepair',
+    rtPump: 'rtPump',
     zxMenu: 'zxMenu',
     zxUser: 'zxUser',
     zxDictionary: 'zxDictionary',

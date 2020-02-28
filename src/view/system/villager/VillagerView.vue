@@ -91,7 +91,11 @@
       <!--账户名称-->
       <el-table-column prop="name" label="户主姓名" width="240px" align="center"/>
       <!--所属用户-->
-      <el-table-column prop="villageCode" label="所属区划" align="center"/>
+      <el-table-column prop="orgName" label="所属区划" align="center">
+<!--        <template slot-scope="scope">-->
+<!--          {{ this.FUNCTIONS.systemFunction.getAreaName(this, scope.row.villageCode) }}}-->
+<!--        </template>-->
+      </el-table-column>
       <el-table-column prop="phoneNumber" label="手机号码" width="200px" align="center"/>
       <el-table-column
         align="center"
@@ -318,6 +322,9 @@
                             _this.pagination.pageSize = resultData.size
                             _this.pagination.total = resultData.total
                             _this.pagination.currentPage = resultData.current
+                            resultData.records.forEach(item => {
+                                item.orgName = _this.FUNCTIONS.systemFunction.getAreaName(_this, item.villageCode)
+                            })
                             _this.tableData = resultData.records
                         } else {
                             _this.$message.warning('获取列表数据失败～')

@@ -68,6 +68,7 @@
                 if (this.setMore.multiple === true) {
                     // 多选
                     let arr = val.split(',')
+                    _this.radioValue = arr
                     let temp = []
                     // 对每一个选项进行重组
                     for (let i = 0; i < arr.length; i++) {
@@ -78,6 +79,12 @@
                 } else {
                     // 单选
                     _this.checkedValue = _this.fitData(val)
+                    let tempArr = [val]
+                    _this.selectObj = []
+                    let temp = _this.getCascaderObj(tempArr, _this.options)
+                    let length = temp.length - 1
+                    _this.selectObj.push(temp[length])
+                    _this.selectValue = val
                 }
             },
             // 请求区划数据
