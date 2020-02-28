@@ -14,7 +14,7 @@
           姓名:
         </label>
       </el-col>
-      <el-col :span="2" class="margin-top-10">
+      <el-col :span="5" class="margin-top-10">
         <el-input v-model="searchForm.name"
                   :size="GLOBAL.config.systemSize"
                   placeholder="姓名"
@@ -25,7 +25,7 @@
           所属乡镇编码:
         </label>
       </el-col>
-      <el-col :span="2" class="margin-top-10">
+      <el-col :span="5" class="margin-top-10">
         <el-input v-model="searchForm.townCode"
                   :size="GLOBAL.config.systemSize"
                   placeholder="所属乡镇编码"
@@ -36,7 +36,7 @@
           所属村居编码:
         </label>
       </el-col>
-      <el-col :span="2" class="margin-top-10">
+      <el-col :span="5" class="margin-top-10">
         <el-input v-model="searchForm.villageCode"
                   :size="GLOBAL.config.systemSize"
                   placeholder="所属村居编码"
@@ -47,7 +47,7 @@
           手机号:
         </label>
       </el-col>
-      <el-col :span="2" class="margin-top-10">
+      <el-col :span="5" class="margin-top-10">
         <el-input v-model="searchForm.phoneNumber"
                   :size="GLOBAL.config.systemSize"
                   placeholder="手机号"
@@ -58,7 +58,7 @@
           更新时间:
         </label>
       </el-col>
-      <el-col :span="3" class="margin-top-10">
+      <el-col :span="5" class="margin-top-10">
         <el-date-picker
           v-model="searchForm.updateTime"
           :size="GLOBAL.config.systemSize"
@@ -73,11 +73,12 @@
           style="width: 100%;">
         </el-date-picker>
       </el-col>
-
       <el-col :span="2" class="margin-top-10">
         <el-button type="primary" @click="doSearch" :size="GLOBAL.config.systemSize" icon="el-icon-search">查询
         </el-button>
       </el-col>
+    </el-row>
+    <el-row class="margin-top-10">
       <el-col :span="2" class="margin-top-10">
         <el-button v-if="source.add"
                    type="primary"
@@ -125,7 +126,7 @@
         type="selection">
       </el-table-column>
       <!--序号-->
-      <el-table-column prop="index" label="序号" align="center"/>
+      <el-table-column type="index" label="序号" align="center"/>
       <!--姓名-->
       <el-table-column prop="name" label="姓名" align="center"/>
       <!--所属乡镇编码-->
@@ -135,7 +136,14 @@
       <!--手机号-->
       <el-table-column prop="phoneNumber" label="手机号" align="center"/>
       <!--更新时间-->
-      <el-table-column prop="updateTime" label="更新时间" align="center"/>
+      <el-table-column prop="updateTime"
+                       label="更新时间" align="center">
+        <template slot-scope="scope">
+          {{ scope.row.updateTime
+          ?$moment(scope.row.updateTime
+          ).format(GLOBAL.config.dateFormat.ymdhms):'' }}
+        </template>
+      </el-table-column>
       <el-table-column prop="scope" label="操作" align="center">
         <template slot-scope="scope">
           <el-dropdown>
@@ -223,7 +231,7 @@
             operationTemplate
         },
         mounted () {
-            // this.init()
+            this.init()
         },
         methods: {
             init: function () {
@@ -247,7 +255,7 @@
                     _this.loading = true
                     _this.FUNCTIONS.systemFunction.interactiveData(
                         _this,
-                        _this.GLOBAL.config.businessFlag.user,
+                        _this.GLOBAL.config.businessFlag.rtUser,
                         _this.GLOBAL.config.handleType.deleteLogicalBatch,
                         _this.deleteBatchList.ids,
                         'list',
@@ -332,7 +340,7 @@
                 // 3、 调接口获取数据
                 _this.FUNCTIONS.systemFunction.interactiveData(
                     _this,
-                    _this.GLOBAL.config.businessFlag.user,
+                    _this.GLOBAL.config.businessFlag.rtUser,
                     _this.GLOBAL.config.handleType.getPage,
                     paginationData,
                     null,

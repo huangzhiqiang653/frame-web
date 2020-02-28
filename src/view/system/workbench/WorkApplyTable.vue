@@ -60,13 +60,13 @@
               @selection-change="tableSelectionChange"
               element-loading-text="数据处理中...请稍等..."
               v-loading="loading">
-      <el-table-column prop="index" label="序号" align="center"/>
+      <el-table-column type="index" label="序号" align="center"/>
       <el-table-column prop="type" label="类型" align="center"/>
-      <el-table-column prop="area" label="所属区划" align="center"/>
-      <el-table-column prop="accountName" label="户主姓名" align="center"/>
-      <el-table-column prop="tel" label="手机号码" align="center"/>
+      <el-table-column prop="targetUserVillageCode" label="所属区划" align="center"/>
+      <el-table-column prop="targetUserName" label="户主姓名" align="center"/>
+      <el-table-column prop="targetUserPhoneNumber" label="手机号码" align="center"/>
       <el-table-column prop="reportTime" label="接收时间" width="200px" align="center"/>
-      <el-table-column prop="state" label="状态" align="center"/>
+      <el-table-column prop="repairStatus" label="状态" align="center"/>
       <el-table-column prop="scope" label="操作" align="center">
         <template slot-scope="scope">
           <el-dropdown>
@@ -113,9 +113,9 @@
                 tableData: [{
                     index: '1',
                     type: '报修',
-                    area: '2',
-                    accountName: '小张',
-                    tel: '15077825632',
+                    targetUserVillageCode: '2',
+                    targetUserName: '小张',
+                    targetUserPhoneNumber: '15077825632',
                     reportTime: '2020-2-25 09:37:13',
                     state: '未分派'
                 }
@@ -144,7 +144,7 @@
             operationTemplate1
         },
         mounted () {
-            // this.init()
+            this.init()
         },
         methods: {
             init: function () {
@@ -175,12 +175,13 @@
             },
             // 查看
             handleView: function (rowData) {
+                debugger
                 this.$router.push({
                     name: 'WorkApplyOperateDialog',
                     query: {
                         type: 'view',
                         id: '12345',
-                        mytype: '1' // rowData.type
+                        myType: rowData.type
                     }
                 })
             },
@@ -200,8 +201,8 @@
                 // 3、 调接口获取数据
                 _this.FUNCTIONS.systemFunction.interactiveData(
                     _this,
-                    _this.GLOBAL.config.businessFlag.recordRepair,
-                    _this.GLOBAL.config.handleType.getPage,
+                    _this.GLOBAL.config.businessFlag.rtRepair,
+                    _this.GLOBAL.config.handleType.getMyPage,
                     paginationData,
                     null,
                     resultData => {
@@ -238,6 +239,19 @@
                     type: 'litigationCasesServiceImpl.downFile',
                     info: searchParams
                 })
+            },
+            tableSelectionChange: function (targetList) {
+                let ids = []
+                targetList.forEach(item => {
+                    ids.push(item.id)
+                })
+                this.deleteBatchList.ids = ids
+                if (this.deleteBatchList.ids &&
+                    this.deleteBatchList.ids.length > 0) {
+                    this.deleteBatchList.deleteFlag = true
+                } else {
+                    this.deleteBatchList.deleteFlag = false
+                }
             }
         }
     }
