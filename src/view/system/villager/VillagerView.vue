@@ -89,11 +89,12 @@
       <!--序号-->
       <el-table-column type="index" label="序号" width="80px" align="center"/>
       <!--账户名称-->
-      <el-table-column prop="name" label="户主姓名" width="240px" align="center"/>
+      <el-table-column prop="name" label="户主姓名" width="240px" align="center">
+      </el-table-column>
       <!--所属用户-->
       <el-table-column prop="orgName" label="所属区划" align="center">
 <!--        <template slot-scope="scope">-->
-<!--          {{ this.FUNCTIONS.systemFunction.getAreaName(this, scope.row.villageCode) }}}-->
+<!--          {{ FUNCTIONS.systemFunction.getAreaName(this, scope.row.villageCode) }}-->
 <!--        </template>-->
       </el-table-column>
       <el-table-column prop="phoneNumber" label="手机号码" width="200px" align="center"/>
@@ -210,6 +211,7 @@
             operationMethod: function (operateType, info) {
                 this.$refs.operationTemplate.init(operateType, info ? info.id : null)
             },
+            // 批量删除
             deleteBatch: function () {
                 let _this = this
                 _this.$confirm('确认删除当前选择' +
@@ -223,7 +225,7 @@
                         _this,
                         _this.GLOBAL.config.businessFlag.rtUser,
                         _this.GLOBAL.config.handleType.deleteLogicalBatch,
-                        _this.deleteBatchList.ids,
+                        _this.deleteBatchList.ids.split(','),
                         'list',
                         resultData => {
                             _this.loading = false
@@ -361,11 +363,12 @@
             // 列表数据导出
             exportTableData: function () {
                 let _this = this, searchParams = this.searchForm
-                _this.FUNCTIONS.systemFunction.removeNullFields(searchParams)
-                this.FUNCTIONS.systemFunction.postDownFile(this, {
-                    type: 'litigationCasesServiceImpl.downFile',
-                    info: searchParams
-                })
+                // _this.FUNCTIONS.systemFunction.removeNullFields(searchParams)
+                // this.FUNCTIONS.systemFunction.postDownFile(this, {
+                //     type: 'litigationCasesServiceImpl.downFile',
+                //     info: searchParams
+                // })
+                window.location.href = _this.CONFIG.urls.root + '/rts/rt-export/exportRtUser'
             },
             importTableData: function () {
                 // TODO

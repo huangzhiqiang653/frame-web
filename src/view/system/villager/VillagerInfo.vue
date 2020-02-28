@@ -258,7 +258,7 @@
                         _this.loading = false
                         if (resultData) {
                             resultData.createTime = _this.$moment(resultData.createTime).format(_this.GLOBAL.config.dateFormat.ymdhms)
-                            resultData.orgName = _this.FUNCTIONS.systemFunction.getAreaName(_this, resultData.townCode)
+                            resultData.orgName = _this.FUNCTIONS.systemFunction.getAreaName(_this, resultData.villageCode)
                             _this.formData = resultData
                         } else {
                             _this.$message.warning('获取村民信息失败～')

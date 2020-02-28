@@ -1,5 +1,5 @@
 <template>
-  <el-dialog :title="dialogTitle" :visible.sync="dialogFormVisible" :destroy-on-close="true">
+  <el-dialog :title="dialogTitle" :visible.sync="dialogFormVisible" @closed="closeDialog" :destroy-on-close="true">
     <el-form :inline="true" :model="form" ref="formData" label-width="100px">
       <el-form-item label="区划" label-width="70px" v-loading="loading">
         <cascader
@@ -17,7 +17,7 @@
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
-      <el-button @click="dialogFormVisible = false">取 消</el-button>
+      <el-button @click="cancelClick">取 消</el-button>
       <el-button type="primary" @click="makesure">确 定</el-button>
     </div>
   </el-dialog>
@@ -97,6 +97,9 @@
       mounted () {
       },
       methods: {
+          closeDialog: function () {
+              this.form = {}
+          },
           open: function (type, rowData) {
               let _this = this
               _this.type = type
@@ -112,10 +115,13 @@
                   }, 100)
               }
           },
+          // 取消按钮
+          cancelClick: function () {
+              this.dialogFormVisible = false
+          },
           // 确定按钮
           makesure: function () {
               let temp = this.$refs.cascaderTemplete.sendToParent('value')
-              debugger
               this.form.villageCode = temp
               if (this.type === 'add') {
                   this.addVillager()
@@ -151,7 +157,6 @@
                           () => {
                               _this.dialogFormVisible = false
                               _this.loading = false
-                              console.log('失败')
                           })
                   } else {
                       this.$message.error('校验失败～')
@@ -164,6 +169,7 @@
               this.$refs.formData.validate(valid => {
                   if (valid) {
                       let params = this.form
+                      delete params.orgName
                       let _this = this
                       debugger
                       _this.loading = true
