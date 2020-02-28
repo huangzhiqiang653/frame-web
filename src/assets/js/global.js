@@ -77,7 +77,8 @@ const config = {
 
     // rts
     updateBatchPersonnel: "updateBatchPersonnel",
-    removeUserRole: "removeUserRole"
+    removeUserRole: "removeUserRole",
+    getMyPage: 'getMyPage'
   },
   dateFormat: {
     YMD: 'YYYY-MM-DD',

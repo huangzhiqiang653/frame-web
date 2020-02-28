@@ -107,7 +107,7 @@
                     _this.loading = true
                     this.FUNCTIONS.systemFunction.interactiveData(
                         _this,
-                        _this.GLOBAL.config.businessFlag.user,
+                        _this.GLOBAL.config.businessFlag.rtUser,
                         _this.GLOBAL.config.handleType.add,
                         _this.FUNCTIONS.systemFunction.removeNullFields(params),
                         null,
@@ -141,7 +141,7 @@
                     _this.loading = true
                     this.FUNCTIONS.systemFunction.interactiveData(
                         _this,
-                        _this.GLOBAL.config.businessFlag.user,
+                        _this.GLOBAL.config.businessFlag.rtUser,
                         _this.GLOBAL.config.handleType.updateAll,
                         _this.FUNCTIONS.systemFunction.removeNullFields(params),
                         null,
@@ -168,7 +168,7 @@
             let _this = this
             this.formData.id && this.FUNCTIONS.systemFunction.interactiveData(
                 _this,
-                _this.GLOBAL.config.businessFlag.user,
+                _this.GLOBAL.config.businessFlag.rtUser,
                 _this.GLOBAL.config.handleType.getInfoById,
                 _this.formData.id,
                 null,
