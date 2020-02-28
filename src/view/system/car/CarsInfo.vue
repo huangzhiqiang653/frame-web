@@ -15,9 +15,8 @@
       <el-row class="margin-top-20">
         <el-col :span="10">
           <el-form-item label="区域：" prop="villageCode">
-            <cascader :set-props="setProps" :set-data-type="'value'"
+            <cascader :set-props="setProps"
                       :set-size="GLOBAL.config.systemSize" maxlength="64"
-                      :val="formData.villageCode"
                       ref="myArea"></cascader>
           </el-form-item>
         </el-col>
@@ -28,9 +27,8 @@
         </el-col>
         <el-col :span="10">
           <el-form-item label="管理区域：" prop="listManageArea">
-            <cascader :set-props="setManageProps" :set-data-type="'value'"
+            <cascader :set-props="setManageProps"
                       :set-size="GLOBAL.config.systemSize" maxlength="64"
-                      :val="formData.listManageArea"
                       ref="manageArea"></cascader>
           </el-form-item>
         </el-col>
@@ -205,9 +203,13 @@
                     } else if (type === 'view') {
                         this.showTitle = '查看'
                     }
+                    // 调用级联组建内 init 方法重组默认值
+                    setTimeout(function () {
+                        _this.$refs.myArea.init(_this.formData.villageCode)
+                    }, 100)
+                    this.getManageArea()
+                    this.getTableData('init')
                 }
-                this.getManageArea()
-                this.getTableData('init')
             },
             goBack: function () {
                 this.$router.go(-1)
@@ -268,6 +270,10 @@
                                 manageAreaIds.push(item.orgCode)
                             })
                             _this.formData.listManageArea = manageAreaIds
+                            // 调用级联组建内 init 方法重组默认值
+                            setTimeout(function () {
+                                _this.$refs.manageArea.init(manageAreaIds.join(','))
+                            }, 100)
                         }
                     }
                 )
@@ -320,13 +326,14 @@
             saveForm: function () {
                 let _this = this
                 // 参数处理======start==========
-                let myAreaCode = this.$refs.myArea.selectValue
+                let myAreaCode = this.$refs.myArea.sendToParent('value')
+                debugger
                 if (!myAreaCode) {
                     this.$message.warning('请勾选区域～')
                     return
                 }
 
-                let checkedNode = _this.$refs.manageArea.radioObj
+                let checkedNode = _this.$refs.manageArea.sendToParent('obj')
                 if (!checkedNode) {
                     _this.$message.warning('请勾选区域～')
                     return
