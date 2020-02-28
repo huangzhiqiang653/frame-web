@@ -44,7 +44,8 @@ const config = {
     zxResource: 'zxResource',
     zxRelationRoleMenu: 'zxRelationRoleMenu',
     zxRelationRoleResource: 'zxRelationRoleResource',
-    zxRelationAccountRole: 'zxRelationAccountRole'
+    zxRelationAccountRole: 'zxRelationAccountRole',
+    rtConfig: 'rtConfig'
   },
   handleType: {
     // 系统默认
@@ -73,7 +74,7 @@ const config = {
     addAccountRolesRelation: 'addAccountRolesRelation',
     initialAccountPwd: 'initialAccountPwd',
 
-    //rts
+    // rts
     updateBatchPersonnel: "updateBatchPersonnel",
     removeUserRole: "removeUserRole"
   },
