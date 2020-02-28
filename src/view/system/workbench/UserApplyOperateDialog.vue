@@ -75,8 +75,10 @@
             let _title = ''
             if (type === 'add') {
                 _title = '新增人员审核'
+                this.editableFlag = true
             } else if (type === 'edit') {
                 _title = '编辑人员审核'
+                this.editableFlag = true
             } else if (type === 'view') {
                 _title = '查看人员审核'
                 this.editableFlag = false
