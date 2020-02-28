@@ -16,9 +16,8 @@
       <el-row class="margin-top-20">
         <el-col :span="8">
           <el-form-item label="区域：" prop="villageCode">
-            <cascader :set-props="setProps" :set-data-type="'value'"
+            <cascader :set-props="setProps"
                       :set-size="GLOBAL.config.systemSize" maxlength="64"
-                      :val="formData.villageCode"
                       ref="myArea"></cascader>
           </el-form-item>
         </el-col>
@@ -34,9 +33,8 @@
         </el-col>
         <el-col :span="8">
           <el-form-item label="管理区域：" prop="listManageArea">
-            <cascader :set-props="setManageProps" :set-data-type="'value'"
+            <cascader :set-props="setManageProps"
                       :set-size="GLOBAL.config.systemSize" maxlength="64"
-                      :val="formData.listManageArea"
                       ref="manageArea"></cascader>
           </el-form-item>
         </el-col>
@@ -48,27 +46,41 @@
       element-loading-text="数据处理中...请稍等..."
       v-loading="loading"
       style="width: 100%">
-      <el-table-column type="index" label="序号" align="center" width="50"></el-table-column>
-      <el-table-column prop="area" label="报修人区域" align="center" width="180"></el-table-column>
-      <el-table-column prop="name" label="报修人姓名" align="center" width="120"></el-table-column>
-      <el-table-column prop="phoneNumber" label="报修人手机号" align="center" width="180"></el-table-column>
-      <el-table-column prop="date" label="报修时间" align="center" width="180"></el-table-column>
-      <el-table-column prop="date" label="首次上门时间" align="center" width="180"></el-table-column>
-      <el-table-column prop="status" label="状态" align="center" width="120"></el-table-column>
+      <el-table-column type="index" label="序号" align="center"></el-table-column>
+      <el-table-column prop="orgName" label="报修人区域" align="center"></el-table-column>
+      <el-table-column prop="targetUserName" label="报修人姓名" align="center"></el-table-column>
+      <el-table-column prop="targetUserPhoneNumber" label="报修人手机号" align="center"></el-table-column>
+      <!--报修时间-->
+      <el-table-column prop="reportTime" label="报修时间" align="center">
+        <template slot-scope="scope">
+          {{ scope.row.reportTime
+          ?$moment(scope.row.reportTime
+          ).format(GLOBAL.config.dateFormat.ymdhms):'' }}
+        </template>
+      </el-table-column>
+      <!--首次上门时间-->
+      <el-table-column prop="reportTime" label="首次上门时间" align="center">
+        <template slot-scope="scope">
+          {{ scope.row.repairTime
+          ?$moment(scope.row.repairTime
+          ).format(GLOBAL.config.dateFormat.ymdhms):'' }}
+        </template>
+      </el-table-column>
+      <el-table-column prop="repairStatus" label="状态" align="center"></el-table-column>
       <el-table-column prop="evaluate" align="center" label="评价"></el-table-column>
     </el-table>
     <el-pagination
       class="margin-top-10 margin-bottom-20"
       @size-change="tableSizeChangeRepairs"
       @current-change="currentChangeRepairs"
-      :current-page="paginationRepairs.currentPage"
-      :page-sizes="paginationRepairs.pageSizeList"
-      :page-size="paginationRepairs.pageSize"
-      :layout="paginationRepairs.layout"
-      :total="paginationRepairs.total">
+      :current-page="pagination.currentPage"
+      :page-sizes="pagination.pageSizeList"
+      :page-size="pagination.pageSize"
+      :layout="pagination.layout"
+      :total="pagination.total">
     </el-pagination>
     <el-row class="margin-top-20">
-      <el-button @click="goBack" style="float: right;margin: 0 20px;" :size="GLOBAL.config.systemSize">关闭</el-button>
+      <el-button @click="goBack" style="margin: 0 20px;" :size="GLOBAL.config.systemSize">返回</el-button>
     </el-row>
   </div>
 </template>
@@ -131,7 +143,7 @@
                 // 报修数据
                 repairsData: [],
                 // 报修分页参数
-                paginationRepairs: {
+                pagination: {
                     pageSizeList: [10, 20, 30, 40, 50],
                     pageSize: 10,
                     layout: 'total, sizes, prev, pager, next, jumper',
@@ -153,7 +165,7 @@
             init: function () {
                 console.log(this.$route.params)
                 let _this = this
-                if (this.$route.params) {
+                if (this.$route.params && this.$route.params.userInfo) {
                     let userInfo = this.$route.params.userInfo
                     _this.formData.id = userInfo.id
                     _this.formData.villageCode = userInfo.villageCode
@@ -162,27 +174,31 @@
                     _this.searchForm.operationUserId = userInfo.id
                     let type = this.$route.params.type
                     if (type === 'add') {
-                        this.showTitle = '新增'
+                        _this.showTitle = '新增'
                     } else if (type === 'edit') {
-                        this.showTitle = '编辑'
-                        this.editableFlag = true
+                        _this.showTitle = '编辑'
+                        _this.editableFlag = true
                     } else if (type === 'view') {
-                        this.showTitle = '查看'
+                        _this.showTitle = '查看'
                     }
+                    // 调用级联组建内 init 方法重组默认值
+                    setTimeout(function () {
+                        _this.$refs.myArea.init(_this.formData.villageCode)
+                    }, 100)
                 }
-                this.getManageArea()
-                this.getTableData('init')
+                _this.getManageArea()
+                _this.getTableData('init')
             },
             goBack: function () {
                 this.$router.go(-1)
             },
             // 报修分页方法
             tableSizeChangeRepairs: function (pageSize) {
-                this.paginationRepairs.pageSize = pageSize
+                this.pagination.pageSize = pageSize
                 this.getTableData('init')
             },
             currentChangeRepairs: function (current) {
-                this.paginationRepairs.currentPage = current
+                this.pagination.currentPage = current
                 this.getTableData('init')
             },
             // 页面请求
@@ -204,14 +220,15 @@
                     resultData => {
                         _this.loading = false
                         if (resultData) {
+                            console.log(resultData)
                             // 结果参数赋值
                             _this.pagination.pageSize = resultData.size
                             _this.pagination.total = resultData.total
                             _this.pagination.currentPage = resultData.current
                             resultData.records.forEach(item => {
-                                item.orgName = _this.FUNCTIONS.systemFunction.getAreaName(_this, item.villageCode)
+                                item.orgName = _this.FUNCTIONS.systemFunction.getAreaName(_this, item.targetUserVillageCode)
                             })
-                            _this.tableData = resultData.records
+                            _this.repairsData = resultData.records
                         } else {
                             _this.$message.warning('获取列表数据失败～')
                         }
@@ -239,6 +256,10 @@
                                 manageAreaIds.push(item.orgCode)
                             })
                             _this.formData.listManageArea = manageAreaIds
+                            // 调用级联组建内 init 方法重组默认值
+                            setTimeout(function () {
+                                _this.$refs.manageArea.init(manageAreaIds.join(','))
+                            }, 100)
                         }
                     }
                 )

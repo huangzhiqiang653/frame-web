@@ -15,10 +15,8 @@
         </label>
       </el-col>
       <el-col :span="4" class="margin-top-10">
-        <cascader :set-props="setProps" :set-data-type="'value'"
+        <cascader :set-props="setProps"
                   :set-size="GLOBAL.config.systemSize" maxlength="64"
-                  :val="searchForm.villageCode"
-                  @getValue="getValue"
                   ref="myArea"></cascader>
       </el-col>
       <el-col :span="2" class="margin-top-10">
@@ -201,34 +199,7 @@
                 this.getTableData('init')
             },
             operationMethod: function (operateType, info) {
-                this.$refs.operationTemplate.init(operateType, info ? info.id : null)
-            },
-            deleteBatch: function () {
-                let _this = this
-                _this.$confirm('确认删除当前选择' +
-                    '的' + _this.deleteBatchList.ids.length + '条数据？？', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                }).then(() => {
-                    _this.loading = true
-                    _this.FUNCTIONS.systemFunction.interactiveData(
-                        _this,
-                        _this.GLOBAL.config.businessFlag.user,
-                        _this.GLOBAL.config.handleType.deleteLogicalBatch,
-                        _this.deleteBatchList.ids,
-                        'list',
-                        resultData => {
-                            _this.loading = false
-                            if (resultData) {
-                                _this.$message.success('删除成功～')
-                                _this.getTableData('init')
-                            } else {
-                                _this.$message.warning('删除失败～')
-                            }
-                        }
-                    )
-                })
+                this.$refs.operationTemplate.open(operateType, info)
             },
             getSource: function (rowData) {
                 let tempList = []
@@ -268,6 +239,10 @@
             // 单条数据删除
             handleDelete: function (rowData) {
                 let _this = this
+                let params = {
+                    id: rowData.id,
+                    userType: _this.GLOBAL.config.userType.repairPersonnel
+                }
                 _this.$confirm('确认删除当前数据？？', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
@@ -276,9 +251,41 @@
                     _this.loading = true
                     _this.FUNCTIONS.systemFunction.interactiveData(
                         _this,
-                        _this.GLOBAL.config.businessFlag.user,
-                        _this.GLOBAL.config.handleType.deleteLogical,
-                        rowData.id,
+                        _this.GLOBAL.config.businessFlag.rtUser,
+                        _this.GLOBAL.config.handleType.removeUserRole,
+                        params,
+                        null,
+                        resultData => {
+                            _this.loading = false
+                            if (resultData) {
+                                _this.$message.success('删除成功～')
+                                _this.getTableData('init')
+                            } else {
+                                _this.$message.warning('删除失败～')
+                            }
+                        }
+                    )
+                })
+            },
+            //批量删除
+            deleteBatch: function () {
+                let _this = this
+                let params = {
+                    id: _this.deleteBatchList.ids.join(','),
+                    userType: _this.GLOBAL.config.userType.repairPersonnel
+                }
+                _this.$confirm('确认删除当前选择' +
+                    '的' + _this.deleteBatchList.ids.length + '条数据？？', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    _this.loading = true
+                    _this.FUNCTIONS.systemFunction.interactiveData(
+                        _this,
+                        _this.GLOBAL.config.businessFlag.rtUser,
+                        _this.GLOBAL.config.handleType.removeUserRole,
+                        params,
                         null,
                         resultData => {
                             _this.loading = false
@@ -295,6 +302,8 @@
             // 获取列表
             getTableData: function (initPageFlag) {
                 this.loading = true
+                //参数处理
+                this.searchForm.villageCode = this.$refs.myArea.sendToParent('value')
                 let _this = this, searchParams = this.searchForm
                 _this.FUNCTIONS.systemFunction.removeNullFields(searchParams)
                 let paginationData = _this.FUNCTIONS.systemFunction.paginationSet(
