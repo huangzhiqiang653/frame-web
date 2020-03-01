@@ -111,13 +111,28 @@
                     type: ''
                 },
                 tableData: [{
-                    index: '1',
-                    type: '报修',
-                    targetUserVillageCode: '2',
-                    targetUserName: '小张',
-                    targetUserPhoneNumber: '15077825632',
-                    reportTime: '2020-2-25 09:37:13',
-                    state: '未分派'
+                        createTime: "2020-02-27T14:05:43.000+0000",
+                        creator: null,
+                        deleteFlag: 0,
+                        finishTime: null,
+                        id: "000121232",
+                        operationUserId: "f9f8894a421aa78b1129251e9d2f1d20",
+                        overtimeFlag: 0,
+                        problem: "抽水设置坏掉",
+                        pumpCarId: null,
+                        remark: "请尽快赶来维修",
+                        repairStatus: 0,
+                        repairTime: null,
+                        reportTime: "2020-02-27 10:05:43",
+                        submitUserId: "11",
+                        targetUserId: "11",
+                        targetUserName: "张三",
+                        targetUserPhoneNumber: "12345678900",
+                        targetUserTownCode: null,
+                        targetUserVillageCode: "100000",
+                        type: 0,
+                        updateTime: "2020-02-27T14:05:43.000+0000"
+
                 }
                 ],
                 // 字典数据
@@ -180,8 +195,7 @@
                     name: 'WorkApplyOperateDialog',
                     query: {
                         type: 'view',
-                        id: '12345',
-                        myType: rowData.type
+                        data: rowData
                     }
                 })
             },
