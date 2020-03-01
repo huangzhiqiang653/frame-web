@@ -60,6 +60,8 @@ const config = {
     deleteLogical: 'deleteLogical',
     deletePhysicalBatch: 'deletePhysicalBatch',
     deleteLogicalBatch: 'deleteLogicalBatch',
+    deleteUsers: 'deleteUsers',
+    deleteConfigs: 'deleteConfigs',
     getInfoById: 'getInfoById',
     getListByCondition: 'getListByCondition',
     getAll: 'getAll',

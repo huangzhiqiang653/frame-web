@@ -224,17 +224,23 @@
                     _this.FUNCTIONS.systemFunction.interactiveData(
                         _this,
                         _this.GLOBAL.config.businessFlag.rtUser,
-                        _this.GLOBAL.config.handleType.deleteLogicalBatch,
-                        _this.deleteBatchList.ids.split(','),
-                        'list',
+                        _this.GLOBAL.config.handleType.deleteUsers,
+                        _this.deleteBatchList.ids.join(','),
+                        null,
                         resultData => {
                             _this.loading = false
-                            if (resultData) {
-                                _this.$message.success('删除成功～')
-                                _this.getTableData('init')
-                            } else {
-                                _this.$message.warning('删除失败～')
-                            }
+                            _this.$message.success('删除成功～')
+                            _this.getTableData('init')
+                            // if (resultData) {
+                            //     _this.$message.success('删除成功～')
+                            //     _this.getTableData('init')
+                            // } else {
+                            //     _this.$message.warning('删除失败～')
+                            // }
+                        },
+                        (e) => {
+                            _this.$message.warning('删除失败～')
+                            console.log(e)
                         }
                     )
                 })
