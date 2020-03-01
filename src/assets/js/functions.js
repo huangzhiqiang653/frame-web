@@ -232,6 +232,24 @@ const systemFunction = {
     }
   },
   /**
+   * 获取旱厕改造字段配置数据
+   * @param targetCode
+   * @param listName
+   * @returns {string}
+   */
+  getRtConfigValue: function (targetCode, storageData) {
+    let resultName = '--'
+    if (storageData) {
+      let resultData = storageData
+      resultData.forEach(function (entry) {
+        if (entry.code === targetCode) {
+          resultName = entry.name
+        }
+      })
+    }
+    return resultName
+  },
+  /**
    * 获取字典数据
    * @param targetCode
    * @param listName

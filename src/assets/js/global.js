@@ -80,7 +80,9 @@ const config = {
     // rts
     updateBatchPersonnel: "updateBatchPersonnel",
     removeUserRole: "removeUserRole",
-    getMyPage: 'getMyPage'
+    getMyPage: 'getMyPage',
+    tellRrepairedPage: 'tellRrepairedPage',
+    tellPumpPage: 'tellPumpPage',
   },
   dateFormat: {
     YMD: 'YYYY-MM-DD',
@@ -101,7 +103,19 @@ const config = {
     systemManage: 'systemManage',
     repairPersonnel: 'repairPersonnel',
     driver: 'driver',
-  }
+  },
+
+  //任务申请类型
+  applyType: [
+    {id: '1', name: '报修', code: 0},
+    {id: '2', name: '报抽', code: 1}
+  ],
+  //分派状态
+  assignStatus: [
+    {id: '1', name: '已分派', code: 'assigned'},
+    {id: '2', name: '已办结', code: 'finish'},
+    {id: '3', name: '未分派', code: 'unassigned'}
+  ],
 }
 const message = {
   '登陆成功': ''

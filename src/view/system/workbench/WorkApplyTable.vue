@@ -21,7 +21,7 @@
                    style="width: 100%;"
         >
           <el-option :label="item.name" :value="item.code"
-                     v-for="item in dictionary.accountStatus"
+                     v-for="item in GLOBAL.config.assignStatus"
                      :key="item.id"></el-option>
         </el-select>
       </el-col>
@@ -37,7 +37,7 @@
                    style="width: 100%;"
         >
           <el-option :label="item.name" :value="item.code"
-                     v-for="item in dictionary.accountStatus"
+                     v-for="item in GLOBAL.config.applyType"
                      :key="item.id"></el-option>
         </el-select>
       </el-col>
@@ -61,12 +61,28 @@
               element-loading-text="数据处理中...请稍等..."
               v-loading="loading">
       <el-table-column type="index" label="序号" align="center"/>
-      <el-table-column prop="type" label="类型" align="center"/>
+      <el-table-column prop="type" label="类型" align="center">
+        <template slot-scope="scope">
+          {{
+          FUNCTIONS.systemFunction.getRtConfigValue(
+          scope.row.type,
+          GLOBAL.config.applyType)
+          }}
+        </template>
+      </el-table-column>
       <el-table-column prop="targetUserVillageCode" label="所属区划" align="center"/>
       <el-table-column prop="targetUserName" label="户主姓名" align="center"/>
       <el-table-column prop="targetUserPhoneNumber" label="手机号码" align="center"/>
       <el-table-column prop="reportTime" label="接收时间" width="200px" align="center"/>
-      <el-table-column prop="repairStatus" label="状态" align="center"/>
+      <el-table-column prop="assiganStatus" label="状态" align="center">
+        <template slot-scope="scope">
+          {{
+          FUNCTIONS.systemFunction.getRtConfigValue(
+          scope.row.assiganStatus,
+          GLOBAL.config.assignStatus)
+          }}
+        </template>
+      </el-table-column>
       <el-table-column prop="scope" label="操作" align="center">
         <template slot-scope="scope">
           <el-dropdown>
@@ -94,47 +110,25 @@
       :layout="pagination.layout"
       :total="pagination.total">
     </el-pagination>
-    <operationTemplate1 ref="operationTemplate1" :refresh="getTableData"/>
+    <workApplyAssign ref="workApplyAssign" :refresh="getTableData"/>
+    <workApplyCarAssign ref="workApplyCarAssign" :refresh="getTableData"/>
   </div>
 </template>
 <script>
     // 替换成相应的模板
-    import operationTemplate1 from './WorkApplyAssign'
+    import workApplyAssign from './WorkApplyAssign'
+    import workApplyCarAssign from './workApplyCarAssign'
 
     export default {
         name: 'RecordRepairTable',
-        data () {
+        data() {
             return {
                 // 查询表单
                 searchForm: {
                     state: '',
                     type: ''
                 },
-                tableData: [{
-                        createTime: "2020-02-27",
-                        creator: null,
-                        deleteFlag: 0,
-                        finishTime: null,
-                        id: "000121232",
-                        operationUserId: "f9f8894a421aa78b1129251e9d2f1d20",
-                        overtimeFlag: 0,
-                        problem: "抽水设置坏掉",
-                        pumpCarId: null,
-                        remark: "请尽快赶来维修",
-                        repairStatus: 0,
-                        repairTime: "2020-02-27",
-                        reportTime: "2020-02-27",
-                        submitUserId: "11",
-                        targetUserId: "11",
-                        targetUserName: "张三",
-                        targetUserPhoneNumber: "12345678900",
-                        targetUserTownCode: null,
-                        targetUserVillageCode: "100000",
-                        type: 0,
-                        updateTime: "2020-02-27"
-
-                }
-                ],
+                tableData: [],
                 // 字典数据
                 dictionary: {},
                 // 资源权限控制，有的系统不需这么细，则全部为true
@@ -156,9 +150,10 @@
             }
         },
         components: {
-            operationTemplate1
+            workApplyAssign,
+            workApplyCarAssign
         },
-        mounted () {
+        mounted() {
             this.init()
         },
         methods: {
@@ -169,13 +164,19 @@
             doSearch: function () {
                 this.getTableData('init')
             },
-            operationMethod: function (operateType, info) {
-                this.$refs.operationTemplate1.init(operateType, info ? info.id : null)
+            operationMethod: function (info) {
+                if (info.type === 0) {//报修
+                    this.$refs.workApplyAssign.init(info)
+                } else if (info.type === 1) {//报抽
+                    this.$refs.workApplyCarAssign.init(info)
+                }
             },
             getSource: function (rowData) {
                 let tempList = []
                 this.source.infoView && tempList.push({icon: 'el-icon-view', title: '查看', method: 'handleView'})
-                this.source.infoSubmit && tempList.push({icon: 'el-icon-bell', title: '分派', method: 'handleSubmit'})
+                if (rowData.assignStatus !== 'finish') {
+                    this.source.infoSubmit && tempList.push({icon: 'el-icon-bell', title: '分派', method: 'handleSubmit'})
+                }
                 return tempList
             },
             handleCommon: function (type, rowData) {
@@ -190,7 +191,6 @@
             },
             // 查看
             handleView: function (rowData) {
-                debugger
                 this.$router.push({
                     name: 'WorkApplyOperateDialog',
                     query: {
@@ -201,7 +201,7 @@
             },
             // 分派
             handleSubmit: function (rowData) {
-                this.operationMethod('bell', rowData)
+                this.operationMethod(rowData)
             },
             // 获取列表
             getTableData: function (initPageFlag) {
@@ -226,6 +226,26 @@
                             _this.pagination.pageSize = resultData.size
                             _this.pagination.total = resultData.total
                             _this.pagination.currentPage = resultData.current
+                            resultData.records.forEach(item => {
+                                if (item.type == 0) {
+                                    if (item.operationUserId) {
+                                        item.assiganStatus = 'assigned'
+                                    } else {
+                                        item.assiganStatus = 'unassigned'
+                                    }
+                                } else if (item.type == 1) {
+                                    if (item.pumpCarId) {
+                                        item.assiganStatus = 'assigned'
+                                    } else {
+                                        item.assiganStatus = 'unassigned'
+                                    }
+                                }
+
+                                if (item.finishTime) {
+                                    item.assiganStatus = 'finish'
+                                }
+
+                            })
                             _this.tableData = resultData.records
                         } else {
                             _this.$message.warning('获取列表数据失败～')

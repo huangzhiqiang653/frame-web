@@ -8,11 +8,9 @@
       <!--序号-->
       <el-table-column type="index" label="序号" align="center"/>
       <!--账户名称-->
-      <el-table-column prop="name" label="姓名" align="center"/>
-      <!--手机号-->
-      <el-table-column prop="phoneNumber" label="手机号码" align="center"/>
-      <!--手机号-->
-      <el-table-column prop="notRepairedNum" label="待报修处理/件" align="center"/>
+      <el-table-column prop="carNo" label="车牌号" align="center"/>
+      <!--待报修处理/件-->
+      <el-table-column prop="notPumpNum" label="待报抽处理/件" align="center"/>
       <!-- 操作-->
       <el-table-column align="center" fixed="right" label="操作">
         <template slot-scope="scope">
@@ -38,7 +36,7 @@
 </template>
 <script>
     export default {
-        name: 'assign',
+        name: 'workApplyCarAssign',
         props: {
             id: {
                 type: String
@@ -58,7 +56,7 @@
                 },
                 formData: {
                     id: '',
-                    targetUserId: ''
+                    pumpCarId: ''
                 },
                 tableData: [],
                 // 资源权限控制，有的系统不需这么细，则全部为true
@@ -71,7 +69,7 @@
                     total: 0,
                     currentPage: 1
                 },
-                showTitle: '报修信息分派',
+                showTitle: '报抽信息分派',
                 showFlag: false,
                 loading: false
             }
@@ -98,8 +96,8 @@
                 // 3、 调接口获取数据
                 _this.FUNCTIONS.systemFunction.interactiveData(
                     _this,
-                    _this.GLOBAL.config.businessFlag.rtUser,
-                    _this.GLOBAL.config.handleType.tellRrepairedPage,
+                    _this.GLOBAL.config.businessFlag.rtCar,
+                    _this.GLOBAL.config.handleType.tellPumpPage,
                     paginationData,
                     null,
                     resultData => {
@@ -135,9 +133,9 @@
             assignUser: function (rowData) {
                 // 参数处理======start==========
                 let _this = this
-                _this.formData.targetUserId = rowData.id
+                _this.formData.pumpCarId = rowData.id
                 // 参数处理======end============
-                _this.$confirm('确认分派给当前维修人员？？', '提示', {
+                _this.$confirm('确认分派给当前车辆？？', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'
@@ -146,7 +144,7 @@
                     let params = _this.formData
                     _this.FUNCTIONS.systemFunction.interactiveData(
                         _this,
-                        _this.GLOBAL.config.businessFlag.rtRepair,
+                        _this.GLOBAL.config.businessFlag.rtPump,
                         _this.GLOBAL.config.handleType.updateAll,
                         params,
                         null,
