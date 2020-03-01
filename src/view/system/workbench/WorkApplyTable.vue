@@ -111,7 +111,7 @@
                     type: ''
                 },
                 tableData: [{
-                        createTime: "2020-02-27T14:05:43.000+0000",
+                        createTime: "2020-02-27",
                         creator: null,
                         deleteFlag: 0,
                         finishTime: null,
@@ -122,8 +122,8 @@
                         pumpCarId: null,
                         remark: "请尽快赶来维修",
                         repairStatus: 0,
-                        repairTime: null,
-                        reportTime: "2020-02-27 10:05:43",
+                        repairTime: "2020-02-27",
+                        reportTime: "2020-02-27",
                         submitUserId: "11",
                         targetUserId: "11",
                         targetUserName: "张三",
@@ -131,7 +131,7 @@
                         targetUserTownCode: null,
                         targetUserVillageCode: "100000",
                         type: 0,
-                        updateTime: "2020-02-27T14:05:43.000+0000"
+                        updateTime: "2020-02-27"
 
                 }
                 ],

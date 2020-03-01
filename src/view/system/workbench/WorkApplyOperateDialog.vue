@@ -1,7 +1,7 @@
 <!--zx_rts_db.t_rt_record_repair（报修记录表）-dialog-->
 <template>
   <div class="main-area">
-      <el-page-header @back="closeDialog" content="工作信息查看"></el-page-header>
+      <el-page-header @back="goBack" content="工作信息查看"></el-page-header>
       <el-form
         :inline="true"
         :model="formData"
@@ -122,7 +122,7 @@
         </el-row>
       </el-form>
       <el-row class="margin-top-20">
-        <el-button @click="cancelClick" style="float: right;margin: 0 20px;" :size="GLOBAL.config.systemSize">关闭
+        <el-button @click="goBack" style="float: right;margin: 0 20px;" :size="GLOBAL.config.systemSize">关闭
         </el-button>
       </el-row>
 
@@ -187,7 +187,7 @@
             // 字典数据
             dictionary: {
                 repairStatus: JSON.parse(unescape(localStorage.getItem(this.GLOBAL.config.dictionaryPre + this.GLOBAL.config.dictionary.repairStatus))),
-                overtimeFlag: JSON.parse(unescape(localStorage.getItem(this.GLOBAL.config.dictionaryPre + this.GLOBAL.config.dictionary.overtimeFlag))),
+                overtimeFlag: JSON.parse(unescape(localStorage.getItem(this.GLOBAL.config.dictionaryPre + this.GLOBAL.config.dictionary.overtimeFlag)))
             },
             editableFlag: true,
             loading: false,
@@ -200,11 +200,14 @@
         this.init()
     },
     methods: {
+        goBack: function () {
+            this.$router.go(-1)
+        },
         cancelClick: function () {
             this.dialogFormVisible = false
         },
         closeDialog: function () {
-            this.form = {}
+            this.showFlag = false
         },
         init: function () {
             let parm = this.$route.query
