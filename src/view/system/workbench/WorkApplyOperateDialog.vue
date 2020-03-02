@@ -17,8 +17,19 @@
           <el-divider content-position="left">{{msg}}</el-divider>
           <el-col :span="8">
             <el-form-item label="类型：" prop="type">
-              <el-input autosize v-model="formData.type" placeholder="类型" maxlength="64"></el-input>
+              <el-select disabled v-model="formData.type"
+                         :size="GLOBAL.config.systemSize"
+                         placeholder="类型"
+                         style="width: 100%;"
+              >
+                <el-option :label="item.name" :value="item.code"
+                           v-for="item in GLOBAL.config.dictionaryData.applyType"
+                           :key="item.id"></el-option>
+              </el-select>
             </el-form-item>
+            <!--<el-form-item label="类型：" prop="type">
+              <el-input autosize v-model="formData.type" placeholder="类型" maxlength="64" ></el-input>
+            </el-form-item>-->
           </el-col>
           <el-col :span="8">
             <el-form-item label="报修时间：" prop="reportTime" v-if="a.p_show">
@@ -32,7 +43,7 @@
           </el-col>
           <el-col :span="8">
             <el-form-item label="分派时间：" prop="assignTime">
-              <el-input autosize v-model="formData.updateTime" placeholder="分派时间" maxlength="64"></el-input>
+              <el-input autosize v-model="formData.assignTime" placeholder="分派时间" maxlength="64"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="8">
@@ -52,7 +63,7 @@
           </el-col>
           <el-col :span="20">
             <el-form-item label="报修描述：" prop="Flag">
-              <el-input v-model="formData.Flag" placeholder="报修描述" maxlength="64"></el-input>
+              <el-input v-model="formData.problem" placeholder="报修描述" maxlength="64"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -60,21 +71,21 @@
         <el-row class="margin-top-20" v-if="a.p_show">
           <el-col :span="6">
             <el-form-item label="状态：" prop="status">
-              <el-select v-model="formData.repairStatus"
+              <el-select disabled v-model="formData.repairStatus"
                          :size="GLOBAL.config.systemSize"
                          placeholder="状态"
                          style="width: 100%;"
               >
                 <el-option label="--请选择--" value=""></el-option>
                 <el-option :label="item.name" :value="item.code"
-                           v-for="item in dictionary.accountStatus"
+                           v-for="item in GLOBAL.config.dictionaryData.repairStatus"
                            :key="item.id"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="6">
             <el-form-item label="维修责任人：" prop="ren">
-              <el-input v-model="formData.operationUserId" placeholder="维修责任人" maxlength="64"></el-input>
+              <el-input v-model="formData. pepairUserName" placeholder="维修责任人" maxlength="64"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="8">
@@ -92,21 +103,21 @@
         <el-row class="margin-top-20" v-if="a.p_show1">
           <el-col :span="8">
             <el-form-item label="状态：" prop="status">
-              <el-select v-model="formData.repairStatus"
+              <el-select disabled v-model="formData.repairStatus"
                          :size="GLOBAL.config.systemSize"
                          placeholder="状态"
                          style="width: 100%;"
               >
                 <el-option label="--请选择--" value=""></el-option>
                 <el-option :label="item.name" :value="item.code"
-                           v-for="item in dictionary.accountStatus"
+                           v-for="item in GLOBAL.config.dictionaryData.pumpStatus"
                            :key="item.id"></el-option>
               </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="抽粪责任车辆：" prop="car" label-width="80">
-              <el-input v-model="formData.pumpCarId" placeholder="抽粪责任车辆" maxlength="64"></el-input>
+              <el-input v-model="formData.pumpCarNumber" placeholder="抽粪责任车辆" maxlength="64"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="8">
@@ -143,6 +154,8 @@
     },
     data () {
         return {
+            // 字典数据
+            // dictionary: {},
             a: {
                 p_show: false,
                 p_show1: false
@@ -156,15 +169,14 @@
                 type: '',
                 reportTime: '',
                 repairTime: '',
-                updateTime: '',
+                assignTime: '',
                 targetUserVillageCode: '',
                 targetUserName: '',
                 targetUserPhoneNumber: '',
-                Flag: '',
+                problem: '',
                 repairStatus: '',
-                operationUserId: '',
-                // repairTime: '',
-                pumpCarId: '',
+                pepairUserName: '',
+                pumpCarNumber: '',
                 appraise: ''
             },
             // 校验规则

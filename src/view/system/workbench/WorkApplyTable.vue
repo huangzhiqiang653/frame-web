@@ -15,9 +15,9 @@
         </label>
       </el-col>
       <el-col :span="4" class="margin-top-10">
-        <el-select v-model="searchForm.assignStatus"
+        <el-select clearable v-model="searchForm.assignStatus"
                    :size="GLOBAL.config.systemSize"
-                   placeholder="--请选择--"
+                   placeholder="分派状态"
                    style="width: 100%;"
         >
           <el-option :label="item.name" :value="item.code"
@@ -31,9 +31,9 @@
         </label>
       </el-col>
       <el-col :span="4" class="margin-top-10">
-        <el-select v-model="searchForm.type"
+        <el-select clearable v-model="searchForm.type"
                    :size="GLOBAL.config.systemSize"
-                   placeholder="--请选择--"
+                   placeholder="类型"
                    style="width: 100%;"
         >
           <el-option :label="item.name" :value="item.code"
@@ -121,7 +121,7 @@
 
     export default {
         name: 'RecordRepairTable',
-        data() {
+        data () {
             return {
                 // 查询表单
                 searchForm: {
@@ -153,7 +153,7 @@
             workApplyAssign,
             workApplyCarAssign
         },
-        mounted() {
+        mounted () {
             this.init()
         },
         methods: {
@@ -165,9 +165,11 @@
                 this.getTableData('init')
             },
             operationMethod: function (info) {
-                if (info.type === 0) {//报修
+                if (info.type === 0) {
+                    // 报修
                     this.$refs.workApplyAssign.init(info)
-                } else if (info.type === 1) {//报抽
+                } else if (info.type === 1) {
+                    // 报抽
                     this.$refs.workApplyCarAssign.init(info)
                 }
             },
@@ -244,7 +246,6 @@
                                 if (item.finishTime) {
                                     item.assiganStatus = 'finish'
                                 }
-
                             })
                             _this.tableData = resultData.records
                         } else {
