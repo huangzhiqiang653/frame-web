@@ -117,7 +117,7 @@
 <script>
     // 替换成相应的模板
     import workApplyAssign from './WorkApplyAssign'
-    import workApplyCarAssign from './workApplyCarAssign'
+    import workApplyCarAssign from './WorkApplyCarAssign'
 
     export default {
         name: 'RecordRepairTable',
