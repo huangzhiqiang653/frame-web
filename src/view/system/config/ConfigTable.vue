@@ -287,7 +287,6 @@
             },
             // 获取列表
             getTableData: function (initPageFlag) {
-            debugger
                 this.loading = true
                 let _this = this, searchParams = this.searchForm
                 _this.FUNCTIONS.systemFunction.removeNullFields(searchParams)
