@@ -83,6 +83,8 @@ const config = {
     getMyPage: 'getMyPage',
     tellRrepairedPage: 'tellRrepairedPage',
     tellPumpPage: 'tellPumpPage',
+    getPageRecordRepair: 'getPageRecordRepair',
+    getPageRecordPumpCar: 'getPageRecordPumpCar'
   },
   dateFormat: {
     YMD: 'YYYY-MM-DD',

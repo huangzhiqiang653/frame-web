@@ -145,7 +145,7 @@
         width="180">
       </el-table-column>
       <el-table-column
-        prop="pumpCarId"
+        prop="pumpCarNo"
         align="center"
         label="抽粪责任车辆">
       </el-table-column>
@@ -283,7 +283,7 @@
                 _this.FUNCTIONS.systemFunction.interactiveData(
                     _this,
                     _this.GLOBAL.config.businessFlag.rtRepair,
-                    _this.GLOBAL.config.handleType.getPage,
+                    _this.GLOBAL.config.handleType.getPageRecordRepair,
                     paginationData,
                     null,
                     resultData => {
@@ -312,8 +312,8 @@
                 // 3、 调接口获取数据
                 _this.FUNCTIONS.systemFunction.interactiveData(
                     _this,
-                    _this.GLOBAL.config.businessFlag.rtPump,
-                    _this.GLOBAL.config.handleType.getPage,
+                    _this.GLOBAL.config.businessFlag.rtRepair,
+                    _this.GLOBAL.config.handleType.getPageRecordPumpCar,
                     paginationData,
                     null,
                     resultData => {
