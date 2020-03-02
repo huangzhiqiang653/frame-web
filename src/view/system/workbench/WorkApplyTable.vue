@@ -21,7 +21,7 @@
                    style="width: 100%;"
         >
           <el-option :label="item.name" :value="item.code"
-                     v-for="item in GLOBAL.config.assignStatus"
+                     v-for="item in GLOBAL.config.dictionaryData.assignStatus"
                      :key="item.id"></el-option>
         </el-select>
       </el-col>
@@ -37,7 +37,7 @@
                    style="width: 100%;"
         >
           <el-option :label="item.name" :value="item.code"
-                     v-for="item in GLOBAL.config.applyType"
+                     v-for="item in GLOBAL.config.dictionaryData.applyType"
                      :key="item.id"></el-option>
         </el-select>
       </el-col>
@@ -66,7 +66,7 @@
           {{
           FUNCTIONS.systemFunction.getRtConfigValue(
           scope.row.type,
-          GLOBAL.config.applyType)
+          GLOBAL.config.dictionaryData.applyType)
           }}
         </template>
       </el-table-column>
@@ -79,7 +79,7 @@
           {{
           FUNCTIONS.systemFunction.getRtConfigValue(
           scope.row.assiganStatus,
-          GLOBAL.config.assignStatus)
+          GLOBAL.config.dictionaryData.assignStatus)
           }}
         </template>
       </el-table-column>
