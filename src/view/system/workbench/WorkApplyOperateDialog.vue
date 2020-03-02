@@ -33,37 +33,37 @@
           </el-col>
           <el-col :span="8">
             <el-form-item label="报修时间：" prop="reportTime" v-if="a.p_show">
-              <el-input autosize v-model="formData.reportTime" placeholder="报修时间" maxlength="64"></el-input>
+              <el-input disabled autosize v-model="formData.reportTime" placeholder="报修时间" maxlength="64"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="报抽时间：" prop="repairTime" v-if="a.p_show1">
-              <el-input autosize v-model="formData.repairTime" placeholder="报抽时间" maxlength="64"></el-input>
+              <el-input disabled autosize v-model="formData.repairTime" placeholder="报抽时间" maxlength="64"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="分派时间：" prop="assignTime">
-              <el-input autosize v-model="formData.assignTime" placeholder="分派时间" maxlength="64"></el-input>
+              <el-input disabled autosize v-model="formData.assignTime" placeholder="分派时间" maxlength="64"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="区划：" prop="area">
-              <el-input v-model="formData.targetUserVillageCode" placeholder="区划"></el-input>
+              <el-input disabled v-model="formData.targetUserVillageCode" placeholder="区划"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="户主姓名" prop="accountName">
-              <el-input v-model="formData.targetUserName" placeholder="户主姓名"></el-input>
+              <el-input disabled v-model="formData.targetUserName" placeholder="户主姓名"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="手机号码" prop="tel">
-              <el-input v-model="formData.targetUserPhoneNumber" placeholder="手机号码"></el-input>
+              <el-input disabled v-model="formData.targetUserPhoneNumber" placeholder="手机号码"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="20">
             <el-form-item label="报修描述：" prop="Flag">
-              <el-input v-model="formData.problem" placeholder="报修描述" maxlength="64"></el-input>
+              <el-input disabled v-model="formData.problem" placeholder="报修描述" maxlength="64"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
@@ -85,12 +85,12 @@
           </el-col>
           <el-col :span="6">
             <el-form-item label="维修责任人：" prop="ren">
-              <el-input v-model="formData. pepairUserName" placeholder="维修责任人" maxlength="64"></el-input>
+              <el-input disabled v-model="formData. pepairUserName" placeholder="维修责任人" maxlength="64"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="首次上门时间：" prop="oneTime" label-width="80">
-              <el-input autosize v-model="formData.repairTime" placeholder="首次上门时间" maxlength="64"></el-input>
+              <el-input disabled autosize v-model="formData.repairTime" placeholder="首次上门时间" maxlength="64"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="6">
@@ -117,12 +117,12 @@
           </el-col>
           <el-col :span="8">
             <el-form-item label="抽粪责任车辆：" prop="car" label-width="80">
-              <el-input v-model="formData.pumpCarNumber" placeholder="抽粪责任车辆" maxlength="64"></el-input>
+              <el-input disabled v-model="formData.pumpCarNumber" placeholder="抽粪责任车辆" maxlength="64"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="上门时间：" prop="Time">
-              <el-input autosize v-model="formData.repairTime" placeholder="上门时间" maxlength="64"></el-input>
+              <el-input disabled autosize v-model="formData.repairTime" placeholder="上门时间" maxlength="64"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="6">
