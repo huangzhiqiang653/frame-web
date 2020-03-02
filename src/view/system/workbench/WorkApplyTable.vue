@@ -11,11 +11,11 @@
     <el-row class="margin-top-10">
       <el-col :span="2" class="margin-top-10">
         <label class="search-label">
-          状态:
+          分派状态:
         </label>
       </el-col>
       <el-col :span="4" class="margin-top-10">
-        <el-select v-model="searchForm.status"
+        <el-select v-model="searchForm.assignStatus"
                    :size="GLOBAL.config.systemSize"
                    placeholder="--请选择--"
                    style="width: 100%;"
@@ -31,7 +31,7 @@
         </label>
       </el-col>
       <el-col :span="4" class="margin-top-10">
-        <el-select v-model="searchForm.status"
+        <el-select v-model="searchForm.type"
                    :size="GLOBAL.config.systemSize"
                    placeholder="--请选择--"
                    style="width: 100%;"
@@ -74,7 +74,7 @@
       <el-table-column prop="targetUserName" label="户主姓名" align="center"/>
       <el-table-column prop="targetUserPhoneNumber" label="手机号码" align="center"/>
       <el-table-column prop="reportTime" label="接收时间" width="200px" align="center"/>
-      <el-table-column prop="assiganStatus" label="状态" align="center">
+      <el-table-column prop="assignStatus" label="状态" align="center">
         <template slot-scope="scope">
           {{
           FUNCTIONS.systemFunction.getRtConfigValue(
@@ -125,7 +125,7 @@
             return {
                 // 查询表单
                 searchForm: {
-                    state: '',
+                    assignStatus: '',
                     type: ''
                 },
                 tableData: [],

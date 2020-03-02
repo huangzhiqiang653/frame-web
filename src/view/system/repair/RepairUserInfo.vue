@@ -66,7 +66,15 @@
           ).format(GLOBAL.config.dateFormat.ymdhms):'' }}
         </template>
       </el-table-column>
-      <el-table-column prop="repairStatus" label="状态" align="center"></el-table-column>
+      <el-table-column prop="repairStatus" label="状态" align="center">
+        <template slot-scope="scope">
+          {{
+          FUNCTIONS.systemFunction.getRtConfigValue(
+          scope.row.repairStatus,
+          GLOBAL.config.dictionaryData.repairStatus)
+          }}
+        </template>
+      </el-table-column>
       <el-table-column prop="evaluate" align="center" label="评价"></el-table-column>
     </el-table>
     <el-pagination
@@ -137,7 +145,6 @@
                     children: 'children',
                     leaf: 'leaf'
                 },
-                // treeData: JSON.parse(unescape(localStorage.getItem(this.GLOBAL.config.orgTreeName))),
                 // 字典数据
                 dictionary: {},
                 // 报修数据

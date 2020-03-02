@@ -8,35 +8,35 @@
     <el-row class="margin-top-10">
       <el-col :span="2" class="margin-top-10">
         <label class="search-label">
-          状态:
+          工作状态:
         </label>
       </el-col>
       <el-col :span="4" class="margin-top-10">
-        <el-select v-model="searchForm.status"
+        <el-select v-model="searchForm.workStatus"
                    :size="GLOBAL.config.systemSize"
-                   placeholder="状态"
+                   placeholder="工作状态"
                    style="width: 100%;"
         >
           <el-option label="--请选择--" value=""></el-option>
           <el-option :label="item.name" :value="item.code"
-                     v-for="item in dictionary.accountStatus"
+                     v-for="item in GLOBAL.config.dictionaryData.workStatus"
                      :key="item.id"></el-option>
         </el-select>
       </el-col>
       <el-col :span="2" class="margin-top-10">
         <label class="search-label">
-          类型:
+          用户类型:
         </label>
       </el-col>
       <el-col :span="4" class="margin-top-10">
-        <el-select v-model="searchForm.status"
+        <el-select v-model="searchForm.userType"
                    :size="GLOBAL.config.systemSize"
-                   placeholder="类型"
+                   placeholder="用户类型"
                    style="width: 100%;"
         >
           <el-option label="--请选择--" value=""></el-option>
           <el-option :label="item.name" :value="item.code"
-                     v-for="item in dictionary.accountStatus"
+                     v-for="item in GLOBAL.config.dictionaryData.userType"
                      :key="item.id"></el-option>
         </el-select>
       </el-col>
@@ -93,9 +93,6 @@
       </el-table-column>
       <!--所属用户-->
       <el-table-column prop="orgName" label="所属区划" align="center">
-<!--        <template slot-scope="scope">-->
-<!--          {{ FUNCTIONS.systemFunction.getAreaName(this, scope.row.villageCode) }}-->
-<!--        </template>-->
       </el-table-column>
       <el-table-column prop="phoneNumber" label="手机号码" width="200px" align="center"/>
       <el-table-column
@@ -117,11 +114,11 @@
             </el-dropdown-menu>
           </el-dropdown>
         </template>
-<!--        <template slot-scope="scope">-->
-<!--          <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>-->
-<!--          <el-button type="text" size="small">编辑</el-button>-->
-<!--          <el-button @click="handleDelete(scope.row)" type="text" size="small">删除</el-button>-->
-<!--        </template>-->
+        <!--        <template slot-scope="scope">-->
+        <!--          <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>-->
+        <!--          <el-button type="text" size="small">编辑</el-button>-->
+        <!--          <el-button @click="handleDelete(scope.row)" type="text" size="small">删除</el-button>-->
+        <!--        </template>-->
       </el-table-column>
     </el-table>
     <el-pagination
@@ -139,18 +136,18 @@
 </template>
 <script>
     import villagerAddDialog from './VillagerAddDialog'
+
     export default {
         name: 'Villager',
-        data () {
+        data() {
             return {
                 // 新增/编辑dialog
                 dialogVisible: false,
                 // 查询表单
                 searchForm: {
-                    accountName: '',
-                    status: '',
-                    userId: '',
-                    updateTime: ''
+                    name: '',
+                    workStatus: '',
+                    userType: '',
                 },
                 tableData: [{
                     id: '22',

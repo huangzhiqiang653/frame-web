@@ -67,10 +67,6 @@
                     ids: []
                 },
                 tableData: [],
-                // 字典数据
-                dictionary: {
-                    accountStatus: JSON.parse(unescape(localStorage.getItem(this.GLOBAL.config.dictionaryPre + this.GLOBAL.config.dictionary.accountStatus)))
-                },
                 // 资源权限控制，有的系统不需这么细，则全部为true
                 source: {
                     add: true,

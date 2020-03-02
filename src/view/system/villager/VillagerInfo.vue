@@ -68,6 +68,13 @@
         label="状态"
         align="center"
         width="180">
+        <template slot-scope="scope">
+          {{
+          FUNCTIONS.systemFunction.getRtConfigValue(
+          scope.row.repairStatus,
+          GLOBAL.config.dictionaryData.repairStatus)
+          }}
+        </template>
       </el-table-column>
       <el-table-column
         prop="targetUserName"
@@ -119,10 +126,17 @@
         </template>
       </el-table-column>
       <el-table-column
-        prop="repairStatus"
+        prop="pumpStatus"
         label="状态"
         align="center"
         width="180">
+        <template slot-scope="scope">
+          {{
+          FUNCTIONS.systemFunction.getRtConfigValue(
+          scope.row.pumpStatus,
+          GLOBAL.config.dictionaryData.pumpStatus)
+          }}
+        </template>
       </el-table-column>
       <el-table-column
         prop="targetUserName"
@@ -170,18 +184,13 @@
                 type: Function
             }
         },
-        data () {
+        data() {
             return {
-                formData: {
-
-                },
+                formData: {},
                 // 校验规则
-                formRules: {
-
-                },
+                formRules: {},
                 // 字典数据
-                dictionary: {
-                },
+                dictionary: {},
                 // 报修数据
                 repairsData: [
                     {
@@ -227,17 +236,14 @@
                 currentId: null
             }
         },
-        mounted () {
+        mounted() {
             this.init()
         },
-        components: {
-
-        },
+        components: {},
         methods: {
             init: function () {
                 console.log(this.$route.params.id)
                 this.currentId = this.$route.params.id
-                debugger
                 this.getVillagerInfo()
                 this.getRepairList('init')
                 this.getPumpList('init')
