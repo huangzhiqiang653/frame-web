@@ -48,7 +48,7 @@
       <el-col :span="2" class="margin-top-10">
         <el-button v-if="source.export"
                    type="primary"
-                   icon="el-icon-download"
+                   icon="el-icon-upload2"
                    :size="GLOBAL.config.systemSize"
                    style="float: left;"
                    @click="exportTableData">导出
