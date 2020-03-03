@@ -18,6 +18,7 @@
         <el-input v-model="searchForm.name"
                   :size="GLOBAL.config.systemSize"
                   placeholder="姓名"
+                  clearable
                   maxlength="32"></el-input>
       </el-col>
       <el-col :span="3" class="margin-top-10">
@@ -29,6 +30,7 @@
         <el-input v-model="searchForm.townCode"
                   :size="GLOBAL.config.systemSize"
                   placeholder="所属乡镇编码"
+                  clearable
                   maxlength="32"></el-input>
       </el-col>
       <el-col :span="3" class="margin-top-10">
@@ -40,6 +42,7 @@
         <el-input v-model="searchForm.villageCode"
                   :size="GLOBAL.config.systemSize"
                   placeholder="所属村居编码"
+                  clearable
                   maxlength="32"></el-input>
       </el-col>
       <el-col :span="2" class="margin-top-10">
@@ -51,6 +54,7 @@
         <el-input v-model="searchForm.phoneNumber"
                   :size="GLOBAL.config.systemSize"
                   placeholder="手机号"
+                  clearable
                   maxlength="32"></el-input>
       </el-col>
       <el-col :span="2" class="margin-top-10">

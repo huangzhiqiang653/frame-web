@@ -18,6 +18,7 @@
         <el-input v-model="searchForm.configName"
                   :size="GLOBAL.config.systemSize"
                   placeholder="配置名称"
+                  clearable
                   maxlength="24"></el-input>
       </el-col>
       <el-col :span="2" class="margin-top-10">
@@ -29,6 +30,7 @@
         <el-input v-model="searchForm.configCode"
                   :size="GLOBAL.config.systemSize"
                   placeholder="配置编码"
+                  clearable
                   maxlength="24"></el-input>
       </el-col>
       <el-col :span="2" class="margin-top-10">
@@ -40,6 +42,7 @@
         <el-input v-model="searchForm.configParam"
                   :size="GLOBAL.config.systemSize"
                   placeholder="配置参数"
+                  clearable
                   maxlength="24"></el-input>
       </el-col>
       <el-col :span="2" class="margin-top-10">

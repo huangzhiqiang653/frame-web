@@ -28,6 +28,7 @@
         <el-input v-model="searchForm.name"
                   :size="GLOBAL.config.systemSize"
                   placeholder="请输入人员姓名"
+                  clearable
                   maxlength="32"></el-input>
       </el-col>
       <el-col :span="2" class="margin-top-10">
@@ -39,6 +40,7 @@
         <el-input v-model="searchForm.phoneNumber"
                   :size="GLOBAL.config.systemSize"
                   placeholder="请输入手机号码"
+                  clearable
                   maxlength="32"></el-input>
       </el-col>
       <el-col :span="2" class="margin-top-10">

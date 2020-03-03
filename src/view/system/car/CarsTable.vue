@@ -28,6 +28,7 @@
         <el-input v-model="searchForm.name"
                   :size="GLOBAL.config.systemSize"
                   placeholder="当值司机"
+                  clearable
                   maxlength="32"></el-input>
       </el-col>
       <el-col :span="2" class="margin-top-10">
@@ -39,6 +40,7 @@
         <el-input v-model="searchForm.carNo"
                   :size="GLOBAL.config.systemSize"
                   placeholder="车牌号"
+                  clearable
                   maxlength="32"></el-input>
       </el-col>
       <el-col :span="2" class="margin-top-10">

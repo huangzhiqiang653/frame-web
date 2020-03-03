@@ -14,6 +14,7 @@
       <el-col :span="4" class="margin-top-10">
         <el-select v-model="searchForm.workStatus"
                    :size="GLOBAL.config.systemSize"
+                   clearable
                    placeholder="工作状态"
                    style="width: 100%;"
         >
@@ -31,6 +32,7 @@
       <el-col :span="4" class="margin-top-10">
         <el-select v-model="searchForm.userType"
                    :size="GLOBAL.config.systemSize"
+                   clearable
                    placeholder="用户类型"
                    style="width: 100%;"
         >
